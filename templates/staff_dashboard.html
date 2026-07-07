@@ -1,284 +1,231 @@
 {% extends "staff_base.html" %}
 {% load static %}
 {% block content %}
+<div class="content staffdash">
+
 <div class="card-h">
   <div>
-    <div class="h1">Overview</div>
-    <div class="muted">Quick totals</div>
+    <div class="muted" style="margin-bottom:4px;">Welcome back,</div>
+    <div class="h1" style="font-size:26px;">Dashboard Overview</div>
+    <div class="muted">Here's what's happening with your platform today.</div>
   </div>
 
-<!-- ✅ Search (stay on dashboard) -->
-<form class="dash-search" method="get" action="{% url 'staff_dashboard' %}">
-  <div class="period-buttons">
-    <button type="submit" name="period" value=""
-        class="period-btn {% if period == '' %}active{% endif %}">
-        All
-    </button>
-  
-    <button type="submit" name="period" value="today"
-        class="period-btn {% if period == 'today' %}active{% endif %}">
-        Today
-    </button>
-  
-    <button type="submit" name="period" value="yesterday"
-        class="period-btn {% if period == 'yesterday' %}active{% endif %}">
-        Yesterday
-    </button>
-  
-    <button type="submit" name="period" value="this_week"
-        class="period-btn {% if period == 'this_week' %}active{% endif %}">
-        This Week
-    </button>
-  
-    <button type="submit" name="period" value="last_week"
-        class="period-btn {% if period == 'last_week' %}active{% endif %}">
-        Last Week
-    </button>
-  
-    <button type="submit" name="period" value="this_month"
-        class="period-btn {% if period == 'this_month' %}active{% endif %}">
-        This Month
-    </button>
-  
-    <button type="submit" name="period" value="last_month"
-        class="period-btn {% if period == 'last_month' %}active{% endif %}">
-        Last Month
-    </button>
-  </div>
-</form>
+  <!-- ✅ Search (stay on dashboard) -->
+  <form class="dash-search" method="get" action="{% url 'staff_dashboard' %}">
+    <div class="period-buttons">
+      <button type="submit" name="period" value="" class="period-btn {% if period == '' %}active{% endif %}">All</button>
+      <button type="submit" name="period" value="today" class="period-btn {% if period == 'today' %}active{% endif %}">Today</button>
+      <button type="submit" name="period" value="yesterday" class="period-btn {% if period == 'yesterday' %}active{% endif %}">Yesterday</button>
+      <button type="submit" name="period" value="this_week" class="period-btn {% if period == 'this_week' %}active{% endif %}">This Week</button>
+      <button type="submit" name="period" value="last_week" class="period-btn {% if period == 'last_week' %}active{% endif %}">Last Week</button>
+      <button type="submit" name="period" value="this_month" class="period-btn {% if period == 'this_month' %}active{% endif %}">This Month</button>
+      <button type="submit" name="period" value="last_month" class="period-btn {% if period == 'last_month' %}active{% endif %}">Last Month</button>
+    </div>
+  </form>
 </div>
 
-<div class="content staffdash staff-font">
-    <div class="stats-grid">
+<div class="kpi-grid">
 
-      <!-- Total Users -->
-      <div class="stat-card stat-teal">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;">
-          <div>
-            <div class="muted">Total Users</div>
-            <div style="font-size:28px;font-weight:950;margin-top:6px;">{{ total_users }}</div>
-          </div>
-          <div class="stat-ico">
-            <img src="{% static 'icons/users.webp' %}" alt="Users">
-          </div>
-        </div>
-        <div style="margin-top:10px;">
-          <a class="btn btn-green" href="{% url 'staff_users' %}">Open →</a>
-        </div>
-      </div>
-
-      <!-- Loan Applications -->
-      <div class="stat-card stat-orange">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;">
-          <div>
-            <div class="muted">Loan Applications</div>
-            <div style="font-size:28px;font-weight:950;margin-top:6px;">{{ total_loans }}</div>
-          </div>
-          <div class="stat-ico">
-            <img src="{% static 'icons/loans.webp' %}" alt="Loans">
-          </div>
-        </div>
-        <div style="margin-top:10px;">
-          <a class="btn btn-green" href="{% url 'staff_loans' %}">Open →</a>
-        </div>
-      </div>
-
-      <!-- Withdrawals -->
-      <div class="stat-card stat-purple">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;">
-          <div>
-            <div class="muted">Withdrawals</div>
-            <div style="font-size:28px;font-weight:950;margin-top:6px;">{{ total_withdrawals }}</div>
-          </div>
-          <div class="stat-ico">
-            <img src="{% static 'icons/withdraw.webp' %}" alt="Withdrawals">
-          </div>
-        </div>
-        <div style="margin-top:10px;">
-          <a class="btn btn-green" href="{% url 'staff_withdrawals' %}">Open →</a>
-        </div>
-      </div>
-
-      <!-- Payment Methods -->
-      <div class="stat-card stat-dark">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;">
-          <div>
-            <div class="muted">Payment Methods</div>
-            <div style="font-size:28px;font-weight:950;margin-top:6px;">{{ total_payment_methods }}</div>
-          </div>
-          <div class="stat-ico">
-            <img src="{% static 'icons/payment.webp' %}" alt="Payments">
-          </div>
-        </div>
-        <div style="margin-top:10px;">
-          <a class="btn btn-green" href="{% url 'staff_payment_methods' %}">Open →</a>
-        </div>
-      </div>
-
+  <div class="kpi-card kpi-blue">
+    <div class="kpi-top">
+      <div class="kpi-ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+      <div class="kpi-label">Total Users</div>
     </div>
-
-<!-- ===== Performance & Reference Grid ===== -->
-<div class="perf-wrap" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: stretch;">
-
-  <!-- Performance Overview -->
-  <div class="perf-card">
-    <div class="perf-head">
-      <div>
-        <div class="perf-title">Performance Overview</div>
-        <div class="perf-sub">User register activity</div>
-      </div>
-    </div>
-
-    <div class="perf-bars">
-      <div class="bar teal" style="height:{{ h_today|default:120 }}px;">
-        <i class="count" data-value="{{ reg_today }}">{{ reg_today }}</i>
-        <span>Today</span>
-      </div>
-
-      <div class="bar teal" style="height:{{ h_yesterday|default:100 }}px;">
-        <i class="count" data-value="{{ reg_yesterday }}">{{ reg_yesterday }}</i>
-        <span>Yesterday</span>
-      </div>
-
-      <div class="bar orange" style="height:{{ h_this_week|default:160 }}px;">
-        <i class="count" data-value="{{ reg_this_week }}">{{ reg_this_week }}</i>
-        <span>This Week</span>
-      </div>
-
-      <div class="bar orange" style="height:{{ h_last_week|default:140 }}px;">
-        <i class="count" data-value="{{ reg_last_week }}">{{ reg_last_week }}</i>
-        <span>Last Week</span>
-      </div>
-
-      <div class="bar purple" style="height:{{ h_this_month|default:170 }}px;">
-        <i class="count" data-value="{{ reg_this_month }}">{{ reg_this_month }}</i>
-        <span>This Month</span>
-      </div>
-
-      <div class="bar purple" style="height:{{ h_last_month|default:150 }}px;">
-        <i class="count" data-value="{{ reg_last_month }}">{{ reg_last_month }}</i>
-        <span>Last Month</span>
-      </div>
-    </div>
+    <div class="kpi-num">{{ total_users }}</div>
+    <div class="kpi-trend {% if users_trend < 0 %}down{% endif %}">{% if users_trend >= 0 %}+{% endif %}{{ users_trend }}% from last week</div>
+    <svg class="kpi-spark" viewBox="0 0 110 34" preserveAspectRatio="none"><path d="{{ spark_users.area }}" fill="currentColor" fill-opacity="0.22"/><path d="{{ spark_users.line }}" fill="none" stroke="currentColor" stroke-width="2"/><circle class="spark-live" cx="{{ spark_users.last.0 }}" cy="{{ spark_users.last.1 }}" r="2.5" fill="currentColor"/></svg>
+    <a class="kpi-link" href="{% url 'staff_users' %}">Open →</a>
   </div>
 
-  <!-- ===== Pending Actions Card ===== -->
-  <div class="perf-card" style="background: linear-gradient(135deg, #0f2027, #1a3a4a, #0b5ea8); display: flex; flex-direction: column; position: relative;">
-
-    <!-- Header -->
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
-      <div>
-        <div style="font-size: 17px; font-weight: 900; color: #fff; letter-spacing: 1px; text-transform: uppercase;">Pending Actions</div>
-        <div style="font-size: 12px; color: rgba(255,255,255,0.65); margin-top: 3px;">Items waiting for staff review</div>
-      </div>
-      {% if total_pending > 0 %}
-      <div style="background: #ef4444; color: #fff; font-weight: 900; font-size: 20px; width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 14px rgba(239,68,68,0.5);">
-        {{ total_pending }}
-      </div>
-      {% else %}
-      <div style="background: #22c55e; color: #fff; font-weight: 900; font-size: 13px; padding: 8px 14px; border-radius: 20px; box-shadow: 0 4px 14px rgba(34,197,94,0.4);">
-        All Clear
-      </div>
-      {% endif %}
+  <div class="kpi-card kpi-orange">
+    <div class="kpi-top">
+      <div class="kpi-ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 13h6M9 17h6"/></svg></div>
+      <div class="kpi-label">Loan Applications</div>
     </div>
+    <div class="kpi-num">{{ total_loans }}</div>
+    <div class="kpi-trend {% if loans_trend < 0 %}down{% endif %}">{% if loans_trend >= 0 %}+{% endif %}{{ loans_trend }}% from last week</div>
+    <svg class="kpi-spark" viewBox="0 0 110 34" preserveAspectRatio="none"><path d="{{ spark_loans.area }}" fill="currentColor" fill-opacity="0.22"/><path d="{{ spark_loans.line }}" fill="none" stroke="currentColor" stroke-width="2"/><circle class="spark-live" cx="{{ spark_loans.last.0 }}" cy="{{ spark_loans.last.1 }}" r="2.5" fill="currentColor"/></svg>
+    <a class="kpi-link" href="{% url 'staff_loans' %}">Open →</a>
+  </div>
 
-    <!-- Withdrawal Row -->
-    <a href="{% url 'staff_withdrawals' %}" style="text-decoration: none; display: flex; align-items: center; justify-content: space-between; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 14px; padding: 14px 18px; margin-bottom: 12px; transition: background 0.2s;"
-       onmouseover="this.style.background='rgba(255,255,255,0.16)'" onmouseout="this.style.background='rgba(255,255,255,0.08)'">
-      <div style="display: flex; align-items: center; gap: 12px;">
-        <div style="width: 40px; height: 40px; border-radius: 12px; background: rgba(239,68,68,0.25); border: 1px solid rgba(239,68,68,0.4); display: flex; align-items: center; justify-content: center;">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-        </div>
+  <div class="kpi-card kpi-pink">
+    <div class="kpi-top">
+      <div class="kpi-ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></div>
+      <div class="kpi-label">Withdrawals</div>
+    </div>
+    <div class="kpi-num">{{ total_withdrawals }}</div>
+    <div class="kpi-trend {% if withdrawals_trend < 0 %}down{% endif %}">{% if withdrawals_trend >= 0 %}+{% endif %}{{ withdrawals_trend }}% from last week</div>
+    <svg class="kpi-spark" viewBox="0 0 110 34" preserveAspectRatio="none"><path d="{{ spark_withdrawals.area }}" fill="currentColor" fill-opacity="0.22"/><path d="{{ spark_withdrawals.line }}" fill="none" stroke="currentColor" stroke-width="2"/><circle class="spark-live" cx="{{ spark_withdrawals.last.0 }}" cy="{{ spark_withdrawals.last.1 }}" r="2.5" fill="currentColor"/></svg>
+    <a class="kpi-link" href="{% url 'staff_withdrawals' %}">Open →</a>
+  </div>
+
+  <div class="kpi-card kpi-teal">
+    <div class="kpi-top">
+      <div class="kpi-ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg></div>
+      <div class="kpi-label">Payment Methods</div>
+    </div>
+    <div class="kpi-num">{{ total_payment_methods }}</div>
+    <div class="kpi-trend {% if payment_methods_trend < 0 %}down{% endif %}">{% if payment_methods_trend >= 0 %}+{% endif %}{{ payment_methods_trend }}% from last week</div>
+    <svg class="kpi-spark" viewBox="0 0 110 34" preserveAspectRatio="none"><path d="{{ spark_payment_methods.area }}" fill="currentColor" fill-opacity="0.22"/><path d="{{ spark_payment_methods.line }}" fill="none" stroke="currentColor" stroke-width="2"/><circle class="spark-live" cx="{{ spark_payment_methods.last.0 }}" cy="{{ spark_payment_methods.last.1 }}" r="2.5" fill="currentColor"/></svg>
+    <a class="kpi-link" href="{% url 'staff_payment_methods' %}">Open →</a>
+  </div>
+
+</div>
+
+<div class="grid2">
+
+  <div class="panel">
+    <div class="panel-head">
+      <div class="panel-head-left">
+        <div class="panel-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18M7 15l4-4 3 3 5-6"/></svg></div>
         <div>
-          <div style="font-size: 14px; font-weight: 800; color: #fff;">Withdrawals</div>
-          <div style="font-size: 12px; color: rgba(255,255,255,0.6); margin-top: 1px;">Processing / waiting</div>
+          <div class="panel-title">Performance Overview</div>
+          <div class="panel-sub">User registration activity</div>
         </div>
       </div>
-      <div style="font-size: 28px; font-weight: 950; color: {% if pending_withdrawals > 0 %}#ef4444{% else %}#22c55e{% endif %};">
-        {{ pending_withdrawals }}
-      </div>
-    </a>
+    </div>
 
-    <!-- Loans Row -->
-    <a href="{% url 'staff_loans' %}" style="text-decoration: none; display: flex; align-items: center; justify-content: space-between; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 14px; padding: 14px 18px; margin-bottom: 12px; transition: background 0.2s;"
-       onmouseover="this.style.background='rgba(255,255,255,0.16)'" onmouseout="this.style.background='rgba(255,255,255,0.08)'">
-      <div style="display: flex; align-items: center; gap: 12px;">
-        <div style="width: 40px; height: 40px; border-radius: 12px; background: rgba(234,179,8,0.25); border: 1px solid rgba(234,179,8,0.4); display: flex; align-items: center; justify-content: center;">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#eab308" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
-        </div>
-        <div>
-          <div style="font-size: 14px; font-weight: 800; color: #fff;">Loans</div>
-          <div style="font-size: 12px; color: rgba(255,255,255,0.6); margin-top: 1px;">Pending / in review</div>
-        </div>
-      </div>
-      <div style="font-size: 28px; font-weight: 950; color: {% if pending_loans > 0 %}#eab308{% else %}#22c55e{% endif %};">
-        {{ pending_loans }}
-      </div>
-    </a>
+    <svg class="line-chart" viewBox="0 0 600 200" preserveAspectRatio="none">
+      <line x1="0" y1="28" x2="600" y2="28" class="grid-line"/>
+      <line x1="0" y1="71" x2="600" y2="71" class="grid-line"/>
+      <line x1="0" y1="114" x2="600" y2="114" class="grid-line"/>
+      <line x1="0" y1="157" x2="600" y2="157" class="grid-line"/>
+      <line x1="0" y1="200" x2="600" y2="200" class="grid-line"/>
+      <defs>
+        <linearGradient id="areaFill" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#6366F1" stop-opacity="0.35"/>
+          <stop offset="100%" stop-color="#6366F1" stop-opacity="0"/>
+        </linearGradient>
+      </defs>
+      <path d="{{ chart_area }}" fill="url(#areaFill)"/>
+      <path d="{{ chart_line }}" fill="none" stroke="#818CF8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      {% for p in chart_points %}
+        <circle cx="{{ p.x }}" cy="{{ p.y }}" r="4" fill="#0A0F1E" stroke="#818CF8" stroke-width="2.5"/>
+        <text x="{{ p.x }}" y="{{ p.y|add:'-16' }}" text-anchor="middle" class="chart-value">{{ p.value }}</text>
+        {% if forloop.last %}
+          <circle class="chart-live-dot" cx="{{ p.x }}" cy="{{ p.y }}" r="4" fill="#818CF8"/>
+        {% endif %}
+      {% endfor %}
+    </svg>
 
-    <!-- Users quick link -->
-    <a href="{% url 'staff_users' %}" style="text-decoration: none; display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 14px; padding: 12px 18px; margin-top: auto; transition: background 0.2s;"
-       onmouseover="this.style.background='rgba(255,255,255,0.13)'" onmouseout="this.style.background='rgba(255,255,255,0.06)'">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-      <span style="font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.75);">Manage Users  →  {{ total_users }} total</span>
-    </a>
+    <div class="chart-legend">
+      {% for p in chart_points %}
+      <div class="legend-item">
+        <div class="legend-label">{{ p.label }}</div>
+        <div class="legend-value">{{ p.value }}</div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="panel pending-panel">
+    <div class="pt-head">
+      <div class="panel-head-left">
+        <div class="panel-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h4"/></svg></div>
+        <div class="panel-title">Pending Tasks</div>
+      </div>
+      <div class="pt-live"><span class="dotlive"></span>Live</div>
+    </div>
+
+    <div class="pt-list">
+      <a href="{% url 'staff_loans' %}" class="pt-row">
+        <div class="pt-ico amber">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12h6M9 16h6M9 8h6M5 4h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z"/></svg>
+        </div>
+        <div class="pt-body">
+          <div class="pt-name">Loan Applications</div>
+          <div class="pt-desc">Awaiting staff review</div>
+        </div>
+        <div class="pt-count {% if pending_loans_count == 0 %}zero{% endif %}">{{ pending_loans_count }}</div>
+        <div class="pt-cta">Review →</div>
+      </a>
+
+      <a href="{% url 'staff_withdrawals' %}" class="pt-row">
+        <div class="pt-ico pink">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </div>
+        <div class="pt-body">
+          <div class="pt-name">Withdrawals</div>
+          <div class="pt-desc">{% if pending_withdrawals_count == 0 %}All caught up{% else %}Awaiting staff action{% endif %}</div>
+        </div>
+        <div class="pt-count {% if pending_withdrawals_count == 0 %}zero{% endif %}">{{ pending_withdrawals_count }}</div>
+        <div class="pt-cta">Review →</div>
+      </a>
+
+      <a href="{% url 'staff_users' %}" class="pt-row">
+        <div class="pt-ico teal">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <div class="pt-body">
+          <div class="pt-name">New Registrations</div>
+          <div class="pt-desc">Signed up today</div>
+        </div>
+        <div class="pt-count {% if reg_today == 0 %}zero{% endif %}">{{ reg_today }}</div>
+        <div class="pt-cta">View →</div>
+      </a>
+
+      <a href="{% url 'staff_payment_methods' %}" class="pt-row">
+        <div class="pt-ico indigo">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+        </div>
+        <div class="pt-body">
+          <div class="pt-name">Payment Setup</div>
+          <div class="pt-desc">{% if pending_payment_setup_count == 0 %}All confirmed{% else %}Not yet confirmed by user{% endif %}</div>
+        </div>
+        <div class="pt-count {% if pending_payment_setup_count == 0 %}zero{% endif %}">{{ pending_payment_setup_count }}</div>
+        <div class="pt-cta">View →</div>
+      </a>
+    </div>
+
+    <a class="view-all-btn" href="{% url 'staff_loans' %}">View All Tasks →</a>
   </div>
 
 </div>
 
-  <!-- RIGHT: User detail (show only when searched_user exists) -->
-  {% if searched_user %}
-  <div class="user-mini-card" style="margin-top: 20px;">
-    <div class="user-mini-head">
-      <div class="user-mini-icon">
-        <img src="{% static 'icons/users.webp' %}" alt="User">
-      </div>
-      <div class="user-mini-phone">{{ searched_user.phone }}</div>
+<div class="security-banner">
+  <div class="sec-left">
+    <div class="sec-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.4 9 8 11 4.6-2 8-6 8-11V5z"/><path d="m9 12 2 2 4-4"/></svg></div>
+    <div>
+      <div class="sec-title">Keep your platform secure and up-to-date.</div>
+      <div class="sec-sub">Regular system updates and security checks keep your data safe.</div>
     </div>
   </div>
-  {% endif %}
+  <div class="sec-status"><span class="dotlive"></span>System Status</div>
+</div>
+
+<div class="staff-footer">
+  <div>© {% now "Y" %} Control Site Panel System. All rights reserved.</div>
+  <div>Version 2.0.0</div>
+</div>
 
 </div>
-    
-    </div>
 
-    <style>
-      /* ===== Dashboard period buttons (All / Today / ...) ===== */
-      .period-buttons{
-        display:flex;
-        gap:10px;
-        align-items:center;
-        flex-wrap:wrap;
-      }
-    
-      /* default (not active) */
-      .period-btn{
-        appearance:none;
-        border:1px solid rgba(0,65,130,.25);
-        background:rgba(255,255,255,.70);
-        color:#004182 !important;          /* ✅ blue text */
-        font-weight:900;
-        padding:10px 16px;
-        border-radius:12px;
-        cursor:pointer;
-        box-shadow: 0 10px 22px rgba(0,0,0,.10);
-        transition: .15s ease;
-      }
-    
-      .period-btn:hover{
-        background:rgba(0,65,130,.08);
-        border-color:rgba(0,65,130,.45);
-      }
-    
-      /* active button */
-      .period-btn.active{
-        background:#004182 !important;     /* ✅ blue background */
-        color:#fff !important;             /* ✅ white text */
-        border-color:rgba(0,65,130,.85);
-        box-shadow: 0 12px 26px rgba(0,0,0,.18);
-      }
-      
-      /* Pending action links */
-      .perf-card a { color: inherit; }
-    </style>    
+<script>
+(function(){
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  var lines = document.querySelectorAll('.kpi-spark path[stroke], .line-chart path[stroke]');
+  var fills = document.querySelectorAll('.kpi-spark path[fill^="currentColor"], .line-chart path[fill^="url"]');
+
+  fills.forEach(function(p){ p.style.opacity = '0'; p.style.transition = 'opacity 900ms ease-out'; });
+
+  lines.forEach(function(path, i){
+    var length = path.getTotalLength();
+    path.style.strokeDasharray = length;
+    path.style.strokeDashoffset = length;
+    path.getBoundingClientRect();
+    path.style.transition = 'stroke-dashoffset 1300ms cubic-bezier(.22,.8,.22,1)';
+
+    var delay = 60 + i * 90;
+    setTimeout(function(){
+      path.style.strokeDashoffset = '0';
+    }, delay);
+    setTimeout(function(){
+      var fill = path.parentElement.querySelector('path[fill^="currentColor"], path[fill^="url"]');
+      if (fill) fill.style.opacity = '1';
+    }, delay + 500);
+  });
+})();
+</script>
+
 {% endblock %}

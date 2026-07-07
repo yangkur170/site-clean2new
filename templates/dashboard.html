@@ -464,11 +464,12 @@ body{
   background-size: 12px 12px; opacity: .8; pointer-events: none; z-index: 0;
 }
 .bc-wallet{
-  position: absolute; right: -4px; top: 56px; bottom: auto;
+  position: absolute; right: -4px; top: 76px; bottom: auto;
   width: 124px; height: 104px; pointer-events: none; z-index: 1;
   filter: drop-shadow(0 8px 14px rgba(120,40,0,.22));
 }
 .bc-wallet svg{ width: 100%; height: 100%; }
+.bc-wallet-img{ width: 100%; height: 100%; object-fit: contain; }
 .bc-top, .bc-label, .bc-amount-row, .bc-divider, .bc-foot{ position: relative; z-index: 2; }
 .bc-top{ display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
 .bc-id{ display: flex; align-items: center; gap: 13px; min-width: 0; }
@@ -708,6 +709,7 @@ body{
 .promo-card{
   position: relative; display: block; overflow: hidden;
   margin-top: 14px;
+  background: transparent !important;
   border-radius: 20px;
   padding: 20px 18px;
   background: linear-gradient(135deg, #FF7A18 0%, #FF6B00 55%, #F25C00 100%);
@@ -756,6 +758,7 @@ body{
 .promo-btn svg{ width: 16px; height: 16px; fill: none; stroke: #FF6B00; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
 @media (prefers-reduced-motion: reduce){ .promo-card{ transition: none; } }
 
+
 /* ===== Bottom Nav (fixed bar, Apply Now as elevated center button) ===== */
 .bottom-nav{
   position: fixed !important;
@@ -791,21 +794,24 @@ body{
 
 .nav-item.center-cta{
   position: relative;
-  top: -16px;
+  top: -18px;
 }
 .nav-item.center-cta .nav-icon-circle{
   width: 58px;
   height: 58px;
-  background: linear-gradient(135deg, #FF6B00, #FF8A33);
-  box-shadow: 0 8px 20px rgba(255,107,0,.45);
+  border-radius: 50%;
+  background: #FF6B00;
+  box-shadow: 0 6px 18px rgba(255,107,0,.50), 0 0 0 4px #fff;
   color: #ffffff !important;
+  transition: transform .2s ease, box-shadow .2s ease;
 }
 .nav-item.center-cta svg{
-  width: 24px !important;
-  height: 24px !important;
+  width: 26px !important;
+  height: 26px !important;
 }
 .nav-item.center-cta:hover .nav-icon-circle{
-  transform: translateY(-2px) scale(1.04);
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 10px 26px rgba(255,107,0,.55), 0 0 0 4px #fff;
 }
 
 .bottom-nav a.nav-item,
@@ -831,33 +837,28 @@ body{
 }
 
 .nav-icon-circle{
-  width: 46px;
-  height: 46px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #FFE9D6, #FFD4A3);
+  width: 28px;
+  height: 28px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #FF6B00;
-  transition: background .2s ease, box-shadow .2s ease, transform .2s ease, color .2s ease;
+  background: transparent;
+  border-radius: 0;
+  color: inherit;
+  transition: color .2s ease, transform .2s ease;
 }
 
 .bottom-nav a.nav-item svg,
 .nav-item svg{
-  width: 20px !important;
-  height: 20px !important;
+  width: 24px !important;
+  height: 24px !important;
   opacity: 1 !important;
   transition: color .2s ease;
 }
 
-.nav-item:not(.center-cta):hover .nav-icon-circle,
-.nav-item.active:not(.center-cta) .nav-icon-circle{
-  background: linear-gradient(135deg, #FFD9B8, #FFC089);
-  box-shadow: 0 6px 16px rgba(255,107,0,.28);
-  transform: translateY(-2px);
-}
+.nav-item:not(.center-cta):hover{ color: #FF6B00 !important; }
 .nav-item.active{ color: #FF6B00 !important; }
-.nav-item:not(.center-cta) .nav-icon-circle svg{ filter: drop-shadow(0 1.5px 1.5px rgba(180,70,0,.30)); }
+.nav-item:not(.center-cta) .nav-icon-circle svg{ filter: none; }
 
 .nav-item:active,
 .bottom-nav a.nav-item:active{ transform: scale(.96); }
@@ -1266,18 +1267,7 @@ body{
     <span class="bc-dots" aria-hidden="true"></span>
 
     <div class="bc-wallet" aria-hidden="true">
-      <svg viewBox="0 0 160 140" fill="none">
-        <rect x="30" y="22" width="100" height="66" rx="14" fill="#FFD8B0" opacity=".9"/>
-        <rect x="22" y="36" width="118" height="64" rx="16" fill="#FFE7D2"/>
-        <path d="M22 52a16 16 0 0116-16h86a16 16 0 0116 16v4H22z" fill="#FFCFA0"/>
-        <rect x="106" y="56" width="34" height="22" rx="11" fill="#FFCFA0"/>
-        <circle cx="123" cy="67" r="6" fill="#FF8A33"/>
-        <circle cx="116" cy="106" r="20" fill="#FFB063"/>
-        <circle cx="116" cy="106" r="20" stroke="#ffffff" stroke-opacity=".4" stroke-width="2"/>
-        <text x="116" y="113" text-anchor="middle" font-size="19" font-weight="700" fill="#fff">&#8369;</text>
-        <circle cx="90" cy="118" r="15" fill="#FFC078"/>
-        <text x="90" y="124" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">&#8369;</text>
-      </svg>
+      <img class="bc-wallet-img" src="{% static 'img/wallet.webp' %}" alt="">
     </div>
 
     <div class="bc-top">
@@ -1319,27 +1309,8 @@ body{
     </div>
   </div>
 <!-- Promo CTA banner -->
-<a href="{% url 'quick_loan' %}" class="promo-card reveal from-left" aria-label="Apply for a loan now">
-  <span class="promo-glow" aria-hidden="true"></span>
-  <div class="promo-body">
-    <span class="promo-kicker">Personal Loan</span>
-    <h3 class="promo-title">Get the cash you need, fast</h3>
-    <p class="promo-sub">Borrow &#8369;80,000 &ndash; &#8369;5,000,000 with approval in as little as 24 hours.</p>
-    <div class="promo-badges">
-      <span class="promo-badge">
-        <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
-        Bank-grade secure
-      </span>
-      <span class="promo-badge">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
-        24-hour approval
-      </span>
-    </div>
-    <span class="promo-btn">
-      Apply Now
-      <svg viewBox="0 0 24 24"><path d="M5 12h13m-6-6l6 6-6 6"/></svg>
-    </span>
-  </div>
+<a href="{% url 'quick_loan' %}" class="promo-card reveal from-left" style="padding:0;background:transparent!important;border-radius:18px;overflow:hidden;display:block;" aria-label="Apply Now">
+  <img src="{% static 'img/slide.webp' %}" alt="Personal Loan" style="width:100%;display:block;border-radius:18px;">
 </a>
 
 <!-- Security Trust Card -->
@@ -1557,23 +1528,23 @@ body{
 <nav class="bottom-nav" role="navigation" aria-label="Bottom Navigation">
   <div class="nav-grid">
       <a class="nav-item" href="#top" data-nav="home" aria-label="Home">
-        <span class="nav-icon-circle"><svg viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5V21a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z" fill="url(#gIcon)"/></svg></span>
+        <span class="nav-icon-circle"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 10.5 12 3l9 7.5V21a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg></span>
         <span class="nav-label">Home</span>
       </a>
       <a class="nav-item" href="/wallet/" data-nav="wallet" aria-label="Wallet">
-        <span class="nav-icon-circle"><svg viewBox="0 0 24 24"><path d="M4 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v2h-6a2 2 0 0 0 0 4h6v2a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z" fill="url(#gIcon)"/><path d="M20 11h-5a1 1 0 0 0 0 2h5z" fill="url(#gIcon)" opacity=".7"/></svg></span>
+        <span class="nav-icon-circle"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v2h-6a2 2 0 0 0 0 4h6v2a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><path d="M20 11h-5a1 1 0 0 0 0 2h5z" opacity=".7"/></svg></span>
         <span class="nav-label">Wallet</span>
       </a>
       <a class="nav-item center-cta" href="{% url 'quick_loan' %}" data-nav="apply" aria-label="Apply Now">
-        <span class="nav-icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h11m-5-6l6 6-6 6"/></svg></span>
+        <span class="nav-icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
         <span class="nav-label">Apply</span>
       </a>
       <a class="nav-item" href="{% url 'contact' %}" data-nav="contact" aria-label="Contact">
-        <span class="nav-icon-circle"><svg viewBox="0 0 24 24"><path d="M4 4h16v12H7l-3 3z" fill="url(#gIcon)"/><path d="M7 8h10M7 11h7" stroke="#fff" stroke-width="2" stroke-linecap="round" fill="none" opacity=".9"/></svg></span>
+        <span class="nav-icon-circle"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h3l3 3 3-3h7a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2zm-5 9H9a1 1 0 0 1 0-2h6a1 1 0 0 1 0 2zm0-4H9a1 1 0 0 1 0-2h6a1 1 0 0 1 0 2z"/></svg></span>
         <span class="nav-label">Contact</span>
       </a>
       <a class="nav-item" href="/profile/" data-nav="profile" aria-label="Profile">
-        <span class="nav-icon-circle"><svg viewBox="0 0 24 24"><path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5zm0 2c-4.42 0-8 2-8 4.5V21h16v-2.5C20 16 16.42 14 12 14z" fill="url(#gIcon)"/></svg></span>
+        <span class="nav-icon-circle"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5zm0 2c-4.42 0-8 2-8 4.5V21h16v-2.5C20 16 16.42 14 12 14z"/></svg></span>
         <span class="nav-label">Profile</span>
       </a>
     </div>

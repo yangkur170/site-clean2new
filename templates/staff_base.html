@@ -8,6 +8,11 @@
 
   <style>
 
+/* Smooth cross-fade between full page loads instead of a hard white flash
+   (Chrome/Edge only — other browsers just ignore this and navigate as before). */
+@view-transition{ navigation: auto; }
+@media (prefers-reduced-motion: reduce){ @view-transition{ navigation: none; } }
+
 /* ✅ Select text = White */
 select,
 select option{
@@ -118,23 +123,25 @@ body, body * {
 .u-link{ text-decoration:none; font-weight:800; display:inline-block; }
 
 /* ===============================
-   ANIMATIONS
+   ANIMATIONS — matches site_clean4's lighter entrance animation
+   (14px nudge, 500ms) instead of the old 70px/1200ms slide, which
+   felt sluggish on every page navigation.
    =============================== */
 @keyframes slideInRightToLeft {
-  from { transform: translateX(70px); opacity: 0; }
+  from { transform: translateX(14px); opacity: 0; }
   to   { transform: translateX(0);    opacity: 1; }
 }
 @keyframes slideInLeftToRight {
-  from { transform: translateX(-70px); opacity: 0; }
+  from { transform: translateX(-14px); opacity: 0; }
   to   { transform: translateX(0);     opacity: 1; }
 }
 @keyframes slideInTopToBottom{
-  from { transform: translateY(-18px); opacity: 0; }
+  from { transform: translateY(-14px); opacity: 0; }
   to   { transform: translateY(0);     opacity: 1; }
 }
-.pill.pill-anim-top{ animation: slideInTopToBottom 1200ms ease-out both; will-change: transform, opacity; }
-.card.card-anim{ animation: slideInRightToLeft 1200ms ease-out both; }
-.card.card-anim-left{ animation: slideInLeftToRight 1200ms ease-out both; }
+.pill.pill-anim-top{ animation: slideInTopToBottom 500ms ease-out both; }
+.card.card-anim{ animation: slideInRightToLeft 500ms ease-out both; }
+.card.card-anim-left{ animation: slideInLeftToRight 500ms ease-out both; }
 
 
 /* ===============================
@@ -209,7 +216,6 @@ body{
   display:inline-flex; gap:10px; align-items:center;
   padding:10px 14px; border-radius:14px;
   background:rgba(0,0,0,.35); border:1px solid var(--stroke);
-  backdrop-filter:blur(14px);
 }
 .btn{
   display:inline-flex; align-items:center; justify-content:center;
@@ -604,8 +610,6 @@ input,select{
   box-shadow:
     0 18px 50px rgba(0,0,0,.35),
     inset 0 1px 0 rgba(255,255,255,.45);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
 }
 
 /* inside text */
@@ -1363,68 +1367,438 @@ th{ text-align:left; font-size:12px; letter-spacing:.06em; text-transform:upperc
 }
 
   </style>
+  <style>
+    /* =========================================================
+       DARK NAVY THEME (ported from site_clean4's redesigned
+       staff panel). New variable names on purpose — the existing
+       --bg1/--card/--txt tokens above are still used by every
+       other staff page's own styles and are left untouched.
+       ========================================================= */
+    :root{
+      --dk-bg: #0A0F1E;
+      --dk-card: #121A2E;
+      --dk-card-2: #0E1526;
+      --dk-border: rgba(255,255,255,.08);
+      --dk-border-strong: rgba(255,255,255,.16);
+      --dk-text: #F1F5F9;
+      --dk-muted: #8B93A7;
+      --dk-dim: #64748B;
+      --dk-indigo: #6366F1;
+      --dk-indigo-dark: #4F46E5;
+      --dk-indigo-soft: rgba(99,102,241,.16);
+      --dk-blue: #3B82F6;
+      --dk-orange: #F97316;
+      --dk-pink: #EC4899;
+      --dk-teal: #14B8A6;
+      --dk-green: #22C55E;
+      --dk-red: #EF4444;
+    }
+
+    /* ── Sidebar: dark navy card (shared shell, all pages) ──
+       backdrop-filter is dropped here — the sidebar isn't sticky,
+       so it scrolls with the rest of the page, and re-blurring a
+       moving element on every scroll frame is what made swipe/scroll
+       feel janky compared to site_clean4 (which has no backdrop-filter
+       anywhere). Same fix already applied to .dashboard-card/.topbar. */
+    .card.side{
+      background: var(--dk-card) !important;
+      border: 1px solid var(--dk-border) !important;
+      box-shadow: 0 20px 50px rgba(0,0,0,.35) !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+    }
+    .card.side::after{ display:none !important; }
+    .card.side .card-h{
+      background: none !important;
+      border-bottom: 1px solid var(--dk-border) !important;
+    }
+    .card.side .card-h .h1{
+      color: #fff !important; text-shadow:none !important; font-size:16px !important;
+    }
+    .brand-block{
+      display:flex; align-items:center; gap:12px;
+      padding: 4px 8px 18px; margin: 0 12px 10px;
+      border-bottom: 1px solid var(--dk-border);
+    }
+    .brand-ico{ width:64px; height:64px; border-radius:14px; flex:none; display:flex; align-items:center; justify-content:center; overflow:hidden; }
+    .brand-ico img{ width:100%; height:100%; object-fit:contain; }
+    .brand-text{ min-width:0; flex:1; }
+    .brand-title{ font-weight:800; font-size:16px; color:#fff; line-height:1.2; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .brand-sub{ font-size:11.5px; color: var(--dk-muted); margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
+    .card.side .menu-item{
+      background: transparent !important;
+      border: none !important;
+      color: var(--dk-muted) !important;
+      font-weight: 600 !important;
+      padding: 11px 12px !important;
+    }
+    .card.side .menu-item:hover{ background: rgba(255,255,255,.05) !important; color: var(--dk-text) !important; }
+    .card.side .menu-item.active{
+      background: linear-gradient(135deg, var(--dk-indigo), var(--dk-indigo-dark)) !important;
+      color:#fff !important;
+      box-shadow: 0 10px 22px rgba(99,102,241,.35) !important;
+    }
+    .card.side .menu-icon{ width:40px; height:40px; object-fit:contain; flex:0 0 40px; }
+    .menu-icon-wrap{
+      width:44px; height:44px; border-radius:11px; flex:0 0 44px;
+      display:flex; align-items:center; justify-content:center;
+      background: rgba(255,255,255,.06); border: 1px solid var(--dk-border);
+    }
+    .card.side .menu-item.active .menu-icon-wrap{ background: rgba(255,255,255,.18); border-color: rgba(255,255,255,.3); }
+
+    .side-clock{
+      margin: 10px 12px 4px; border-radius: 14px; padding: 14px;
+      background: var(--dk-card-2); border: 1px solid var(--dk-border);
+      display:flex; align-items:center; gap: 12px;
+    }
+    .side-clock .sc-ico{
+      width:56px; height:56px; border-radius:999px; flex:none;
+      display:flex; align-items:center; justify-content:center;
+      background: rgba(255,255,255,.04); border: 1px solid var(--dk-border-strong); overflow:hidden;
+    }
+    .side-clock .sc-ico img{ width:52px; height:52px; object-fit:contain; }
+    .side-clock .sc-body{ min-width:0; }
+    .side-clock .sc-label{ font-size: 11px; font-weight: 700; color: var(--dk-muted); }
+    .side-clock .sc-time{ font-size: 17px; font-weight: 800; color: #fff; font-variant-numeric: tabular-nums; margin-top: 2px; }
+    .side-clock .sc-date{ font-size: 11px; font-weight: 600; color: var(--dk-text); margin-top: 3px; }
+    .side-clock .sc-country{ font-size: 11px; font-weight: 600; color: var(--dk-muted); margin-top: 1px; }
+
+    /* ── Topbar: right-aligned admin pill inside the content card
+       (shared shell, all pages) — replaces the old full-width bar
+       that duplicated the "Control Site" brand already shown in
+       the sidebar. ── */
+    .topbar{
+      background: none !important;
+      border: none !important;
+      box-shadow: none !important;
+      backdrop-filter: none !important;
+      padding: 14px 18px 0 14px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: flex-end !important;
+      gap: 12px !important;
+      margin-bottom: 16px !important;
+    }
+    .admin-pill{
+      display:flex; align-items:center; gap:10px;
+      padding: 6px 12px 6px 6px;
+      border-radius: 999px;
+      background: var(--dk-card); border:1px solid var(--dk-border);
+      cursor:pointer;
+    }
+    .admin-avatar{
+      width:36px; height:36px; border-radius:999px; flex:none;
+      display:flex; align-items:center; justify-content:center;
+      overflow: hidden; background: rgba(255,255,255,.06);
+    }
+    .admin-avatar img{ width:100%; height:100%; object-fit:contain; }
+    .admin-name{ font-size:13px; font-weight:700; color: var(--dk-text); line-height:1.2; }
+    .admin-role{ font-size:11px; color: var(--dk-muted); line-height:1.2; }
+    .admin-chev{ color: var(--dk-muted); font-size:12px; margin-left:2px; }
+
+    /* ── Redesigned pages only: dark content card instead of the
+       shared white card used by every other (not-yet-redesigned)
+       staff page. ── */
+    body.staff-dash-page,
+    body.staff-users-page,
+    body.staff-user-detail-page,
+    body.staff-loans-page,
+    body.staff-loan-detail-page,
+    body.staff-withdrawals-page,
+    body.staff-payment-methods-page{
+      background: radial-gradient(1100px 500px at 15% -10%, rgba(99,102,241,.10), transparent 60%), var(--dk-bg) !important;
+    }
+    body.staff-dash-page .dashboard-card,
+    body.staff-users-page .dashboard-card,
+    body.staff-user-detail-page .dashboard-card,
+    body.staff-loans-page .dashboard-card,
+    body.staff-loan-detail-page .dashboard-card,
+    body.staff-withdrawals-page .dashboard-card,
+    body.staff-payment-methods-page .dashboard-card{
+      background: var(--dk-card-2) !important;
+      border: 1px solid var(--dk-border) !important;
+      box-shadow: 0 20px 50px rgba(0,0,0,.3) !important;
+      backdrop-filter: none !important;
+    }
+    body.staff-dash-page .dashboard-card .h1,
+    body.staff-users-page .dashboard-card .h1,
+    body.staff-user-detail-page .dashboard-card .h1,
+    body.staff-loans-page .dashboard-card .h1,
+    body.staff-loan-detail-page .dashboard-card .h1,
+    body.staff-withdrawals-page .dashboard-card .h1,
+    body.staff-payment-methods-page .dashboard-card .h1{
+      color: #fff !important; text-shadow: none !important; font-weight: 800 !important;
+    }
+    body.staff-dash-page .dashboard-card .muted,
+    body.staff-users-page .dashboard-card .muted,
+    body.staff-user-detail-page .dashboard-card .muted,
+    body.staff-loans-page .dashboard-card .muted,
+    body.staff-loan-detail-page .dashboard-card .muted,
+    body.staff-withdrawals-page .dashboard-card .muted,
+    body.staff-payment-methods-page .dashboard-card .muted{
+      color: var(--dk-muted) !important; text-shadow: none !important;
+    }
+    body.staff-dash-page .dashboard-card .card-h,
+    body.staff-users-page .dashboard-card .card-h,
+    body.staff-user-detail-page .dashboard-card .card-h,
+    body.staff-loans-page .dashboard-card .card-h,
+    body.staff-loan-detail-page .dashboard-card .card-h,
+    body.staff-withdrawals-page .dashboard-card .card-h,
+    body.staff-payment-methods-page .dashboard-card .card-h{
+      border-bottom: 1px solid var(--dk-border) !important;
+    }
+
+    /* ===== KPI cards (Dashboard only — new markup/classes) ===== */
+    .kpi-grid{ display:grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap:16px; margin-bottom: 18px; }
+    @media (max-width: 1100px){ .kpi-grid{ grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 560px){ .kpi-grid{ grid-template-columns: 1fr; } }
+
+    .kpi-card{
+      position: relative; border-radius: 18px; padding: 22px 22px 76px;
+      border: 1px solid var(--kpi-border, var(--dk-border));
+      background: var(--dk-card-2); overflow: hidden;
+      transition: transform .15s ease, box-shadow .15s ease;
+    }
+    .kpi-card:hover{ transform: translateY(-2px); box-shadow: 0 16px 34px rgba(0,0,0,.3); }
+    .kpi-card::before{
+      content:""; position:absolute; inset:0;
+      background:
+        radial-gradient(160px 120px at 0% 0%, var(--tint-strong, rgba(99,102,241,.35)), transparent 70%),
+        linear-gradient(160deg, var(--tint, rgba(99,102,241,.12)), transparent 60%);
+      pointer-events:none;
+    }
+    .kpi-blue{ --tint: rgba(59,130,246,.16); --tint-strong: rgba(59,130,246,.35); --kpi-border: rgba(59,130,246,.35); }
+    .kpi-orange{ --tint: rgba(249,115,22,.16); --tint-strong: rgba(249,115,22,.35); --kpi-border: rgba(249,115,22,.35); }
+    .kpi-pink{ --tint: rgba(236,72,153,.16); --tint-strong: rgba(236,72,153,.35); --kpi-border: rgba(236,72,153,.35); }
+    .kpi-teal{ --tint: rgba(20,184,166,.16); --tint-strong: rgba(20,184,166,.35); --kpi-border: rgba(20,184,166,.35); }
+
+    .kpi-blue .kpi-ico{ background: linear-gradient(145deg, #60A5FA, #2563EB); box-shadow: 0 8px 18px rgba(37,99,235,.45), inset 0 1px 0 rgba(255,255,255,.3); }
+    .kpi-orange .kpi-ico{ background: linear-gradient(145deg, #FB923C, #EA580C); box-shadow: 0 8px 18px rgba(234,88,12,.45), inset 0 1px 0 rgba(255,255,255,.3); }
+    .kpi-pink .kpi-ico{ background: linear-gradient(145deg, #F472B6, #DB2777); box-shadow: 0 8px 18px rgba(219,39,119,.45), inset 0 1px 0 rgba(255,255,255,.3); }
+    .kpi-teal .kpi-ico{ background: linear-gradient(145deg, #2DD4BF, #0D9488); box-shadow: 0 8px 18px rgba(13,148,136,.45), inset 0 1px 0 rgba(255,255,255,.3); }
+
+    .kpi-blue .kpi-label{ color: #60A5FA; }
+    .kpi-orange .kpi-label{ color: #FB923C; }
+    .kpi-pink .kpi-label{ color: #F472B6; }
+    .kpi-teal .kpi-label{ color: #2DD4BF; }
+    .kpi-blue .kpi-spark{ color: #60A5FA; }
+    .kpi-orange .kpi-spark{ color: #FB923C; }
+    .kpi-pink .kpi-spark{ color: #F472B6; }
+    .kpi-teal .kpi-spark{ color: #2DD4BF; }
+    .kpi-blue .kpi-link{ color: var(--dk-blue); }
+    .kpi-orange .kpi-link{ color: var(--dk-orange); }
+    .kpi-pink .kpi-link{ color: var(--dk-pink); }
+    .kpi-teal .kpi-link{ color: var(--dk-teal); }
+
+    .kpi-top{ display:flex; align-items:center; gap:12px; position:relative; }
+    .kpi-label{ font-size:12.5px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; }
+    .kpi-ico{ width:48px; height:48px; border-radius:14px; flex:none; color:#fff; display:flex; align-items:center; justify-content:center; }
+    .kpi-num{ font-size:38px; font-weight:800; color:#fff; margin-top:16px; font-variant-numeric: tabular-nums; position:relative; line-height:1; }
+    .kpi-trend{ font-size:13px; font-weight:500; color: rgba(255,255,255,.7); margin-top:8px; position:relative; }
+    .kpi-trend.down{ color: var(--dk-red); }
+    .kpi-spark{ position:absolute; left:0; right:0; bottom:34px; width:100%; height:32px; opacity:.85; filter: drop-shadow(0 2px 6px rgba(0,0,0,.35)); z-index: 1; }
+    .kpi-link{ position:absolute; left:22px; bottom:16px; font-size:12.5px; font-weight:700; text-decoration:none; z-index: 2; }
+    .kpi-num, .kpi-trend{ position:relative; z-index: 2; }
+    .kpi-link:hover{ text-decoration: underline; }
+
+    @keyframes dkLivePulse{ 0%{ r:2.5; opacity:.9; } 70%{ r:7; opacity:0; } 100%{ r:7; opacity:0; } }
+    .kpi-spark .spark-live, .line-chart .chart-live-dot{
+      animation: dkLivePulse 1.8s ease-out infinite;
+      transform-box: fill-box; transform-origin: center;
+    }
+
+    /* ===== Performance panel + Pending Tasks (Dashboard only) ===== */
+    .grid2{ display:grid; grid-template-columns: 1.5fr 1fr; gap:16px; align-items:stretch; margin-bottom: 18px; }
+    @media (max-width: 1100px){ .grid2{ grid-template-columns: 1fr; } }
+
+    .panel{ border-radius:16px; border:1px solid var(--dk-border); background: var(--dk-card-2); padding:18px; }
+    .panel-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
+    .panel-head-left{ display:flex; align-items:center; gap:10px; }
+    .panel-ico{ width:30px; height:30px; border-radius:9px; background: var(--dk-indigo-soft); color: var(--dk-indigo); display:flex; align-items:center; justify-content:center; flex:none; }
+    .panel-title{ font-size:15.5px; font-weight:700; color:#fff; }
+    .panel-sub{ font-size:12px; color: var(--dk-muted); margin-top:2px; }
+
+    .line-chart{ width:100%; height:200px; overflow: visible; }
+    .grid-line{ stroke: rgba(255,255,255,.06); stroke-width:1; }
+    .chart-value{ fill: var(--dk-muted); font-size: 11px; font-weight: 700; font-family: inherit; }
+
+    .chart-legend{ display:flex; justify-content:space-between; gap:8px; margin-top: 18px; flex-wrap: wrap; }
+    .legend-item{ text-align:center; flex:1; min-width: 70px; }
+    .legend-label{ font-size:11px; color: var(--dk-muted); }
+    .legend-value{ font-size:15px; font-weight:800; color:#fff; margin-top:2px; font-variant-numeric: tabular-nums; }
+
+    .pending-panel{ display:flex; flex-direction:column; }
+    .pt-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
+    .pt-live{ display:flex; align-items:center; gap:6px; font-size:11.5px; color: var(--dk-muted); font-weight:600; }
+    .pt-live .dotlive, .sec-status .dotlive{ width:7px; height:7px; border-radius:999px; background: var(--dk-green); box-shadow:0 0 10px rgba(34,197,94,.8); }
+
+    .pt-list{ display:flex; flex-direction:column; gap:10px; flex:1; }
+    .pt-row{
+      display:flex; align-items:center; gap:12px; padding:12px 14px; border-radius:12px;
+      background: rgba(255,255,255,.03); border: 1px solid var(--dk-border);
+      text-decoration:none; transition: background .15s ease, transform .15s ease;
+    }
+    .pt-row:hover{ background: rgba(255,255,255,.06); transform: translateY(-1px); }
+    .pt-ico{ width:38px; height:38px; border-radius:10px; flex:none; display:flex; align-items:center; justify-content:center; color:#fff; }
+    .pt-ico.amber{ background: linear-gradient(150deg, #F59E0B, #B45309); }
+    .pt-ico.pink{ background: linear-gradient(150deg, #EC4899, #9D174D); }
+    .pt-ico.teal{ background: linear-gradient(150deg, #14B8A6, #0F766E); }
+    .pt-ico.indigo{ background: linear-gradient(150deg, #6366F1, #4338CA); }
+    .pt-body{ flex:1; min-width:0; }
+    .pt-name{ font-size:13.5px; font-weight:700; color:#fff; }
+    .pt-desc{ font-size:11.5px; color: var(--dk-muted); margin-top:1px; }
+    .pt-count{ font-size:20px; font-weight:800; font-variant-numeric: tabular-nums; min-width:24px; text-align:right; color:#fff; }
+    .pt-count.zero{ color: var(--dk-dim); }
+    .pt-cta{ display:inline-flex; align-items:center; padding:8px 12px; border-radius:9px; background: rgba(255,255,255,.06); border:1px solid var(--dk-border); font-size:12px; font-weight:700; color:#fff; flex:none; }
+    .view-all-btn{
+      margin-top: 14px; display:flex; align-items:center; justify-content:center;
+      padding: 12px; border-radius:12px; background: var(--dk-indigo-soft); color: var(--dk-indigo);
+      font-weight:700; font-size:13px; text-decoration:none;
+    }
+    .view-all-btn:hover{ background: rgba(99,102,241,.24); }
+
+    .security-banner{
+      display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap: wrap;
+      position: relative; overflow: hidden; border-radius: 22px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: linear-gradient(135deg, rgba(255,255,255,.14), rgba(255,255,255,.05));
+      box-shadow: 0 8px 32px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.22);
+      padding: 20px 22px; margin-bottom: 16px;
+    }
+    .security-banner::before{
+      content:""; position:absolute; inset:0;
+      background: radial-gradient(560px 200px at 8% 0%, rgba(99,102,241,.28), transparent 60%);
+      pointer-events:none;
+    }
+    .sec-left{ display:flex; align-items:center; gap:14px; position:relative; }
+    .sec-ico{
+      width:46px; height:46px; border-radius:14px; flex:none;
+      display:flex; align-items:center; justify-content:center; color:#fff;
+      background: linear-gradient(150deg, rgba(99,102,241,.92), rgba(79,70,229,.92));
+      box-shadow: 0 6px 16px rgba(99,102,241,.4), inset 0 1px 0 rgba(255,255,255,.4);
+    }
+    .sec-title{ font-weight:700; color:#fff; font-size:14.5px; }
+    .sec-sub{ font-size:12.5px; color: var(--dk-muted); margin-top:2px; }
+    .sec-status{
+      display:flex; align-items:center; gap:8px; padding:11px 18px; border-radius:999px;
+      background: rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.18);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.22); font-weight:700; font-size:13px; color:#fff;
+      position: relative;
+    }
+    .staff-footer{ display:flex; justify-content:space-between; font-size:12px; color: var(--dk-dim); padding-top: 6px; }
+    @media (max-width: 560px){ .staff-footer{ flex-direction:column; gap:4px; } }
+
+    /* Dashboard-page period buttons restyled to match the dark theme
+       (was blue-on-white; only active when body.staff-dash-page). */
+    body.staff-dash-page .period-btn{
+      background: var(--dk-card-2) !important;
+      border: 1px solid var(--dk-border) !important;
+      color: var(--dk-text) !important;
+      box-shadow: none !important;
+    }
+    body.staff-dash-page .period-btn:hover{ background: rgba(255,255,255,.06) !important; }
+    body.staff-dash-page .period-btn.active{
+      background: linear-gradient(135deg, var(--dk-indigo), var(--dk-indigo-dark)) !important;
+      border-color: transparent !important;
+      color:#fff !important;
+      box-shadow: 0 10px 22px rgba(99,102,241,.35) !important;
+    }
+  </style>
 </head>
 
-<body>
+<body class="{% if request.resolver_match.url_name == 'staff_dashboard' %}staff-dash-page{% elif request.resolver_match.url_name == 'staff_users' %}staff-users-page{% elif request.resolver_match.url_name == 'staff_user_detail' %}staff-user-detail-page{% elif request.resolver_match.url_name == 'staff_loans' %}staff-loans-page{% elif request.resolver_match.url_name == 'staff_loan_detail' %}staff-loan-detail-page{% elif request.resolver_match.url_name == 'staff_withdrawals' %}staff-withdrawals-page{% elif request.resolver_match.url_name == 'staff_payment_methods' %}staff-payment-methods-page{% endif %}">
+  <script>
+    // Must run before the animated elements below are parsed, so the
+    // slide-in entrance animation only ever plays once per tab/session
+    // instead of replaying (and visibly snapping mid-flight) on every
+    // page navigation.
+    if (sessionStorage.getItem("staffWelcomePlayed") === "1"){
+      document.body.classList.add("no-welcome-anim");
+    } else {
+      sessionStorage.setItem("staffWelcomePlayed", "1");
+    }
+  </script>
   <div class="wrap">
-    <div class="topbar">
-      <div class="pill pill-anim-top">
-        <div class="brand">Control Site / Login By</div>
-        <div class="muted">({{ request.user.phone }})</div>
-      </div>
-      <div class="pill pill-anim-top">
-        <a class="btn" href="{% url 'staff_dashboard' %}">Dashboard</a>
-        <a class="btn" href="#" id="staffLogoutBtn">Logout</a>
-      </div>
-    </div>
-
     <div class="grid">
       <!-- LEFT MENU -->
       <div class="card side card-anim-left">
-        <div class="card-h">
-          <div class="h1">Menu</div>
-          <span class="dot"></span>
+        <div class="brand-block">
+          <div class="brand-ico"><img src="{% static 'icons/secured-dark.svg' %}" alt=""></div>
+          <div class="brand-text">
+            <div class="brand-title">Control Site</div>
+            <div class="brand-sub">Panel System</div>
+          </div>
         </div>
+
+        <a href="{% url 'staff_dashboard' %}"
+           class="menu-item {% if request.resolver_match.url_name == 'staff_dashboard' %}active{% endif %}">
+          <span class="menu-left">
+            <span class="menu-icon-wrap"><img src="{% static 'icons/dashboard-dark.svg' %}" class="menu-icon" alt=""></span>
+            <span class="menu-text">Dashboard</span>
+          </span>
+          <span class="menu-arrow">›</span>
+        </a>
 
         <a href="{% url 'staff_users' %}"
            class="menu-item {% if request.resolver_match.url_name == 'staff_users' %}active{% endif %}">
           <span class="menu-left">
-            <img src="{% static 'icons/users.png' %}" class="menu-icon" alt="">
+            <span class="menu-icon-wrap"><img src="{% static 'icons/users-dark.svg' %}" class="menu-icon" alt=""></span>
             <span class="menu-text">Users</span>
           </span>
-          <span class="menu-arrow">→</span>
+          <span class="menu-arrow">›</span>
         </a>
 
         <a href="{% url 'staff_loans' %}"
            class="menu-item {% if request.resolver_match.url_name == 'staff_loans' %}active{% endif %}">
           <span class="menu-left">
-            <img src="{% static 'icons/loans.png' %}" class="menu-icon" alt="">
+            <span class="menu-icon-wrap"><img src="{% static 'icons/loans-dark.svg' %}" class="menu-icon" alt=""></span>
             <span class="menu-text">Loans</span>
           </span>
-          <span class="menu-arrow">→</span>
+          <span class="menu-arrow">›</span>
         </a>
 
         <a href="{% url 'staff_withdrawals' %}"
            class="menu-item {% if request.resolver_match.url_name == 'staff_withdrawals' %}active{% endif %}">
           <span class="menu-left">
-            <img src="{% static 'icons/withdrawals.png' %}" class="menu-icon" alt="">
+            <span class="menu-icon-wrap"><img src="{% static 'icons/withdrawals-dark.svg' %}" class="menu-icon" alt=""></span>
             <span class="menu-text">Withdrawals</span>
           </span>
-          <span class="menu-arrow">→</span>
+          <span class="menu-arrow">›</span>
         </a>
 
         <a href="{% url 'staff_payment_methods' %}"
            class="menu-item {% if request.resolver_match.url_name == 'staff_payment_methods' %}active{% endif %}">
           <span class="menu-left">
-            <img src="{% static 'icons/payments.png' %}" class="menu-icon" alt="">
+            <span class="menu-icon-wrap"><img src="{% static 'icons/payment-method-dark.svg' %}" class="menu-icon" alt=""></span>
             <span class="menu-text">Payment Methods</span>
           </span>
-          <span class="menu-arrow">→</span>
+          <span class="menu-arrow">›</span>
         </a>
+
+        <div class="side-clock">
+          <div class="sc-ico"><img src="{% static 'icons/clock-dark.svg' %}" alt=""></div>
+          <div class="sc-body">
+            <div class="sc-label">Server Time</div>
+            <div class="sc-time" id="sideClockTime">00:00:00</div>
+            <div class="sc-date" id="sideClockDate">—</div>
+            <div class="sc-country" id="sideClockCountry">—</div>
+          </div>
+        </div>
       </div>
 
       <!-- RIGHT CONTENT -->
       <div class="card card-anim dashboard-card">
+        <div class="topbar pill-anim-top">
+          <div class="admin-pill" id="staffLogoutBtn" title="Logout">
+            <div class="admin-avatar"><img src="{% static 'icons/admin-dark.svg' %}" alt=""></div>
+            <div>
+              <div class="admin-name">{{ request.user.phone }}</div>
+              <div class="admin-role">{% if request.user.is_superuser %}Super Administrator{% else %}Staff{% endif %}</div>
+            </div>
+            <span class="admin-chev">⌄</span>
+          </div>
+        </div>
         {% block content %}{% endblock %}
       </div>
     </div>
@@ -1555,16 +1929,28 @@ th{ text-align:left; font-size:12px; letter-spacing:.06em; text-transform:upperc
   </script>
   <script>
     (function(){
-      // if already played in this tab/session, disable animations
-      if (sessionStorage.getItem("staffWelcomePlayed") === "1"){
-        document.body.classList.add("no-welcome-anim");
-        return;
+      var timeEl = document.getElementById("sideClockTime");
+      var dateEl = document.getElementById("sideClockDate");
+      var countryEl = document.getElementById("sideClockCountry");
+      if (!timeEl || !dateEl) return;
+
+      var fmt = new Intl.DateTimeFormat("en-GB", {
+        timeZone: "Asia/Manila",
+        hour12: false,
+        hour: "2-digit", minute: "2-digit", second: "2-digit",
+        weekday: "short", day: "numeric", month: "long", year: "numeric"
+      });
+
+      function tick(){
+        var parts = {};
+        fmt.formatToParts(new Date()).forEach(function(p){ parts[p.type] = p.value; });
+        timeEl.textContent = parts.hour + ":" + parts.minute + ":" + parts.second;
+        dateEl.textContent = parts.weekday + ", " + parts.day + " " + parts.month + " " + parts.year;
+        if (countryEl) countryEl.textContent = "Philippines (PHT)";
       }
-      // first time: allow animations, then mark as played
-      sessionStorage.setItem("staffWelcomePlayed", "1");
+      tick();
+      setInterval(tick, 1000);
     })();
- 
- 
   </script>
 
 </body>

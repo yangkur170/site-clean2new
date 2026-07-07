@@ -455,6 +455,179 @@
 .dashboard-card #loanTable td.col-phone a.u-link:hover{
   text-decoration: underline;
 }
+
+/* =========================================================
+   DARK NAVY THEME OVERRIDE (matches site_clean4's redesigned
+   staff panel / same treatment already applied to Dashboard,
+   Users list, and User Detail). Pure visual override, scoped to
+   body.staff-loans-page — every name=/data-*/onclick/fetch()
+   endpoint above is left completely untouched, including the
+   row <form>/status <select> and every modal's field ids. Status
+   pill colors (green/yellow/red) are intentionally left as-is —
+   they already read fine on a dark background.
+   ========================================================= */
+body.staff-loans-page .card-h form input,
+body.staff-loans-page .card-h form select{
+  background: var(--dk-card-2) !important;
+  border: 1px solid var(--dk-border) !important;
+  color: var(--dk-text) !important;
+}
+
+body.staff-loans-page .dashboard-card #loanTable th,
+body.staff-loans-page .dashboard-card #loanTable td{
+  border-right: 1px solid var(--dk-border) !important;
+}
+/* Safety-net: catch any column not explicitly listed below so nothing
+   is left forced to the old --staff-blue text color by the generic
+   base.html table rule. More specific column rules further down still
+   win over this for the ones that need a different color (phone link,
+   status select). */
+body.staff-loans-page .dashboard-card #loanTable tbody td,
+body.staff-loans-page .dashboard-card #loanTable tbody td span,
+body.staff-loans-page .dashboard-card #loanTable tbody td strong,
+body.staff-loans-page .dashboard-card #loanTable tbody td b{
+  color: var(--dk-text) !important;
+}
+body.staff-loans-page .dashboard-card #loanTable thead th{
+  background: var(--dk-card-2) !important;
+  color: var(--dk-muted) !important;
+}
+body.staff-loans-page .dashboard-card #loanTable tbody tr:nth-child(even){
+  background: rgba(255,255,255,.02) !important;
+}
+body.staff-loans-page .dashboard-card #loanTable tbody tr:hover{
+  background: rgba(255,255,255,.04) !important;
+}
+body.staff-loans-page .dashboard-card #loanTable td.col-name,
+body.staff-loans-page .dashboard-card #loanTable td.col-amount,
+body.staff-loans-page .dashboard-card #loanTable td.col-term,
+body.staff-loans-page .dashboard-card #loanTable td.col-created{
+  color: var(--dk-text) !important;
+}
+/* Let the date wrap onto 2 lines instead of truncating with "..." —
+   the column is a fixed 135px and "21/03/2026 02:15 PM" doesn't fit
+   on one line at a readable size. */
+body.staff-loans-page .dashboard-card #loanTable th.col-created,
+body.staff-loans-page .dashboard-card #loanTable td.col-created{
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  line-height: 1.35 !important;
+  word-break: break-word !important;
+}
+body.staff-loans-page .dashboard-card #loanTable td.col-phone,
+body.staff-loans-page .dashboard-card #loanTable td.col-phone a.u-link{
+  color: var(--dk-blue) !important;
+}
+body.staff-loans-page .dashboard-card #loanTable td:nth-child(6) select{
+  background: var(--dk-card) !important;
+  color: var(--dk-text) !important;
+}
+
+/* Shared modal component (ID Identify / Password / Modify Loan /
+   Withdrawal Code / Credit Score / Delete) */
+body.staff-loans-page .modal-card{ background: var(--dk-card) !important; }
+body.staff-loans-page .modal-head{ background: var(--dk-card-2) !important; }
+body.staff-loans-page .modal-title{ color: #fff !important; }
+body.staff-loans-page .modal-sub{ color: var(--dk-muted) !important; }
+body.staff-loans-page .modal-label{ color: var(--dk-blue) !important; }
+body.staff-loans-page .modal-input{
+  background: var(--dk-card-2) !important;
+  border: 1px solid var(--dk-border) !important;
+}
+body.staff-loans-page .modal-body p,
+body.staff-loans-page .modal-body div:not([class]){
+  color: var(--dk-text) !important;
+}
+
+/* Bank/Wallet modal — bespoke inline-styled markup, no shared
+   .modal-card class, so it's targeted by id instead. */
+body.staff-loans-page #bankModal > div{
+  background: var(--dk-card) !important;
+  border: 1px solid var(--dk-border-strong) !important;
+}
+body.staff-loans-page #bankModal input{
+  background: var(--dk-card-2) !important;
+  border: 1px solid var(--dk-border) !important;
+  color: #fff !important;
+}
+
+/* Action buttons — match site_clean4's embossed gradient + colored
+   glow style exactly (including fixing Withdrawal Code, which was
+   flat green instead of pink, and Credit Score, which was purple
+   instead of teal, and Save, which was flat blue instead of green).
+   Layout also switched from a 3-per-row grid to a 2-per-row wrapping
+   flex layout (site_clean4's exact approach) so the action column
+   never needs horizontal scrolling. */
+body.staff-loans-page .dashboard-card .action-wrap{
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 10px !important;
+  align-items: stretch !important;
+}
+body.staff-loans-page .dashboard-card .action-wrap button{
+  flex: 1 1 calc(50% - 10px) !important;
+  width: auto !important;
+  min-width: 140px !important;
+  height: 44px !important;
+  padding: 0 16px !important;
+  border-radius: 13px !important;
+  border: 1.5px solid rgba(255,255,255,.55) !important;
+  font-size: 13.5px !important;
+  font-weight: 600 !important;
+  letter-spacing: .02em;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+body.staff-loans-page .dashboard-card .action-wrap button svg{
+  flex: none; opacity: .95;
+  width: 17px !important; height: 17px !important;
+}
+body.staff-loans-page .dashboard-card .action-wrap button span{ overflow: hidden; text-overflow: ellipsis; }
+body.staff-loans-page .dashboard-card .action-wrap button:hover{
+  transform: translateY(-2px);
+  filter: brightness(1.08);
+  box-shadow: 0 12px 24px rgba(0,0,0,.3), inset 0 1px 0 rgba(255,255,255,.4) !important;
+}
+body.staff-loans-page .dashboard-card .action-wrap button:active{
+  transform: translateY(0) scale(.98);
+}
+body.staff-loans-page .dashboard-card .btn-bank{
+  background: linear-gradient(150deg, #3B82F6, #1D4ED8) !important;
+  box-shadow: 0 8px 18px rgba(29,78,216,.38), inset 0 1px 0 rgba(255,255,255,.3) !important;
+}
+body.staff-loans-page .dashboard-card .btn-id{
+  background: linear-gradient(150deg, #A855F7, #7E22CE) !important;
+  box-shadow: 0 8px 18px rgba(126,34,206,.38), inset 0 1px 0 rgba(255,255,255,.3) !important;
+}
+body.staff-loans-page .dashboard-card .btn-pass{
+  background: linear-gradient(150deg, #F59E0B, #B45309) !important;
+  box-shadow: 0 8px 18px rgba(180,83,9,.38), inset 0 1px 0 rgba(255,255,255,.3) !important;
+}
+body.staff-loans-page .dashboard-card .btn-modify{
+  background: linear-gradient(150deg, #0EA5E9, #0369A1) !important;
+  box-shadow: 0 8px 18px rgba(3,105,161,.38), inset 0 1px 0 rgba(255,255,255,.3) !important;
+}
+body.staff-loans-page .dashboard-card .btn-withdraw{
+  background: linear-gradient(150deg, #EC4899, #BE185D) !important;
+  box-shadow: 0 8px 18px rgba(190,24,93,.38), inset 0 1px 0 rgba(255,255,255,.3) !important;
+}
+body.staff-loans-page .dashboard-card .btn-score{
+  background: linear-gradient(150deg, #14B8A6, #0F766E) !important;
+  box-shadow: 0 8px 18px rgba(15,118,110,.38), inset 0 1px 0 rgba(255,255,255,.3) !important;
+}
+body.staff-loans-page .dashboard-card .btn-save{
+  background: linear-gradient(150deg, #22C55E, #15803D) !important;
+  box-shadow: 0 8px 18px rgba(21,128,61,.38), inset 0 1px 0 rgba(255,255,255,.3) !important;
+}
+body.staff-loans-page .dashboard-card .btn-delete{
+  background: linear-gradient(150deg, #EF4444, #B91C1C) !important;
+  box-shadow: 0 8px 18px rgba(185,28,28,.38), inset 0 1px 0 rgba(255,255,255,.3) !important;
+}
 </style>
   <div class="card-h">
     <div>
@@ -527,24 +700,27 @@
   class="btn-bank js-bank-btn"
   data-user-id="{{ loan.user.id }}"
 >
-  Bank/Wallet card Number
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 10h18"/></svg>
+  <span>Bank/Wallet card Number</span>
 </button>
- 
+
 <button
 type="button"
 class="btn-id js-id-btn"
 data-loan-id="{{ loan.id }}"
 >
-ID Identify
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="10.5" r="1.8"/><path d="M6 16c0-1.7 1.3-3 2.5-3s2.5 1.3 2.5 3M13 9h5M13 13h5"/></svg>
+  <span>ID Identify</span>
 </button>
- 
+
 <button
 type="button"
 class="btn-pass js-pass-btn"
 data-user-id="{{ loan.user.id }}"
 data-phone="{{ loan.user.phone }}"
 >
-Password
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+  <span>Password</span>
 </button>
 
 <button
@@ -552,7 +728,8 @@ Password
   class="btn-modify js-modify-btn"
   data-loan-id="{{ loan.id }}"
 >
-  Modify Loan
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L18.5 9.5a2.1 2.1 0 0 0-3-3L5 17v3z"/></svg>
+  <span>Modify Loan</span>
 </button>
 
 <button
@@ -561,7 +738,8 @@ Password
   data-user-id="{{ loan.user.id }}"
   data-phone="{{ loan.user.phone }}"
 >
-  Withdrawal Code
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="12" r="4"/><path d="M11 12h9M17 12v3M20 12v4"/></svg>
+  <span>Withdrawal Code</span>
 </button>
 
 <button
@@ -570,18 +748,23 @@ Password
   data-loan-id="{{ loan.id }}"
   data-user-id="{{ loan.user.id }}"
 >
-  Credit Score
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19V11M12 19V5M19 19v-7"/></svg>
+  <span>Credit Score</span>
 </button>
- 
+
 <button
 type="button"
 class="btn-delete js-del-btn"
 data-loan-id="{{ loan.id }}"
 data-phone="{{ loan.user.phone }}"
 >
-Delete
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12"/></svg>
+  <span>Delete</span>
 </button>
-<button class="btn-save" type="submit">Save</button>
+<button class="btn-save" type="submit">
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+  <span>Save</span>
+</button>
  
               </div>
             </td>

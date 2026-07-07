@@ -127,6 +127,78 @@
 #pmTable td:nth-child(2):hover{
   opacity: .85;
 }
+
+/* =========================================================
+   DARK NAVY THEME OVERRIDE (matches site_clean4's redesigned
+   staff panel). Pure visual override, scoped to
+   body.staff-payment-methods-page so nothing here touches
+   structure/IDs/JS — every id=, name=, form= attribute above
+   is left completely untouched. This block only recolors
+   what's already there.
+   ========================================================= */
+body.staff-payment-methods-page .card-h form input[name="q"]{
+  background: var(--dk-card-2) !important;
+  border: 1px solid var(--dk-border) !important;
+  color: var(--dk-text) !important;
+}
+
+body.staff-payment-methods-page #pmTable th,
+body.staff-payment-methods-page #pmTable td{
+  border-right: 1px solid var(--dk-border) !important;
+}
+body.staff-payment-methods-page #pmTable thead th{
+  background: var(--dk-card-2) !important;
+  color: var(--dk-muted) !important;
+  font-weight: 700 !important;
+  font-size: 11.5px !important;
+  letter-spacing: .06em !important;
+}
+body.staff-payment-methods-page #pmTable tbody tr:nth-child(even){
+  background: rgba(255,255,255,.02) !important;
+}
+body.staff-payment-methods-page #pmTable tbody tr:hover{
+  background: rgba(255,255,255,.04) !important;
+}
+body.staff-payment-methods-page #pmTable tbody tr{
+  border-bottom: 1px solid var(--dk-border) !important;
+}
+body.staff-payment-methods-page #pmTable tbody td,
+body.staff-payment-methods-page #pmTable tbody td.user-font{
+  color: var(--dk-text) !important;
+}
+body.staff-payment-methods-page #pmTable td:nth-child(2){
+  color: var(--dk-blue) !important;
+}
+body.staff-payment-methods-page #pmTable td:nth-child(2) a{
+  color: var(--dk-blue) !important;
+}
+
+body.staff-payment-methods-page #pmTable td input,
+body.staff-payment-methods-page #pmTable td.multi input{
+  background: rgba(255,255,255,.05) !important;
+  border: 1px solid var(--dk-border) !important;
+  border-radius: 8px !important;
+  color: #fff !important;
+  font-weight: 600 !important;
+}
+body.staff-payment-methods-page #pmTable td input:focus,
+body.staff-payment-methods-page #pmTable td.multi input:focus{
+  border-color: var(--dk-indigo) !important;
+  outline: none !important;
+}
+body.staff-payment-methods-page #pmTable td select{
+  background: rgba(255,255,255,.05) !important;
+  border: 1px solid var(--dk-border) !important;
+  border-radius: 8px !important;
+  color: #fff !important;
+}
+
+body.staff-payment-methods-page .pager a{
+  color: var(--dk-indigo) !important;
+}
+body.staff-payment-methods-page .pager .muted{
+  color: var(--dk-muted) !important;
+}
     </style>
 
     <table id="pmTable">

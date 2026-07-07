@@ -23,7 +23,12 @@
 
   <div class="content user-detail-page">
 
-    <!-- ✅ Progress Tracker -->
+    <!-- ✅ Progress Tracker — each item is done / the one live blocker / or
+         waiting-in-queue, computed as the same first-unmet-condition
+         waterfall the view already uses for progress.stuck, just re-applied
+         per item so the ONE thing actually blocking the applicant right now
+         is highlighted instead of every unfinished item looking equally
+         urgent. -->
     <div class="cardx">
       <div class="p-head">
         <div>
@@ -34,51 +39,75 @@
       </div>
 
       <div class="p-grid">
-        <div class="p-item">
-          <span class="dot {% if progress.loan_started %}ok{% else %}no{% endif %}"></span>
+        <div class="p-item {% if progress.loan_started %}done{% else %}blocker{% endif %}">
+          <span class="p-dot {% if progress.loan_started %}done{% else %}blocker{% endif %}">
+            {% if progress.loan_started %}
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+            {% else %}<span class="p-pulse-ring"></span>{% endif %}
+          </span>
           <div class="p-text">
             <div class="p-k">Loan Started</div>
-            <div class="p-v">{% if progress.loan_started %}Done{% else %}Not yet{% endif %}</div>
+            <div class="p-v">{% if progress.loan_started %}Done{% else %}<span class="dotlive"></span>Not yet{% endif %}</div>
           </div>
         </div>
 
-        <div class="p-item">
-          <span class="dot {% if progress.loan_info_done %}ok{% else %}no{% endif %}"></span>
+        <div class="p-item {% if progress.loan_info_done %}done{% elif progress.loan_started %}blocker{% else %}pending{% endif %}">
+          <span class="p-dot {% if progress.loan_info_done %}done{% elif progress.loan_started %}blocker{% else %}pending{% endif %}">
+            {% if progress.loan_info_done %}
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+            {% elif progress.loan_started %}<span class="p-pulse-ring"></span>{% endif %}
+          </span>
           <div class="p-text">
             <div class="p-k">Loan Information</div>
-            <div class="p-v">{% if progress.loan_info_done %}Done{% else %}Missing fields{% endif %}</div>
+            <div class="p-v">{% if progress.loan_info_done %}Done{% elif progress.loan_started %}<span class="dotlive"></span>Missing fields{% else %}Waiting{% endif %}</div>
           </div>
         </div>
 
-        <div class="p-item">
-          <span class="dot {% if progress.id_upload_done %}ok{% else %}no{% endif %}"></span>
+        <div class="p-item {% if progress.id_upload_done %}done{% elif progress.loan_started and progress.loan_info_done %}blocker{% else %}pending{% endif %}">
+          <span class="p-dot {% if progress.id_upload_done %}done{% elif progress.loan_started and progress.loan_info_done %}blocker{% else %}pending{% endif %}">
+            {% if progress.id_upload_done %}
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+            {% elif progress.loan_started and progress.loan_info_done %}<span class="p-pulse-ring"></span>{% endif %}
+          </span>
           <div class="p-text">
             <div class="p-k">ID Upload</div>
-            <div class="p-v">{% if progress.id_upload_done %}Done{% else %}Not complete{% endif %}</div>
+            <div class="p-v">{% if progress.id_upload_done %}Done{% elif progress.loan_started and progress.loan_info_done %}<span class="dotlive"></span>Not complete{% else %}Waiting{% endif %}</div>
           </div>
         </div>
 
-        <div class="p-item">
-          <span class="dot {% if progress.signature_done %}ok{% else %}no{% endif %}"></span>
+        <div class="p-item {% if progress.signature_done %}done{% elif progress.loan_started and progress.loan_info_done and progress.id_upload_done %}blocker{% else %}pending{% endif %}">
+          <span class="p-dot {% if progress.signature_done %}done{% elif progress.loan_started and progress.loan_info_done and progress.id_upload_done %}blocker{% else %}pending{% endif %}">
+            {% if progress.signature_done %}
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+            {% elif progress.loan_started and progress.loan_info_done and progress.id_upload_done %}<span class="p-pulse-ring"></span>{% endif %}
+          </span>
           <div class="p-text">
             <div class="p-k">Signature</div>
-            <div class="p-v">{% if progress.signature_done %}Done{% else %}Not found{% endif %}</div>
+            <div class="p-v">{% if progress.signature_done %}Done{% elif progress.loan_started and progress.loan_info_done and progress.id_upload_done %}<span class="dotlive"></span>Not found{% else %}Waiting{% endif %}</div>
           </div>
         </div>
 
-        <div class="p-item">
-          <span class="dot {% if progress.pm_saved %}ok{% else %}no{% endif %}"></span>
+        <div class="p-item {% if progress.pm_saved %}done{% elif progress.loan_started and progress.loan_info_done and progress.id_upload_done and progress.signature_done %}blocker{% else %}pending{% endif %}">
+          <span class="p-dot {% if progress.pm_saved %}done{% elif progress.loan_started and progress.loan_info_done and progress.id_upload_done and progress.signature_done %}blocker{% else %}pending{% endif %}">
+            {% if progress.pm_saved %}
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+            {% elif progress.loan_started and progress.loan_info_done and progress.id_upload_done and progress.signature_done %}<span class="p-pulse-ring"></span>{% endif %}
+          </span>
           <div class="p-text">
             <div class="p-k">Payment Method Filled</div>
-            <div class="p-v">{% if progress.pm_saved %}Done{% else %}Empty{% endif %}</div>
+            <div class="p-v">{% if progress.pm_saved %}Done{% elif progress.loan_started and progress.loan_info_done and progress.id_upload_done and progress.signature_done %}<span class="dotlive"></span>Empty{% else %}Waiting{% endif %}</div>
           </div>
         </div>
 
-        <div class="p-item">
-          <span class="dot {% if progress.pm_locked %}ok{% else %}no{% endif %}"></span>
+        <div class="p-item {% if progress.pm_locked %}done{% elif progress.pm_saved %}blocker{% else %}pending{% endif %}">
+          <span class="p-dot {% if progress.pm_locked %}done{% elif progress.pm_saved %}blocker{% else %}pending{% endif %}">
+            {% if progress.pm_locked %}
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+            {% elif progress.pm_saved %}<span class="p-pulse-ring"></span>{% endif %}
+          </span>
           <div class="p-text">
             <div class="p-k">Payment Method Saved</div>
-            <div class="p-v">{% if progress.pm_locked %}Locked (Saved){% else %}Not saved yet{% endif %}</div>
+            <div class="p-v">{% if progress.pm_locked %}Locked (Saved){% elif progress.pm_saved %}<span class="dotlive"></span>Not saved yet{% else %}Waiting{% endif %}</div>
           </div>
         </div>
       </div>
@@ -577,6 +606,145 @@
   width: 1px;
   height: 1px;
   overflow: hidden;
+}
+
+/* =========================================================
+   DARK NAVY THEME OVERRIDE (matches site_clean4's redesigned
+   staff panel / same treatment already applied to Dashboard and
+   Users-list). Pure visual override, scoped to
+   body.staff-user-detail-page so no id=/name=/form logic above
+   is touched — every field, hidden input, and the status-picker
+   modal keep their exact names/ids/behavior.
+   ========================================================= */
+body.staff-user-detail-page .cardx{
+  background: var(--dk-card-2) !important;
+  box-shadow: 0 20px 50px rgba(0,0,0,.3) !important;
+}
+body.staff-user-detail-page .p-title{ color: #fff !important; }
+body.staff-user-detail-page .p-sub{ color: var(--dk-muted) !important; }
+body.staff-user-detail-page .pill{
+  background: var(--dk-indigo) !important;
+}
+body.staff-user-detail-page .p-item{
+  background: linear-gradient(160deg, rgba(255,255,255,.035), rgba(255,255,255,0) 40%), var(--dk-card) !important;
+  border: 1px solid var(--dk-border) !important;
+  display: flex !important; gap: 10px !important; align-items: center !important;
+  box-shadow: 0 3px 12px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.04);
+  transition: border-color .3s ease, background .3s ease, box-shadow .3s ease, transform .2s ease;
+}
+body.staff-user-detail-page .p-k{ color: #fff !important; font-size: 12px; font-weight: 700; }
+body.staff-user-detail-page .p-v{
+  color: var(--dk-dim) !important; font-size: 11px; margin-top: 1px;
+  display: flex; align-items: center; gap: 5px;
+}
+body.staff-user-detail-page .mini-link{
+  background: var(--dk-indigo) !important;
+}
+
+/* Checklist item states — done (green check), blocker (the ONE thing
+   currently stopping the applicant, pulsing so it's obvious at a glance),
+   pending (further down the queue, quietly muted so it doesn't compete
+   with the actual blocker for attention). */
+body.staff-user-detail-page .p-dot{
+  position: relative;
+  width: 26px; height: 26px; border-radius: 999px; flex: none;
+  display: flex; align-items: center; justify-content: center;
+  border: 1.5px solid rgba(255,255,255,.14);
+  background: var(--dk-card-2);
+  color: transparent;
+}
+body.staff-user-detail-page .p-dot.done{
+  background: linear-gradient(150deg, #22c55e, #16a34a);
+  border-color: rgba(255,255,255,.35);
+  color: #fff;
+  box-shadow: 0 3px 10px rgba(34,197,94,.4);
+}
+body.staff-user-detail-page .p-dot.blocker{
+  background: rgba(239,68,68,.18);
+  border-color: #ef4444;
+}
+body.staff-user-detail-page .p-dot.pending{
+  background: rgba(99,102,241,.08);
+  border-color: rgba(99,102,241,.3);
+  color: rgba(199,203,253,.8);
+  font-size: 11px; font-weight: 800;
+}
+body.staff-user-detail-page .p-dot.pending::after{
+  content: "";
+  width: 6px; height: 6px; border-radius: 999px;
+  background: rgba(129,140,248,.7);
+  animation: pPendingBreathe 2.6s ease-in-out infinite;
+}
+@keyframes pPendingBreathe{
+  0%, 100% { opacity: .35; transform: scale(.8); }
+  50%      { opacity: 1;   transform: scale(1); }
+}
+body.staff-user-detail-page .p-item.done{
+  box-shadow: 0 0 0 1px rgba(34,197,94,.12), 0 4px 18px rgba(34,197,94,.16), inset 0 1px 0 rgba(255,255,255,.04);
+}
+body.staff-user-detail-page .p-item.done .p-k{ color: rgba(255,255,255,.75) !important; }
+body.staff-user-detail-page .p-item.blocker{
+  border-color: rgba(239,68,68,.5) !important;
+  background: linear-gradient(160deg, rgba(239,68,68,.1), rgba(239,68,68,.03) 45%), var(--dk-card) !important;
+  box-shadow: 0 0 0 1px rgba(239,68,68,.18), 0 4px 22px rgba(239,68,68,.22);
+}
+body.staff-user-detail-page .p-item.blocker .p-v{ color: #f87171 !important; font-weight: 700; }
+body.staff-user-detail-page .p-item.pending{
+  border-color: rgba(99,102,241,.14) !important;
+  box-shadow: 0 3px 12px rgba(0,0,0,.22), inset 0 1px 0 rgba(255,255,255,.03);
+}
+body.staff-user-detail-page .p-item.pending .p-k{ color: rgba(255,255,255,.55) !important; }
+body.staff-user-detail-page .p-item.pending .p-v{ color: var(--dk-muted) !important; }
+
+body.staff-user-detail-page .p-pulse-ring{
+  position: absolute; inset: -5px; border-radius: 999px;
+  border: 2px solid #ef4444;
+  animation: pItemPulse 1.8s ease-out infinite;
+  pointer-events: none;
+}
+@keyframes pItemPulse{
+  0%   { transform: scale(.8); opacity: .9; }
+  100% { transform: scale(1.4); opacity: 0; }
+}
+body.staff-user-detail-page .p-v .dotlive{
+  width: 5px; height: 5px; border-radius: 999px; flex: none;
+  background: #ef4444;
+  box-shadow: 0 0 6px rgba(239,68,68,.9);
+  animation: pDotBlink 1.4s ease-in-out infinite;
+}
+@keyframes pDotBlink{ 0%,100%{ opacity: 1; } 50%{ opacity: .3; } }
+
+body.staff-user-detail-page .p-item:hover{
+  transform: translateY(-1px);
+  border-color: rgba(255,255,255,.22) !important;
+}
+body.staff-user-detail-page .p-item.blocker:hover{ border-color: rgba(239,68,68,.7) !important; }
+body.staff-user-detail-page .p-item.done:hover{ border-color: rgba(34,197,94,.4) !important; }
+
+@media (prefers-reduced-motion: reduce){
+  body.staff-user-detail-page .p-pulse-ring{ animation: none; display: none; }
+  body.staff-user-detail-page .p-v .dotlive{ animation: none; }
+  body.staff-user-detail-page .p-dot.pending::after{ animation: none; }
+  body.staff-user-detail-page .p-item:hover{ transform: none; }
+}
+
+body.staff-user-detail-page .user-detail-form label{
+  color: var(--dk-blue) !important;
+}
+body.staff-user-detail-page .user-detail-form input,
+body.staff-user-detail-page .user-detail-form select{
+  background: var(--dk-card) !important;
+  border: 1px solid var(--dk-border) !important;
+}
+body.staff-user-detail-page .sep{ border-top: 1px solid var(--dk-border) !important; }
+body.staff-user-detail-page .h2{ color: #fff !important; }
+
+body.staff-user-detail-page .make-app-btn{
+  background: var(--dk-indigo) !important;
+}
+body.staff-user-detail-page .img-box{
+  background: var(--dk-card) !important;
+  border: 1px solid var(--dk-border) !important;
 }
 </style>
 <!-- ✅ Status Picker Modal (DETAIL PAGE) -->

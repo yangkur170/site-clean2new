@@ -26,31 +26,66 @@
     </div>
 
     <!-- ✅ Step Tracker (Register → Loan Form → Payment Method → Submitted) -->
-    <div class="step-wrap">
-      <div class="step-row">
-        <div class="dot done">✓</div>
-        <div class="line done"></div>
+    {% with step3_done=pm.locked %}
+    <div class="stepper">
+      <div class="stepper-row">
 
-        <div class="dot done">✓</div>
-        <div class="line {% if pm.locked %}done{% else %}{% endif %}"></div>
-
-        <div class="dot {% if pm.locked %}done{% else %}active{% endif %}">
-          {% if pm.locked %}✓{% else %}3{% endif %}
+        <div class="step-item">
+          <div class="step-dot done"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
+          <div class="step-text">
+            <div class="step-label done">Register</div>
+            <div class="step-state done">Done</div>
+          </div>
         </div>
-        <div class="line {% if loan.status != 'DRAFT' and pm.locked %}done{% else %}{% endif %}"></div>
+        <div class="step-connector done"></div>
 
-        <div class="dot {% if loan.status != 'DRAFT' and pm.locked %}done{% else %}{% endif %}">
-          {% if loan.status != 'DRAFT' and pm.locked %}✓{% else %}4{% endif %}
+        <div class="step-item">
+          <div class="step-dot done"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
+          <div class="step-text">
+            <div class="step-label done">Loan Form</div>
+            <div class="step-state done">Done</div>
+          </div>
         </div>
-      </div>
+        <div class="step-connector {% if step3_done %}done{% endif %}"></div>
 
-      <div class="step-labels">
-        <div>Register</div>
-        <div>Loan Form</div>
-        <div>Payment Method</div>
-        <div>Submitted</div>
+        <div class="step-item">
+          <div class="step-dot {% if step3_done %}done{% else %}active{% endif %}">
+            {% if step3_done %}
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+            {% else %}
+              <span class="step-pulse-ring"></span>3
+            {% endif %}
+          </div>
+          <div class="step-text">
+            <div class="step-label {% if step3_done %}done{% else %}active{% endif %}">Payment Method</div>
+            <div class="step-state {% if step3_done %}done{% else %}active{% endif %}">
+              {% if step3_done %}Done{% else %}<span class="dotlive"></span>In progress{% endif %}
+            </div>
+          </div>
+        </div>
+        <div class="step-connector {% if loan.status != 'DRAFT' and pm.locked %}done{% endif %}"></div>
+
+        <div class="step-item">
+          <div class="step-dot {% if loan.status != 'DRAFT' and pm.locked %}done{% elif step3_done %}active{% endif %}">
+            {% if loan.status != 'DRAFT' and pm.locked %}
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+            {% elif step3_done %}
+              <span class="step-pulse-ring"></span>4
+            {% else %}
+              4
+            {% endif %}
+          </div>
+          <div class="step-text">
+            <div class="step-label {% if loan.status != 'DRAFT' and pm.locked %}done{% elif step3_done %}active{% endif %}">Submitted</div>
+            <div class="step-state {% if loan.status != 'DRAFT' and pm.locked %}done{% elif step3_done %}active{% endif %}">
+              {% if loan.status != 'DRAFT' and pm.locked %}Done{% elif step3_done %}<span class="dotlive"></span>In progress{% else %}Pending{% endif %}
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
+    {% endwith %}
 
   </div>
 
@@ -233,40 +268,97 @@
   .pill.ok{ color:#22c55e; border-color: rgba(34,197,94,.45); background: rgba(34,197,94,.10); }
   .pill.bad{ color:#ff4a4a; border-color: rgba(255,74,74,.45); background: rgba(255,74,74,.10); }
 
-  .step-wrap{ margin-top:12px; }
-  .step-row{ display:flex; align-items:center; gap:10px; }
-  .dot{
-    width:34px; height:34px; border-radius:999px;
-    display:flex; align-items:center; justify-content:center;
-    font-weight:950;
-    border:1px solid rgba(255,255,255,.18);
-    background:rgba(0,0,0,.18);
-    color:rgba(255,255,255,.75);
+  /* ===== Stepper (Register → Loan Form → Payment Method → Submitted) =====
+     Done = filled green with a checkmark icon. Active (current step) =
+     indigo with a soft pulsing ring, so staff can tell at a glance where
+     the applicant actually is right now, not just what's finished.
+     Pending = quiet/muted, no visual competing for attention. */
+  .stepper{ margin-top:14px; }
+  .stepper-row{ display:flex; align-items:flex-start; gap:8px; }
+
+  .step-item{
+    display:flex; flex-direction:column; align-items:center;
+    gap:8px; flex:none; width:96px;
   }
-  .dot.active{
-    background: rgba(0,65,130,.22);
-    border-color: rgba(0,65,130,.60);
-    color:#fff;
-  }
-  .dot.done{
-    background: rgba(34,197,94,.12);
-    border-color: rgba(34,197,94,.45);
-    color:#22c55e;
-  }
-  .line{
+  .step-connector{
     flex:1; height:3px; border-radius:999px;
-    background:rgba(255,255,255,.18);
+    background: rgba(255,255,255,.14);
+    margin-top:19px;
+    transition: background .3s ease;
   }
-  .line.done{
-    background: rgba(34,197,94,.65);
+  .step-connector.done{
+    background: linear-gradient(90deg, #22c55e, #16a34a);
   }
-  .step-labels{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    margin-top:8px;
-    font-size:12px;
-    opacity:.85;
-    text-align:center;
+
+  .step-dot{
+    position:relative;
+    width:38px; height:38px; border-radius:999px;
+    display:flex; align-items:center; justify-content:center;
+    font-weight:800; font-size:14px;
+    border:1.5px solid rgba(255,255,255,.16);
+    background: var(--dk-card-2);
+    color: var(--dk-muted);
+    transition: background .3s ease, border-color .3s ease, color .3s ease, transform .2s ease;
+  }
+  .step-dot.active{
+    background: linear-gradient(150deg, var(--dk-indigo), var(--dk-indigo-dark));
+    border-color: rgba(255,255,255,.4);
+    color:#fff;
+    transform: scale(1.08);
+    box-shadow: 0 6px 16px rgba(99,102,241,.45);
+  }
+  .step-dot.done{
+    background: linear-gradient(150deg, #22c55e, #16a34a);
+    border-color: rgba(255,255,255,.4);
+    color:#fff;
+    box-shadow: 0 4px 12px rgba(34,197,94,.35);
+  }
+  .step-dot.done svg{ display:block; }
+
+  .step-pulse-ring{
+    position:absolute; inset:-6px; border-radius:999px;
+    border: 2px solid var(--dk-indigo);
+    animation: stepPulse 1.8s ease-out infinite;
+    pointer-events:none;
+  }
+  @keyframes stepPulse{
+    0%   { transform: scale(.85); opacity:.9; }
+    100% { transform: scale(1.35); opacity:0; }
+  }
+
+  .step-text{ text-align:center; }
+  .step-label{
+    font-size:11.5px; font-weight:700; color: var(--dk-muted);
+    line-height:1.3;
+  }
+  .step-label.done{ color: rgba(255,255,255,.85); }
+  .step-label.active{ color:#fff; font-weight:800; }
+
+  .step-state{
+    margin-top:2px; font-size:10px; font-weight:700;
+    color: var(--dk-dim); text-transform:uppercase; letter-spacing:.03em;
+    display:flex; align-items:center; justify-content:center; gap:4px;
+  }
+  .step-state.done{ color:#4ade80; }
+  .step-state.active{ color: var(--dk-indigo); }
+  .step-state .dotlive{
+    width:6px; height:6px; border-radius:999px;
+    background: var(--dk-indigo);
+    box-shadow: 0 0 8px rgba(99,102,241,.9);
+    animation: stepDotBlink 1.4s ease-in-out infinite;
+  }
+  @keyframes stepDotBlink{ 0%,100%{ opacity:1; } 50%{ opacity:.35; } }
+
+  @media (prefers-reduced-motion: reduce){
+    .step-pulse-ring{ animation:none; display:none; }
+    .step-state .dotlive{ animation:none; }
+  }
+
+  /* Match the label color used on the User Detail page exactly —
+     was a darker/more muted blue (#0b5fa5) here, User Detail uses
+     the brighter --dk-blue token. */
+  body.staff-loan-detail-page .user-detail-form label{
+    color: var(--dk-blue) !important;
   }
 </style>
 

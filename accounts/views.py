@@ -1442,6 +1442,105 @@ def staff_dashboard(request):
     pending_loans = LoanApplication.objects.filter(status__in=["PENDING", "REVIEW"]).count()
     total_pending = pending_withdrawals + pending_loans
 
+    # ---- New KPI-card / line-chart data (additive — does not replace any of
+    # the totals/pending counts above, only adds extra context for the
+    # redesigned dashboard template) ----
+    pending_loans_count = pending_loans
+    pending_withdrawals_count = WithdrawalRequest.objects.filter(
+        status__in=[WithdrawalRequest.STATUS_PROCESSING, WithdrawalRequest.STATUS_WAITING]
+    ).count()
+    pending_payment_setup_count = PaymentMethod.objects.filter(locked=False).count()
+
+    def period_counts(model):
+        return {
+            "today": model.objects.filter(created_at__range=(today_start, today_end)).count(),
+            "yesterday": model.objects.filter(created_at__range=(yday_start, yday_end)).count(),
+            "this_week": model.objects.filter(created_at__gte=week_start_dt).count(),
+            "last_week": model.objects.filter(created_at__range=(last_week_start_dt, last_week_end_dt)).count(),
+            "this_month": model.objects.filter(created_at__gte=month_start_dt).count(),
+            "last_month": model.objects.filter(created_at__range=(last_month_start_dt, last_month_end_dt)).count(),
+        }
+
+    def trend_pct(this_week, last_week):
+        if last_week > 0:
+            return round((this_week - last_week) / last_week * 100)
+        return 100 if this_week > 0 else 0
+
+    loans_periods = period_counts(LoanApplication)
+    withdrawals_periods = period_counts(WithdrawalRequest)
+    payment_methods_periods = period_counts(PaymentMethod)
+
+    users_trend = trend_pct(reg_this_week, reg_last_week)
+    loans_trend = trend_pct(loans_periods["this_week"], loans_periods["last_week"])
+    withdrawals_trend = trend_pct(withdrawals_periods["this_week"], withdrawals_periods["last_week"])
+    payment_methods_trend = trend_pct(payment_methods_periods["this_week"], payment_methods_periods["last_week"])
+
+    def smooth_path(points):
+        """Catmull-Rom -> cubic Bezier, so the line curves instead of zig-zagging."""
+        if len(points) < 2:
+            return ""
+        p = points
+        d = f"M{p[0][0]:.1f},{p[0][1]:.1f} "
+        for i in range(len(p) - 1):
+            p0 = p[i - 1] if i > 0 else p[i]
+            p1 = p[i]
+            p2 = p[i + 1]
+            p3 = p[i + 2] if i + 2 < len(p) else p2
+            c1x = p1[0] + (p2[0] - p0[0]) / 6
+            c1y = p1[1] + (p2[1] - p0[1]) / 6
+            c2x = p2[0] - (p3[0] - p1[0]) / 6
+            c2y = p2[1] - (p3[1] - p1[1]) / 6
+            d += f"C{c1x:.1f},{c1y:.1f} {c2x:.1f},{c2y:.1f} {p2[0]:.1f},{p2[1]:.1f} "
+        return d.strip()
+
+    def build_spark(vals, width=110, height=34, pad=4):
+        vals = [max(0, v) for v in vals]
+        top = max(vals) if vals else 0
+        n = len(vals)
+        if n < 2:
+            return {"line": "", "area": "", "last": (0, 0)}
+        step = (width - 2 * pad) / (n - 1)
+        pts = []
+        for i, v in enumerate(vals):
+            x = pad + i * step
+            y = (height - pad) if top <= 0 else (height - pad) - (v / top) * (height - 2 * pad)
+            pts.append((x, y))
+        line = smooth_path(pts)
+        area = line + f" L{pts[-1][0]:.1f},{height:.1f} L{pts[0][0]:.1f},{height:.1f} Z"
+        return {"line": line, "area": area, "last": pts[-1]}
+
+    def build_chart(vals, width=600, height=200, pad=40):
+        top = max(vals) if vals else 0
+        n = len(vals)
+        step = (width - 2 * pad) / (n - 1) if n > 1 else 0
+        points = []
+        for i, v in enumerate(vals):
+            x = pad + i * step
+            y = (height - pad) if top <= 0 else (height - pad) - (v / top) * (height - 2 * pad)
+            points.append((x, y))
+        line = smooth_path(points)
+        area = line
+        if points:
+            area = line + f" L{points[-1][0]:.1f},{height - pad:.1f} L{points[0][0]:.1f},{height - pad:.1f} Z"
+        return {"line": line, "area": area, "points": points}
+
+    def period_series(counts):
+        return [counts["today"], counts["yesterday"], counts["this_week"],
+                counts["last_week"], counts["this_month"], counts["last_month"]]
+
+    chart_values = [reg_today, reg_yesterday, reg_this_week, reg_last_week, reg_this_month, reg_last_month]
+    chart_labels = ["Today", "Yesterday", "This Week", "Last Week", "This Month", "Last Month"]
+    chart = build_chart(chart_values)
+    chart_points = [
+        {"x": x, "y": y, "value": v, "label": lbl}
+        for (x, y), v, lbl in zip(chart["points"], chart_values, chart_labels)
+    ]
+
+    spark_users = build_spark(chart_values)
+    spark_loans = build_spark(period_series(loans_periods))
+    spark_withdrawals = build_spark(period_series(withdrawals_periods))
+    spark_payment_methods = build_spark(period_series(payment_methods_periods))
+
     context = {
         "period": period,
         "total_users": total_users,
@@ -1463,6 +1562,20 @@ def staff_dashboard(request):
         "pending_withdrawals": pending_withdrawals,
         "pending_loans": pending_loans,
         "total_pending": total_pending,
+        "pending_loans_count": pending_loans_count,
+        "pending_withdrawals_count": pending_withdrawals_count,
+        "pending_payment_setup_count": pending_payment_setup_count,
+        "users_trend": users_trend,
+        "loans_trend": loans_trend,
+        "withdrawals_trend": withdrawals_trend,
+        "payment_methods_trend": payment_methods_trend,
+        "spark_users": spark_users,
+        "spark_loans": spark_loans,
+        "spark_withdrawals": spark_withdrawals,
+        "spark_payment_methods": spark_payment_methods,
+        "chart_points": chart_points,
+        "chart_area": chart["area"],
+        "chart_line": chart["line"],
     }
     return render(request, "staff_dashboard.html", context)
 @login_required

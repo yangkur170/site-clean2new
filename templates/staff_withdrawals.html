@@ -40,9 +40,8 @@
 #withdrawalsTable th:nth-child(2),
 #withdrawalsTable td:nth-child(2){
   min-width: 140px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  white-space: normal;
+  word-break: break-word;
 }
 
 /* Phone column */
@@ -105,27 +104,26 @@
 #withdrawalsTable select.st-processing{ background:#0b5ea8 !important; color:#fff !important; }
 #withdrawalsTable select.st-paid{ background:#22c55e !important; color:#fff !important; }
 #withdrawalsTable select.st-rejected{ background:#ef4444 !important; color:#fff !important; }
-#withdrawalsTable select.st-withdrawal-fail{ background:#dc2626 !important; color:#fff !important; }
+#withdrawalsTable select.st-withdrawal-fail{ background:#7f1d1d !important; color:#fff !important; }
 
 /* Phone blue */
 #withdrawalsTable td:nth-child(3){
-  color: #004182 !important;
+  color: #60A5FA !important;
   font-weight: 900 !important;
 }
 #withdrawalsTable td:nth-child(3) a{
-  color:#004182 !important;
+  color:#60A5FA !important;
 }
 
-/* ✅ Credit Score - plain text style (like red box) */
-.c/* ✅ Credit Score - compact style */
+/* ✅ Credit Score - compact style */
 .cs-score-display{
   font-size: 13px;
   font-weight: 900;
-  color: #0b2f55;
+  color: #93C5FD;
   padding: 4px 8px;  /*  */
-  background: rgba(11, 47, 85, 0.08);
+  background: rgba(147, 197, 253, 0.10);
   border-radius: 6px;
-  border: 1px solid rgba(11, 47, 85, 0.2);
+  border: 1px solid rgba(147, 197, 253, 0.25);
   display: inline-flex;  /* flex  inline-block */
   align-items: center;
   gap: 4px;
@@ -133,7 +131,7 @@
   white-space: nowrap;
 }
 .cs-score-display:hover{
-  background: rgba(11, 47, 85, 0.15);
+  background: rgba(147, 197, 253, 0.18);
 }
 
 /* ✅ Edit box - compact */
@@ -182,6 +180,65 @@
   margin-right: 8px;
 }
 .wd-del:hover{ opacity:.92; }
+
+/* =========================================================
+   DARK NAVY THEME OVERRIDE (matches site_clean4's redesigned
+   staff panel). Pure visual override, scoped to
+   body.staff-withdrawals-page so nothing here touches
+   structure/IDs/JS — every id=, name=, form= attribute above
+   is left completely untouched. This block only recolors
+   what's already there.
+   ========================================================= */
+body.staff-withdrawals-page .card-h form input[name="q"],
+body.staff-withdrawals-page .card-h form input[name="status"]{
+  background: var(--dk-card-2) !important;
+  border: 1px solid var(--dk-border) !important;
+  color: var(--dk-text) !important;
+}
+
+body.staff-withdrawals-page #withdrawalsTable th,
+body.staff-withdrawals-page #withdrawalsTable td{
+  border-right: 1px solid var(--dk-border) !important;
+}
+body.staff-withdrawals-page #withdrawalsTable thead th{
+  background: var(--dk-card-2) !important;
+  color: var(--dk-muted) !important;
+  font-weight: 700 !important;
+  font-size: 11.5px !important;
+  letter-spacing: .06em !important;
+}
+body.staff-withdrawals-page #withdrawalsTable tbody tr:nth-child(even){
+  background: rgba(255,255,255,.02) !important;
+}
+body.staff-withdrawals-page #withdrawalsTable tbody tr:hover{
+  background: rgba(255,255,255,.04) !important;
+}
+body.staff-withdrawals-page #withdrawalsTable tbody tr{
+  border-bottom: 1px solid var(--dk-border) !important;
+}
+body.staff-withdrawals-page #withdrawalsTable tbody td,
+body.staff-withdrawals-page #withdrawalsTable tbody td.user-font{
+  color: var(--dk-text) !important;
+}
+body.staff-withdrawals-page #withdrawalsTable td:nth-child(3){
+  color: var(--dk-blue) !important;
+}
+body.staff-withdrawals-page #withdrawalsTable td:nth-child(3) a{
+  color: var(--dk-blue) !important;
+}
+
+body.staff-withdrawals-page .cs-input-simple{
+  background: rgba(255,255,255,.05) !important;
+  border: 1px solid var(--dk-border) !important;
+  color: #fff !important;
+}
+
+body.staff-withdrawals-page .pager a{
+  color: var(--dk-indigo) !important;
+}
+body.staff-withdrawals-page .pager .muted{
+  color: var(--dk-muted) !important;
+}
 </style>
 
   <div class="card-h">
