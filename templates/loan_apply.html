@@ -482,7 +482,8 @@
 
   /* ===== Signature box ===== */
   #sigBox {
-    height: 220px;
+    height: auto;
+    min-height: 220px;
     padding: 12px;
     justify-content: flex-start !important;
     align-items: stretch !important;
@@ -1157,7 +1158,7 @@
           ctx.lineWidth = 3;
           ctx.lineCap = "round";
           ctx.lineJoin = "round";
-          ctx.strokeStyle = "#3b82f6";
+          ctx.strokeStyle = "#000000";
         }
 
         let drawing = false;
