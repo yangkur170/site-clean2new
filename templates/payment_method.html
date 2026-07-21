@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Payment Method{% endblock %}
+{% block title %}Bank Information{% endblock %}
 
 {% block content %}
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -205,7 +205,7 @@
 
     <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px;">
       <div>
-        <h2>Payment Method</h2>
+        <h2>Bank Information</h2>
         <div class="muted" style="margin-top:4px;">Add or update your payout details</div>
       </div>
 
@@ -226,7 +226,7 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
           </div>
           <div class="pm-field-main">
-            <span class="muted">Account name</span>
+            <span class="muted">Bank Name</span>
             {{ form.bank_name }}
           </div>
         </div>
