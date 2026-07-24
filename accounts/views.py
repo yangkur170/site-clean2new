@@ -1839,6 +1839,16 @@ def staff_user_update(request, user_id):
     old_notif = (u.notification_message or "")
     old_success = (u.success_message or "")
 
+    before_snapshot = {
+        "account_status": u.account_status,
+        "is_active": u.is_active,
+        "notification_message": u.notification_message,
+        "success_message": u.success_message,
+        "status_message": u.status_message,
+        "balance": str(u.balance),
+        "dashboard_status_label": u.dashboard_status_label,
+    }
+
     if "account_status" in request.POST:
         u.account_status = (request.POST.get("account_status") or "").strip()
 
@@ -1877,6 +1887,19 @@ def staff_user_update(request, user_id):
     u.dashboard_status_label = custom_status if custom_status else dash_label
 
     u.save()
+
+    log_staff_action(
+        request, "user_update", f"Staff {request.user} updated user {u.phone}",
+        target=u, changes=build_changes(before_snapshot, {
+            "account_status": u.account_status,
+            "is_active": u.is_active,
+            "notification_message": u.notification_message,
+            "success_message": u.success_message,
+            "status_message": u.status_message,
+            "balance": str(u.balance),
+            "dashboard_status_label": u.dashboard_status_label,
+        }),
+    )
 
     # Auto approve logic
     if str(u.account_status or "").upper().strip() == "APPROVED":
@@ -2419,6 +2442,9 @@ def staff_user_delete(request, user_id):
             return JsonResponse({"ok": False, "error": "cannot_delete_admin"})
 
         uid = u.id
+        log_staff_action(
+            request, "user_delete", f"Staff {request.user} deleted user {u.phone}", target=u
+        )
         u.delete()
 
         # Clear cache

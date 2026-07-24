@@ -25,6 +25,13 @@ FIELD_STYLES = {
     "identity_number": ("🪪", "ID number"),
     "amount": ("💵", "Loan amount"),
     "term_months": ("📅", "Loan term"),
+    "account_status": ("🏷️", "Account status"),
+    "is_active": ("🔌", "Active"),
+    "notification_message": ("📢", "Alert message"),
+    "success_message": ("✅", "Success message"),
+    "status_message": ("🚩", "Banner message"),
+    "balance": ("💰", "Balance"),
+    "dashboard_status_label": ("🏷️", "Custom status"),
 }
 
 STATUS_FIELD_LABELS = {
