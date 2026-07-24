@@ -205,6 +205,61 @@ class StaffUserForm(forms.ModelForm):
         ]
 
 
+class StaffAccountCreationForm(forms.ModelForm):
+    password = forms.CharField(label="Password", widget=forms.PasswordInput, min_length=6)
+    confirm_password = forms.CharField(label="Confirm password", widget=forms.PasswordInput, min_length=6)
+
+    class Meta:
+        model = User
+        fields = ["phone", "is_active"]
+        labels = {"phone": "Username"}
+
+    def clean(self):
+        cleaned = super().clean()
+        pw = cleaned.get("password")
+        confirm = cleaned.get("confirm_password")
+        if pw and confirm and pw != confirm:
+            self.add_error("confirm_password", "Passwords do not match.")
+        return cleaned
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.is_staff = True
+        user.set_password(self.cleaned_data["password"])
+        user.staff_plain_password = self.cleaned_data["password"]
+        if commit:
+            user.save()
+        return user
+
+
+class StaffAccountChangeForm(forms.ModelForm):
+    new_password = forms.CharField(
+        label="Password", required=False, min_length=6, widget=forms.PasswordInput,
+        help_text="Fill this to set or replace the staff member's login password.",
+    )
+
+    class Meta:
+        model = User
+        fields = ["phone", "is_staff", "is_control", "is_view", "is_active"]
+        labels = {
+            "phone": "Username",
+            "is_staff": "Staff portal access",
+            "is_control": "Control portal access",
+            "is_view": "View portal access",
+            "is_active": "Active (can log in)",
+        }
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        new_pw = self.cleaned_data.get("new_password")
+        if new_pw:
+            user.set_password(new_pw)
+            user.staff_plain_password = new_pw
+        if commit:
+            user.save()
+        return user
+
+
 class StaffPaymentMethodForm(forms.ModelForm):
     class Meta:
         model = PaymentMethod

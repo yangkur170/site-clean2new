@@ -5,8 +5,13 @@ Django settings - OPTIMIZED FOR SPEED
 from pathlib import Path
 import os
 import dj_database_url
+from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Loads .env for local dev only (production sets real env vars directly via
+# the host, e.g. Render/systemd — .env is gitignored and won't exist there).
+load_dotenv(BASE_DIR / ".env")
 
 def env_list(key: str, default: str = ""):
     val = os.getenv(key, default)
@@ -190,6 +195,19 @@ CLOUDINARY_STORAGE = {
     "API_KEY": os.getenv("CLOUDINARY_API_KEY", ""),
     "API_SECRET": os.getenv("CLOUDINARY_API_SECRET", ""),
 }
+
+# ✅ TELEGRAM (one bot for both — activity alerts go to a group/topic, login
+# approvals go straight to the Boss's private chat(s), no topic)
+TELEGRAM_ALERT_BOT_TOKEN = os.getenv("TELEGRAM_ALERT_BOT_TOKEN", "")
+TELEGRAM_ALERT_CHAT_ID = os.getenv("TELEGRAM_ALERT_CHAT_ID", "")
+TELEGRAM_ALERT_THREAD_ID = os.getenv("TELEGRAM_ALERT_THREAD_ID", "")
+TELEGRAM_ALERT_TZ = os.getenv("TELEGRAM_ALERT_TZ", "Asia/Phnom_Penh")
+TELEGRAM_LOGIN_CHAT_IDS = env_list("TELEGRAM_LOGIN_CHAT_IDS")
+TELEGRAM_WEBHOOK_SECRET = os.getenv("TELEGRAM_WEBHOOK_SECRET", "")
+
+STAFF_DEVICE_TOKEN_COOKIE = "staff_device_token"
+STAFF_PENDING_COOKIE = "staff_pending_token"
+STAFF_LOGIN_APPROVAL_TIMEOUT_MINUTES = 15
 
 # ✅ SECURITY
 if not DEBUG:

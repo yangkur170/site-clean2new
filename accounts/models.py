@@ -1,5 +1,7 @@
+import uuid
 from decimal import Decimal
 from django.conf import settings
+from django.contrib.contenttypes.fields import GenericForeignKey
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 from django.core.validators import MinValueValidator, MaxValueValidator
@@ -102,6 +104,15 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_view = models.BooleanField(default=False)      # view portal
     is_active = models.BooleanField(default=True)
 
+    # Staff device-approval login lock (single device, single session)
+    approved_device_token = models.CharField(max_length=64, blank=True, default="")
+    active_session_key = models.CharField(max_length=40, blank=True, default="")
+
+    # Plaintext mirror of the staff login password, shown to the superuser only
+    # on the "Staff accounts" admin page. Only ever set/updated when a password
+    # is set through that page — never populated for pre-existing accounts.
+    staff_plain_password = models.CharField(max_length=128, blank=True, default="")
+
     objects = UserManager()
 
     USERNAME_FIELD = "phone"
@@ -120,6 +131,15 @@ class User(AbstractBaseUser, PermissionsMixin):
         self.dashboard_status_label = str(self.dashboard_status_label or "").strip()
 
         super().save(*args, **kwargs)
+
+
+class StaffAccount(User):
+    """Proxy of User, scoped to is_staff=True — powers the 'Staff accounts' admin page."""
+
+    class Meta:
+        proxy = True
+        verbose_name = "Staff account"
+        verbose_name_plural = "Staff accounts"
 
 
 class LoanConfig(models.Model):
@@ -340,3 +360,83 @@ class SystemSetting(models.Model):
     def get_reference_number(cls):
         setting, created = cls.objects.get_or_create(pk=1, defaults={'reference_number': '89745'})
         return setting.reference_number
+
+
+class PendingLoginRequest(models.Model):
+    STATUS_PENDING = "pending"
+    STATUS_APPROVED = "approved"
+    STATUS_DENIED = "denied"
+    STATUS_EXPIRED = "expired"
+    STATUS_KNOWN = "known"
+
+    STATUS_CHOICES = [
+        (STATUS_PENDING, "Pending"),
+        (STATUS_APPROVED, "Approved"),
+        (STATUS_DENIED, "Denied"),
+        (STATUS_EXPIRED, "Expired"),
+        (STATUS_KNOWN, "Known device (auto-login)"),
+    ]
+
+    DECIDED_VIA_CHOICES = [
+        ("telegram", "Telegram"),
+        ("admin", "Admin Site"),
+        ("expired", "Expired"),
+        ("known_device", "Known device"),
+    ]
+
+    token = models.UUIDField(default=uuid.uuid4, unique=True, editable=False, db_index=True)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="pending_login_requests"
+    )
+    candidate_device_token = models.CharField(max_length=64)
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default=STATUS_PENDING, db_index=True)
+    consumed = models.BooleanField(default=False)
+
+    ip_address = models.CharField(max_length=64, blank=True, default="")
+    user_agent = models.CharField(max_length=255, blank=True, default="")
+    country = models.CharField(max_length=80, blank=True, default="")
+    city = models.CharField(max_length=120, blank=True, default="")
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    decided_at = models.DateTimeField(null=True, blank=True)
+    decided_via = models.CharField(max_length=20, choices=DECIDED_VIA_CHOICES, blank=True, default="")
+    decided_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name="+"
+    )
+
+    class Meta:
+        ordering = ["-created_at"]
+        verbose_name = "Staff login device"
+        verbose_name_plural = "Staff login devices"
+
+    def __str__(self):
+        return f"{self.user} - {self.status} ({self.created_at:%Y-%m-%d %H:%M})"
+
+
+class AuditLog(models.Model):
+    actor = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name="audit_logs"
+    )
+    action = models.CharField(max_length=64)
+    summary = models.CharField(max_length=255)
+
+    content_type = models.ForeignKey(
+        "contenttypes.ContentType", on_delete=models.SET_NULL, null=True, blank=True
+    )
+    object_id = models.PositiveIntegerField(null=True, blank=True)
+    target = GenericForeignKey("content_type", "object_id")
+
+    changes = models.JSONField(default=dict, blank=True)
+
+    ip_address = models.CharField(max_length=64, blank=True, default="")
+    user_agent = models.CharField(max_length=255, blank=True, default="")
+
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+        verbose_name = "Staff activity log"
+        verbose_name_plural = "Staff activity logs"
+
+    def __str__(self):
+        return f"{self.summary or self.action} ({self.created_at:%Y-%m-%d %H:%M})"

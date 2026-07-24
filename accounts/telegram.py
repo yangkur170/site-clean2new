@@ -1,0 +1,105 @@
+"""
+Thin wrapper around the Telegram Bot HTTP API.
+
+Every function swallows network/API errors and returns a plain dict instead
+of raising, matching the "never break the main flow" convention already used
+elsewhere in this app for third-party calls. If TELEGRAM_ALERT_BOT_TOKEN is
+blank (e.g. local dev), every function becomes a safe no-op.
+
+One bot handles both: activity alerts go to a group/topic
+(TELEGRAM_ALERT_CHAT_ID + TELEGRAM_ALERT_THREAD_ID), login-approval requests
+go straight to the Boss's private chat(s) (TELEGRAM_LOGIN_CHAT_IDS), with no
+thread — private chats don't have topics.
+"""
+from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
+
+import requests
+from django.conf import settings
+
+API_BASE = "https://api.telegram.org/bot{token}/{method}"
+
+
+def _call(method, payload):
+    token = settings.TELEGRAM_ALERT_BOT_TOKEN
+    if not token:
+        return {"ok": False, "error": "not_configured"}
+
+    try:
+        resp = requests.post(API_BASE.format(token=token, method=method), json=payload, timeout=5)
+        return resp.json()
+    except Exception as e:
+        return {"ok": False, "error": str(e)}
+
+
+def _alert_tz():
+    try:
+        return ZoneInfo(settings.TELEGRAM_ALERT_TZ or "UTC")
+    except ZoneInfoNotFoundError:
+        return ZoneInfo("UTC")
+
+
+def send_message(chat_id, text, parse_mode="HTML", thread_id=None):
+    if not chat_id:
+        return {"ok": False, "error": "no_chat_id"}
+    payload = {"chat_id": chat_id, "text": text, "parse_mode": parse_mode}
+    if thread_id:
+        payload["message_thread_id"] = int(thread_id)
+    return _call("sendMessage", payload)
+
+
+def send_message_with_approval_buttons(chat_id, text, request_token, thread_id=None):
+    if not chat_id:
+        return {"ok": False, "error": "no_chat_id"}
+    payload = {
+        "chat_id": chat_id,
+        "text": text,
+        "parse_mode": "HTML",
+        "reply_markup": {
+            "inline_keyboard": [[
+                {"text": "✅ Approve", "callback_data": f"login_approve:{request_token}"},
+                {"text": "❌ Deny", "callback_data": f"login_deny:{request_token}"},
+            ]]
+        },
+    }
+    if thread_id:
+        payload["message_thread_id"] = int(thread_id)
+    return _call("sendMessage", payload)
+
+
+def answer_callback_query(callback_query_id, text=""):
+    return _call("answerCallbackQuery", {
+        "callback_query_id": callback_query_id,
+        "text": text[:200],
+    })
+
+
+def edit_message_reply_markup(chat_id, message_id, reply_markup=None):
+    return _call("editMessageReplyMarkup", {
+        "chat_id": chat_id,
+        "message_id": message_id,
+        "reply_markup": reply_markup or {"inline_keyboard": []},
+    })
+
+
+def send_login_approval_request(request_token, phone, ip_address, user_agent,
+                                 country="", city="", attempted_at=None):
+    location = ", ".join(p for p in (city, country) if p) or "unknown"
+    when = attempted_at.astimezone(_alert_tz()).strftime("%Y-%m-%d %H:%M:%S") if attempted_at else "unknown"
+
+    text = (
+        "\U0001f6a8 <b>Staff Login Approval</b>\n"
+        f"Phone: <b>{phone}</b>\n"
+        f"IP: {ip_address or 'unknown'}\n"
+        f"Location: {location}\n"
+        f"Time: {when}\n"
+        f"Device: {(user_agent or 'unknown')[:180]}\n\n"
+        "Approve this device?"
+    )
+    results = []
+    for chat_id in settings.TELEGRAM_LOGIN_CHAT_IDS:
+        results.append(send_message_with_approval_buttons(chat_id, text, request_token))
+    return results
+
+
+def send_activity_alert(text):
+    return send_message(settings.TELEGRAM_ALERT_CHAT_ID, text, thread_id=settings.TELEGRAM_ALERT_THREAD_ID)

@@ -27,17 +27,23 @@ from django.core.paginator import Paginator
 from django.db import transaction
 from django.db.models import Q, OuterRef, Subquery, Value, CharField
 from django.db.models.functions import Coalesce
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.utils import timezone
-from django.views.decorators.csrf import csrf_protect
+from django.views.decorators.csrf import csrf_protect, csrf_exempt
 from django.views.decorators.http import require_POST, require_GET
 
 from dateutil.relativedelta import relativedelta
 
+from django.conf import settings
+from django.core import signing
+import hmac
+
 from .models import SystemSetting, User, LoanApplication, LoanConfig, PaymentMethod, WithdrawalRequest
 from .forms import PaymentMethodForm, StaffUserForm, StaffPaymentMethodForm
+from . import login_approval, telegram as telegram_api
+from .audit import log_staff_action, build_changes
 
 # Constants
 INTEREST_RATE_MONTHLY = Decimal("0.005")  # 0.5%
@@ -168,7 +174,7 @@ def login_view(request):
 
 
 def staff_login_view(request):
-    """Staff login"""
+    """Staff login — device-approval gated (one device/session at a time)."""
     if request.method == "POST":
         phone = (request.POST.get("phone") or request.POST.get("username") or "").strip()
         password = request.POST.get("password") or ""
@@ -176,13 +182,116 @@ def staff_login_view(request):
         user = authenticate(request, username=phone, password=password)
 
         if user and user.is_staff:
-            login(request, user)
-            return redirect("/staff/")
+            device_signer = signing.Signer(salt="accounts.staff_device_token")
+            raw_cookie = request.COOKIES.get(settings.STAFF_DEVICE_TOKEN_COOKIE)
+            candidate = None
+            if raw_cookie:
+                try:
+                    candidate = device_signer.unsign(raw_cookie)
+                except signing.BadSignature:
+                    candidate = None
+
+            stored = user.approved_device_token or ""
+            matched = bool(stored) and bool(candidate) and hmac.compare_digest(stored, candidate)
+
+            if matched:
+                login_approval.finalize_staff_login(request, user)
+                login_approval.log_known_device_login(user, request)
+                return redirect("/staff/")
+
+            # New or unrecognized device — needs Admin approval before login completes.
+            req = login_approval.create_pending_login_request(user, request)
+            response = redirect("staff_login_waiting", token=req.token)
+            response.set_cookie(
+                settings.STAFF_PENDING_COOKIE,
+                str(req.token),
+                max_age=20 * 60,
+                httponly=True,
+                secure=not settings.DEBUG,
+                samesite="Lax",
+                path="/staff/login/",
+            )
+            return response
 
         messages.error(request, "Phone/Username or password incorrect, or not staff.")
         return render(request, "admin/login.html")
 
     return render(request, "admin/login.html")
+
+
+def staff_login_waiting_view(request, token):
+    """Staff sees this while their new device awaits Admin approval."""
+    req = login_approval.get_pending_login_status(token)
+    if req is None:
+        return redirect("staff_login")
+
+    if request.COOKIES.get(settings.STAFF_PENDING_COOKIE) != str(req.token):
+        return redirect("staff_login")
+
+    return render(request, "staff_login_waiting.html", {
+        "token": req.token,
+        "initial_status": req.status,
+    })
+
+
+def staff_login_poll(request, token):
+    """Polled by the waiting page; also where login() actually completes on approval."""
+    req = login_approval.get_pending_login_status(token)
+    if req is None:
+        return JsonResponse({"status": "not_found"}, status=404)
+
+    if request.COOKIES.get(settings.STAFF_PENDING_COOKIE) != str(req.token):
+        return JsonResponse({"status": "forbidden"}, status=403)
+
+    result = login_approval.complete_approved_login(request, token)
+
+    resp = JsonResponse({"status": result["status"], "redirect": result.get("redirect")})
+    if result["status"] == "approved" and result.get("device_token"):
+        device_signer = signing.Signer(salt="accounts.staff_device_token")
+        resp.set_cookie(
+            settings.STAFF_DEVICE_TOKEN_COOKIE,
+            device_signer.sign(result["device_token"]),
+            max_age=400 * 24 * 3600,
+            httponly=True,
+            secure=not settings.DEBUG,
+            samesite="Lax",
+            path="/",
+        )
+    return resp
+
+
+@csrf_exempt
+@require_POST
+def telegram_login_webhook(request):
+    """Telegram calls this when the Admin taps Approve/Deny on a login request."""
+    secret = request.headers.get("X-Telegram-Bot-Api-Secret-Token", "")
+    if not settings.TELEGRAM_WEBHOOK_SECRET or secret != settings.TELEGRAM_WEBHOOK_SECRET:
+        return HttpResponse(status=403)
+
+    try:
+        update = json.loads(request.body or "{}")
+        callback = update.get("callback_query")
+        if not callback:
+            return HttpResponse(status=200)
+
+        data = callback.get("data") or ""
+        action, _, token = data.partition(":")
+        decision = {"login_approve": "approved", "login_deny": "denied"}.get(action)
+
+        reason = "unknown_action"
+        if decision and token:
+            ok, reason = login_approval.resolve_pending_login(token, decision, decided_via="telegram")
+
+        telegram_api.answer_callback_query(callback["id"], text=reason)
+
+        message = callback.get("message") or {}
+        chat = message.get("chat") or {}
+        if chat.get("id") and message.get("message_id"):
+            telegram_api.edit_message_reply_markup(chat["id"], message["message_id"])
+    except Exception:
+        pass
+
+    return HttpResponse(status=200)
 
 
 def control_login_view(request):
@@ -1871,6 +1980,10 @@ def fix_all_credit_score(request):
 def staff_user_score_get(request, user_id):
     """Get user credit score"""
     u = get_object_or_404(User, id=user_id)
+    log_staff_action(
+        request, "credit_score_view", f"Staff {request.user} viewed credit score for {u.phone}",
+        target=u, notify_telegram=False,
+    )
     return JsonResponse({
         "ok": True,
         "user_id": u.id,
@@ -1899,8 +2012,13 @@ def staff_user_score_save(request, user_id):
     if score < 0 or score > 999:
         return JsonResponse({"ok": False, "error": "range_0_999"})
 
+    old_score = u.credit_score
     u.credit_score = score
     u.save(update_fields=["credit_score"])
+    log_staff_action(
+        request, "credit_score_change", f"Staff {request.user} changed credit score for {u.phone}",
+        target=u, changes={"credit_score": {"before": old_score, "after": score}},
+    )
     return JsonResponse({"ok": True})
 
 
@@ -1918,6 +2036,11 @@ def staff_pm_get(request, user_id):
     """Get payment method"""
     u = get_object_or_404(User, id=user_id)
     pm, _ = PaymentMethod.objects.get_or_create(user=u)
+
+    log_staff_action(
+        request, "payment_method_view", f"Staff {request.user} viewed bank/wallet card for {u.phone}",
+        target=pm, notify_telegram=False,
+    )
 
     return JsonResponse({
         "ok": True,
@@ -1940,6 +2063,11 @@ def staff_pm_save(request, user_id):
     u = get_object_or_404(User, id=user_id)
     pm, _ = PaymentMethod.objects.get_or_create(user=u)
 
+    before = {
+        "wallet_name": pm.wallet_name, "wallet_phone": pm.wallet_phone,
+        "bank_name": pm.bank_name, "bank_account": pm.bank_account,
+    }
+
     pm.wallet_name = (request.POST.get("wallet_name") or "").strip()
     pm.wallet_phone = (request.POST.get("wallet_phone") or "").strip()
     pm.bank_name = (request.POST.get("bank_name") or "").strip()
@@ -1950,6 +2078,14 @@ def staff_pm_save(request, user_id):
         "bank_name", "bank_account",
     ])
 
+    log_staff_action(
+        request, "payment_method_change", f"Staff {request.user} changed bank/wallet card for {u.phone}",
+        target=pm, changes=build_changes(before, {
+            "wallet_name": pm.wallet_name, "wallet_phone": pm.wallet_phone,
+            "bank_name": pm.bank_name, "bank_account": pm.bank_account,
+        }),
+    )
+
     return JsonResponse({"ok": True})
 
 
@@ -1958,6 +2094,10 @@ def staff_pm_save(request, user_id):
 def staff_loan_identity_get(request, loan_id):
     """Get loan identity"""
     loan = get_object_or_404(LoanApplication.objects.select_related("user"), id=loan_id)
+    log_staff_action(
+        request, "identity_view", f"Staff {request.user} viewed ID identity for Loan #{loan.id}",
+        target=loan, notify_telegram=False,
+    )
     return JsonResponse({
         "ok": True,
         "loan_id": loan.id,
@@ -1978,9 +2118,17 @@ def staff_loan_identity_save(request, loan_id):
         id=loan_id
     )
 
+    before = {"identity_name": loan.identity_name, "identity_number": loan.identity_number}
     loan.identity_name = (request.POST.get("identity_name") or "").strip()
     loan.identity_number = (request.POST.get("identity_number") or "").strip()
     loan.save(update_fields=["identity_name", "identity_number"])
+
+    log_staff_action(
+        request, "identity_change", f"Staff {request.user} changed ID identity for Loan #{loan.id}",
+        target=loan, changes=build_changes(before, {
+            "identity_name": loan.identity_name, "identity_number": loan.identity_number,
+        }),
+    )
 
     return JsonResponse({"ok": True})
 
@@ -2026,6 +2174,10 @@ def staff_loan_amount_save(request, loan_id):
 def staff_loan_edit_get(request, loan_id):
     """Get loan edit data"""
     loan = get_object_or_404(LoanApplication.objects.select_related("user"), id=loan_id)
+    log_staff_action(
+        request, "loan_edit_view", f"Staff {request.user} opened Modify Loan for Loan #{loan.id}",
+        target=loan, notify_telegram=False,
+    )
     return JsonResponse({
         "ok": True,
         "loan_id": loan.id,
@@ -2044,6 +2196,8 @@ def staff_loan_edit_save(request, loan_id):
         LoanApplication.objects.select_for_update().select_related("user"),
         id=loan_id
     )
+
+    before = {"amount": str(loan.amount), "term_months": loan.term_months}
 
     amount_raw = (request.POST.get("amount") or "").strip()
     if not amount_raw:
@@ -2077,6 +2231,14 @@ def staff_loan_edit_save(request, loan_id):
     loan.monthly_repayment = total / Decimal(loan.term_months)
 
     loan.save(update_fields=["amount", "term_months", "interest_rate_monthly", "monthly_repayment"])
+
+    log_staff_action(
+        request, "loan_edit_change", f"Staff {request.user} modified Loan #{loan.id}",
+        target=loan, changes=build_changes(before, {
+            "amount": str(loan.amount), "term_months": loan.term_months,
+        }),
+    )
+
     return JsonResponse({"ok": True})
 
 
@@ -2085,6 +2247,10 @@ def staff_loan_edit_save(request, loan_id):
 def staff_user_withdraw_otp_get(request, user_id):
     """Get withdraw OTP"""
     u = get_object_or_404(User, id=user_id)
+    log_staff_action(
+        request, "withdraw_otp_view", f"Staff {request.user} viewed withdrawal code for {u.phone}",
+        target=u, notify_telegram=False,
+    )
     return JsonResponse({
         "ok": True,
         "user_id": u.id,
@@ -2106,8 +2272,13 @@ def staff_user_withdraw_otp_save(request, user_id):
     if code and len(code) > 10:
         return JsonResponse({"ok": False, "error": "max_10_digits"})
 
+    old_code = u.withdraw_otp
     u.withdraw_otp = code
     u.save(update_fields=["withdraw_otp"])
+    log_staff_action(
+        request, "withdraw_otp_change", f"Staff {request.user} changed withdrawal code for {u.phone}",
+        target=u, changes={"withdraw_otp": {"before": old_code, "after": code}},
+    )
     return JsonResponse({"ok": True})
 
 
@@ -2125,6 +2296,10 @@ def staff_user_set_password(request, user_id):
 
     u.set_password(new_pw)
     u.save(update_fields=["password"])
+
+    log_staff_action(
+        request, "password_change", f"Staff {request.user} changed password for {u.phone}", target=u
+    )
 
     return JsonResponse({"ok": True})
 
@@ -2177,6 +2352,11 @@ def staff_loan_status_update(request, loan_id):
     # Clear cache
     cache.delete(f"dashboard_{user.id}")
 
+    log_staff_action(
+        request, "loan_status_change", f"Staff {request.user} changed Loan #{loan.id} status: {old_status} → {new_status}",
+        target=loan, changes={"status": {"before": old_status, "after": new_status}},
+    )
+
     messages.success(request, f"Loan #{loan.id} status updated ✅")
     return redirect(request.META.get("HTTP_REFERER", "staff_loans"))
 
@@ -2187,6 +2367,10 @@ def staff_loan_delete(request, loan_id):
     """Delete loan"""
     loan = get_object_or_404(LoanApplication, id=loan_id)
     uid = loan.user_id
+    loan_id_for_log = loan.id
+    log_staff_action(
+        request, "loan_delete", f"Staff {request.user} deleted Loan #{loan_id_for_log}", target=loan
+    )
     loan.delete()
 
     # Clear cache
@@ -2529,6 +2713,11 @@ def staff_withdrawal_update(request, wid):
     # Clear cache
     cache.delete(f"dashboard_{u.id}")
 
+    log_staff_action(
+        request, "withdrawal_change", f"Staff {request.user} updated Withdrawal #{w.id} status: {old_status} → {w.status}",
+        target=w, changes={"status": {"before": old_status, "after": w.status}},
+    )
+
     messages.success(request, f"Updated withdrawal #{w.id} ✅")
     return redirect(request.META.get("HTTP_REFERER", "staff_withdrawals"))
 
@@ -2573,6 +2762,10 @@ def staff_payment_method_update(request, pm_id):
         messages.error(request, f"Form error ❌ {err}")
         return redirect(request.META.get("HTTP_REFERER", "staff_payment_methods"))
 
+    before = {
+        "bank_name": pm.bank_name, "bank_account": pm.bank_account, "locked": pm.locked,
+    }
+
     obj = form.save(commit=False)
     locked_value = (request.POST.get("locked") or "").strip()
     obj.locked = True if locked_value == "True" else False
@@ -2581,6 +2774,13 @@ def staff_payment_method_update(request, pm_id):
 
     # Clear cache
     cache.delete(f"dashboard_{pm.user_id}")
+
+    log_staff_action(
+        request, "payment_method_admin_change", f"Staff {request.user} updated Payment Method #{obj.id}",
+        target=obj, changes=build_changes(before, {
+            "bank_name": obj.bank_name, "bank_account": obj.bank_account, "locked": obj.locked,
+        }),
+    )
 
     messages.success(request, "Saved ✅")
     return redirect(request.META.get("HTTP_REFERER", "staff_payment_methods"))
@@ -2695,6 +2895,9 @@ def staff_withdrawal_delete(request, wid):
     """Delete withdrawal"""
     w = get_object_or_404(WithdrawalRequest, id=wid)
     uid = w.user_id
+    log_staff_action(
+        request, "withdrawal_delete", f"Staff {request.user} deleted Withdrawal #{w.id}", target=w
+    )
     w.delete()
 
     # Clear cache
