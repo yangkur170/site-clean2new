@@ -137,7 +137,7 @@ def create_pending_login_request(user, request):
         city=city,
     )
     telegram.send_login_approval_request(
-        request_token=str(req.token),
+        staff_pk=user.pk,
         phone=user.phone,
         ip_address=req.ip_address,
         user_agent=req.user_agent,
@@ -201,6 +201,19 @@ def resolve_pending_login(token, decision, decided_via, decided_by=None):
         req.save(update_fields=["status", "decided_at", "decided_via", "decided_by"])
 
     return True, decision
+
+
+def resolve_latest_pending_for_user(user, decision, decided_via):
+    """Find this user's most recent pending request and resolve it. Returns (ok, reason)."""
+    pending = (
+        PendingLoginRequest.objects
+        .filter(user=user, status=PendingLoginRequest.STATUS_PENDING)
+        .order_by("-created_at")
+        .first()
+    )
+    if not pending:
+        return False, "no_pending_request"
+    return resolve_pending_login(pending.token, decision, decided_via=decided_via)
 
 
 def complete_approved_login(request, token):

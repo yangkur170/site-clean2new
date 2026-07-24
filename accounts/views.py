@@ -27,7 +27,7 @@ from django.core.paginator import Paginator
 from django.db import transaction
 from django.db.models import Q, OuterRef, Subquery, Value, CharField
 from django.db.models.functions import Coalesce
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.utils import timezone
@@ -42,7 +42,7 @@ import hmac
 
 from .models import SystemSetting, User, LoanApplication, LoanConfig, PaymentMethod, WithdrawalRequest
 from .forms import PaymentMethodForm, StaffUserForm, StaffPaymentMethodForm
-from . import login_approval, telegram as telegram_api
+from . import login_approval
 from .audit import log_staff_action, build_changes
 
 # Constants
@@ -262,36 +262,46 @@ def staff_login_poll(request, token):
 
 @csrf_exempt
 @require_POST
-def telegram_login_webhook(request):
-    """Telegram calls this when the Admin taps Approve/Deny on a login request."""
-    secret = request.headers.get("X-Telegram-Bot-Api-Secret-Token", "")
-    if not settings.TELEGRAM_WEBHOOK_SECRET or secret != settings.TELEGRAM_WEBHOOK_SECRET:
-        return HttpResponse(status=403)
+def device_action(request):
+    """
+    Called by the separate polling bot that shares this project's Telegram
+    bot token (this site must NOT run a webhook for that token — webhook and
+    getUpdates polling can't coexist). Authenticated solely by a shared
+    secret, no session required.
+    """
+    secret = settings.DEVICE_ACTION_SECRET or ""
+    given = request.POST.get("secret") or request.headers.get("X-Device-Secret", "")
+    if not secret or not hmac.compare_digest(str(given), str(secret)):
+        return JsonResponse({"ok": False, "message": "unauthorized"}, status=403)
 
-    try:
-        update = json.loads(request.body or "{}")
-        callback = update.get("callback_query")
-        if not callback:
-            return HttpResponse(status=200)
+    action = (request.POST.get("action") or "").strip()
+    pk = (request.POST.get("pk") or "").strip()
 
-        data = callback.get("data") or ""
-        action, _, token = data.partition(":")
-        decision = {"login_approve": "approved", "login_deny": "denied"}.get(action)
+    u = User.objects.filter(pk=pk).first()
+    if not u:
+        return JsonResponse({"ok": False, "message": "Staff not found (already removed?)."})
 
-        reason = "unknown_action"
-        if decision and token:
-            ok, reason = login_approval.resolve_pending_login(token, decision, decided_via="telegram")
+    phone = u.phone
 
-        telegram_api.answer_callback_query(callback["id"], text=reason)
+    if action == "allow":
+        ok, reason = login_approval.resolve_latest_pending_for_user(u, "approved", decided_via="telegram")
+        if not ok:
+            return JsonResponse({"ok": False, "message": f"Could not approve for {phone}: {reason}"})
+        return JsonResponse({"ok": True, "message": f"✅ Device approved for {phone}. They can log in now."})
 
-        message = callback.get("message") or {}
-        chat = message.get("chat") or {}
-        if chat.get("id") and message.get("message_id"):
-            telegram_api.edit_message_reply_markup(chat["id"], message["message_id"])
-    except Exception:
-        pass
+    if action == "reject":
+        ok, reason = login_approval.resolve_latest_pending_for_user(u, "denied", decided_via="telegram")
+        if not ok:
+            return JsonResponse({"ok": False, "message": f"Could not reject for {phone}: {reason}"})
+        return JsonResponse({"ok": True, "message": f"🚫 Rejected the new device for {phone}. They stay on their old device."})
 
-    return HttpResponse(status=200)
+    if action == "del":
+        if u.is_superuser:
+            return JsonResponse({"ok": False, "message": "Refusing to delete a superuser account via this endpoint."})
+        u.delete()
+        return JsonResponse({"ok": True, "message": f"🗑 Staff account {phone} deleted."})
+
+    return JsonResponse({"ok": False, "message": "Unknown action."})
 
 
 def control_login_view(request):

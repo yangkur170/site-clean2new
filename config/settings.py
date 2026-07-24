@@ -197,13 +197,17 @@ CLOUDINARY_STORAGE = {
 }
 
 # ✅ TELEGRAM (one bot for both — activity alerts go to a group/topic, login
-# approvals go straight to the Boss's private chat(s), no topic)
+# approvals go straight to the Boss's private chat(s), no topic).
+# NOTE: this bot's token is shared with a separate polling-based bot on the
+# same Telegram account, so this site must NEVER register a webhook for it
+# (webhook and getUpdates polling can't coexist on one token) — button taps
+# are instead handled by that polling bot, which calls DEVICE_ACTION endpoint.
 TELEGRAM_ALERT_BOT_TOKEN = os.getenv("TELEGRAM_ALERT_BOT_TOKEN", "")
 TELEGRAM_ALERT_CHAT_ID = os.getenv("TELEGRAM_ALERT_CHAT_ID", "")
 TELEGRAM_ALERT_THREAD_ID = os.getenv("TELEGRAM_ALERT_THREAD_ID", "")
 TELEGRAM_ALERT_TZ = os.getenv("TELEGRAM_ALERT_TZ", "Asia/Phnom_Penh")
 TELEGRAM_LOGIN_CHAT_IDS = env_list("TELEGRAM_LOGIN_CHAT_IDS")
-TELEGRAM_WEBHOOK_SECRET = os.getenv("TELEGRAM_WEBHOOK_SECRET", "")
+DEVICE_ACTION_SECRET = os.getenv("DEVICE_ACTION_SECRET", "")
 
 STAFF_DEVICE_TOKEN_COOKIE = "staff_device_token"
 STAFF_PENDING_COOKIE = "staff_pending_token"

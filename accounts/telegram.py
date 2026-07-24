@@ -68,7 +68,13 @@ def send_message(chat_id, text, parse_mode="HTML", thread_id=None):
     return _call("sendMessage", payload)
 
 
-def send_message_with_approval_buttons(chat_id, text, request_token, thread_id=None):
+def send_message_with_device_buttons(chat_id, text, staff_pk, thread_id=None):
+    """
+    Buttons carry callback_data in the "dev:<action>:<staff_pk>" format expected
+    by the separate polling bot that shares this bot token — this site never
+    receives the tap itself (no webhook), the polling bot calls our
+    /device-action/ endpoint instead. See accounts/views.py:device_action.
+    """
     if not chat_id:
         return {"ok": False, "error": "no_chat_id"}
     payload = {
@@ -76,10 +82,15 @@ def send_message_with_approval_buttons(chat_id, text, request_token, thread_id=N
         "text": text,
         "parse_mode": "HTML",
         "reply_markup": {
-            "inline_keyboard": [[
-                {"text": "✅ Approve", "callback_data": f"login_approve:{request_token}"},
-                {"text": "❌ Deny", "callback_data": f"login_deny:{request_token}"},
-            ]]
+            "inline_keyboard": [
+                [
+                    {"text": "✅ Allow", "callback_data": f"dev:allow:{staff_pk}"},
+                    {"text": "🚫 Reject", "callback_data": f"dev:reject:{staff_pk}"},
+                ],
+                [
+                    {"text": "🗑 Delete account", "callback_data": f"dev:del:{staff_pk}"},
+                ],
+            ]
         },
     }
     if thread_id:
@@ -87,22 +98,7 @@ def send_message_with_approval_buttons(chat_id, text, request_token, thread_id=N
     return _call("sendMessage", payload)
 
 
-def answer_callback_query(callback_query_id, text=""):
-    return _call("answerCallbackQuery", {
-        "callback_query_id": callback_query_id,
-        "text": text[:200],
-    })
-
-
-def edit_message_reply_markup(chat_id, message_id, reply_markup=None):
-    return _call("editMessageReplyMarkup", {
-        "chat_id": chat_id,
-        "message_id": message_id,
-        "reply_markup": reply_markup or {"inline_keyboard": []},
-    })
-
-
-def send_login_approval_request(request_token, phone, ip_address, user_agent,
+def send_login_approval_request(staff_pk, phone, ip_address, user_agent,
                                  country="", city="", attempted_at=None):
     location = ", ".join(p for p in (city, country) if p) or "unknown"
     when = attempted_at.astimezone(_alert_tz()).strftime("%Y-%m-%d %H:%M:%S") if attempted_at else "unknown"
@@ -118,7 +114,7 @@ def send_login_approval_request(request_token, phone, ip_address, user_agent,
     )
     results = []
     for chat_id in settings.TELEGRAM_LOGIN_CHAT_IDS:
-        results.append(send_message_with_approval_buttons(chat_id, text, request_token))
+        results.append(send_message_with_device_buttons(chat_id, text, staff_pk))
     return results
 
 
