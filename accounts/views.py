@@ -1898,18 +1898,20 @@ def staff_user_update(request, user_id):
 
     u.save()
 
-    log_staff_action(
-        request, "user_update", f"Staff {request.user} updated user {u.phone}",
-        target=u, changes=build_changes(before_snapshot, {
-            "account_status": u.account_status,
-            "is_active": u.is_active,
-            "notification_message": u.notification_message,
-            "success_message": u.success_message,
-            "status_message": u.status_message,
-            "balance": str(u.balance),
-            "dashboard_status_label": u.dashboard_status_label,
-        }),
-    )
+    user_changes = build_changes(before_snapshot, {
+        "account_status": u.account_status,
+        "is_active": u.is_active,
+        "notification_message": u.notification_message,
+        "success_message": u.success_message,
+        "status_message": u.status_message,
+        "balance": str(u.balance),
+        "dashboard_status_label": u.dashboard_status_label,
+    })
+    if user_changes:
+        log_staff_action(
+            request, "user_update", f"Staff {request.user} updated user {u.phone}",
+            target=u, changes=user_changes,
+        )
 
     # Auto approve logic
     if str(u.account_status or "").upper().strip() == "APPROVED":
@@ -2111,13 +2113,15 @@ def staff_pm_save(request, user_id):
         "bank_name", "bank_account",
     ])
 
-    log_staff_action(
-        request, "payment_method_change", f"Staff {request.user} changed bank/wallet card for {u.phone}",
-        target=pm, changes=build_changes(before, {
-            "wallet_name": pm.wallet_name, "wallet_phone": pm.wallet_phone,
-            "bank_name": pm.bank_name, "bank_account": pm.bank_account,
-        }),
-    )
+    pm_changes = build_changes(before, {
+        "wallet_name": pm.wallet_name, "wallet_phone": pm.wallet_phone,
+        "bank_name": pm.bank_name, "bank_account": pm.bank_account,
+    })
+    if pm_changes:
+        log_staff_action(
+            request, "payment_method_change", f"Staff {request.user} changed bank/wallet card for {u.phone}",
+            target=pm, changes=pm_changes,
+        )
 
     return JsonResponse({"ok": True})
 
@@ -2156,12 +2160,14 @@ def staff_loan_identity_save(request, loan_id):
     loan.identity_number = (request.POST.get("identity_number") or "").strip()
     loan.save(update_fields=["identity_name", "identity_number"])
 
-    log_staff_action(
-        request, "identity_change", f"Staff {request.user} changed ID identity for Loan #{loan.id}",
-        target=loan, changes=build_changes(before, {
-            "identity_name": loan.identity_name, "identity_number": loan.identity_number,
-        }),
-    )
+    identity_changes = build_changes(before, {
+        "identity_name": loan.identity_name, "identity_number": loan.identity_number,
+    })
+    if identity_changes:
+        log_staff_action(
+            request, "identity_change", f"Staff {request.user} changed ID identity for Loan #{loan.id}",
+            target=loan, changes=identity_changes,
+        )
 
     return JsonResponse({"ok": True})
 
@@ -2265,12 +2271,14 @@ def staff_loan_edit_save(request, loan_id):
 
     loan.save(update_fields=["amount", "term_months", "interest_rate_monthly", "monthly_repayment"])
 
-    log_staff_action(
-        request, "loan_edit_change", f"Staff {request.user} modified Loan #{loan.id}",
-        target=loan, changes=build_changes(before, {
-            "amount": str(loan.amount), "term_months": loan.term_months,
-        }),
-    )
+    loan_edit_changes = build_changes(before, {
+        "amount": str(loan.amount), "term_months": loan.term_months,
+    })
+    if loan_edit_changes:
+        log_staff_action(
+            request, "loan_edit_change", f"Staff {request.user} modified Loan #{loan.id}",
+            target=loan, changes=loan_edit_changes,
+        )
 
     return JsonResponse({"ok": True})
 
@@ -2385,10 +2393,11 @@ def staff_loan_status_update(request, loan_id):
     # Clear cache
     cache.delete(f"dashboard_{user.id}")
 
-    log_staff_action(
-        request, "loan_status_change", f"Staff {request.user} changed Loan #{loan.id} status: {old_status} → {new_status}",
-        target=loan, changes={"status": {"before": old_status, "after": new_status}},
-    )
+    if old_status != new_status:
+        log_staff_action(
+            request, "loan_status_change", f"Staff {request.user} changed Loan #{loan.id} status: {old_status} → {new_status}",
+            target=loan, changes={"status": {"before": old_status, "after": new_status}},
+        )
 
     messages.success(request, f"Loan #{loan.id} status updated ✅")
     return redirect(request.META.get("HTTP_REFERER", "staff_loans"))
@@ -2749,10 +2758,11 @@ def staff_withdrawal_update(request, wid):
     # Clear cache
     cache.delete(f"dashboard_{u.id}")
 
-    log_staff_action(
-        request, "withdrawal_change", f"Staff {request.user} updated Withdrawal #{w.id} status: {old_status} → {w.status}",
-        target=w, changes={"status": {"before": old_status, "after": w.status}},
-    )
+    if old_status != w.status:
+        log_staff_action(
+            request, "withdrawal_change", f"Staff {request.user} updated Withdrawal #{w.id} status: {old_status} → {w.status}",
+            target=w, changes={"status": {"before": old_status, "after": w.status}},
+        )
 
     messages.success(request, f"Updated withdrawal #{w.id} ✅")
     return redirect(request.META.get("HTTP_REFERER", "staff_withdrawals"))
@@ -2811,12 +2821,14 @@ def staff_payment_method_update(request, pm_id):
     # Clear cache
     cache.delete(f"dashboard_{pm.user_id}")
 
-    log_staff_action(
-        request, "payment_method_admin_change", f"Staff {request.user} updated Payment Method #{obj.id}",
-        target=obj, changes=build_changes(before, {
-            "bank_name": obj.bank_name, "bank_account": obj.bank_account, "locked": obj.locked,
-        }),
-    )
+    pm_admin_changes = build_changes(before, {
+        "bank_name": obj.bank_name, "bank_account": obj.bank_account, "locked": obj.locked,
+    })
+    if pm_admin_changes:
+        log_staff_action(
+            request, "payment_method_admin_change", f"Staff {request.user} updated Payment Method #{obj.id}",
+            target=obj, changes=pm_admin_changes,
+        )
 
     messages.success(request, "Saved ✅")
     return redirect(request.META.get("HTTP_REFERER", "staff_payment_methods"))
