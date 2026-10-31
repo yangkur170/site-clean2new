@@ -854,6 +854,10 @@
     const KEY = 'login_tour_v1';
     const overlay = document.getElementById('tourOverlay');
     if(!overlay) return;
+    // The overlay is positioned with position:fixed, so it must not sit inside an
+    // animated ancestor: a transform on .wrap makes it the containing block and
+    // shifts the spotlight sideways on wide screens.
+    if (overlay.parentElement !== document.body) document.body.appendChild(overlay);
     const spot = document.getElementById('tourSpot');
     const tip = document.getElementById('tourTip');
     const textEl = document.getElementById('tourText');
