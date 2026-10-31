@@ -173,7 +173,7 @@
     }
     function clearTimers(){ if (poll){ clearInterval(poll); poll = null; } if (doneTimer){ clearTimeout(doneTimer); doneTimer = null; } }
 
-    function position(retried){
+    function position(){
       var step = steps[i];
       var t = document.querySelector(step.sel);
       if (!t){ advance(); return; }
@@ -198,19 +198,12 @@
       var roomAbove = (r.top - pad) - vTop - gap;
       var below = (roomBelow >= tipH) || (roomBelow >= roomAbove);
       var top = below ? (r.bottom + pad + gap) : (r.top - pad - gap - tipH);
-      top = Math.max(vTop + 10, Math.min(top, vTop + vH - tipH - 10));
-
-      // In a tight viewport - a phone with the keyboard up - clamping can push
-      // the tip back over the very field it points at. Scroll the field toward
-      // the top of the visible area so the tip has somewhere to sit.
-      if (!retried && (top + tipH > r.top - pad) && (top < r.bottom + pad)){
-        var shift = (r.top - pad) - (vTop + 12);
-        if (shift > 2){
-          window.scrollBy(0, shift);
-          setTimeout(function(){ position(true); }, 60);
-          return;
-        }
+      // With a keyboard up neither side may fit. Park the tip on whichever edge
+      // of the visible area is clear of the field rather than over the field.
+      if ((top + tipH > r.top - pad) && (top < r.bottom + pad)){
+        top = (r.top + r.height / 2 > vTop + vH / 2) ? (vTop + 10) : (vTop + vH - tipH - 10);
       }
+      top = Math.max(vTop + 10, Math.min(top, vTop + vH - tipH - 10));
 
       var left = r.left + r.width / 2 - tipW / 2;
       left = Math.max(vLeft + 10, Math.min(left, vLeft + vW - tipW - 10));
@@ -316,6 +309,10 @@
       window.visualViewport.addEventListener("resize", function(){ if (tip.style.display !== "none") position(); });
       window.visualViewport.addEventListener("scroll", function(){ if (tip.style.display !== "none") position(); });
     }
+    // In-app browsers do not reliably fire scroll or visualViewport events when
+    // the keyboard pushes the page around, and the overlay is position:fixed, so
+    // it drifts away from its field. Keep it glued instead of trusting events.
+    setInterval(function(){ if (tip.style.display !== "none") position(); }, 120);
 
     setTimeout(render, opts.startDelay || 500);
   }
