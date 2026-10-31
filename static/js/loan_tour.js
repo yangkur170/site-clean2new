@@ -79,6 +79,10 @@
       + '.lt-next:hover,.lt-next:active{animation:none;}'
 
 
+      + '.lt-next:disabled{opacity:.42;cursor:not-allowed;transform:none;animation:none;'
+      + 'box-shadow:0 3px 0 #8E4653,0 6px 10px rgba(150,36,52,.18),inset 0 2px 3px rgba(255,255,255,.18);}'
+      + '.lt-hint{margin:-8px 0 12px;font-size:12.5px;font-weight:700;color:#A6726F;}'
+      + '.lt-hint[hidden]{display:none;}'
       + '.lt-done .lt-text:before{content:"\\2713 ";color:#15803D;font-weight:800;}'
       + '@media (prefers-reduced-motion: reduce){.lt-spot,.lt-tip,.lt-dots i{transition:none;}.lt-tip.lt-pop,.lt-text,.lt-next{animation:none !important;}}';
     var st = document.createElement("style");
@@ -88,7 +92,7 @@
   }
 
   // ---- build overlay DOM once ----
-  var spot, tip, caret, stepEl, dotsWrap, textEl, btnSkip, btnBack, btnNext;
+  var spot, tip, caret, stepEl, dotsWrap, textEl, hintEl, btnSkip, btnBack, btnNext;
   function buildDom(total){
     spot = document.createElement("div"); spot.className = "lt-spot lt-hidden";
     tip = document.createElement("div"); tip.className = "lt-tip"; tip.style.display = "none";
@@ -97,6 +101,7 @@
       '<span class="lt-caret"></span>'
       + '<div class="lt-head"><span class="lt-step"></span><span class="lt-dots"></span></div>'
       + '<p class="lt-text"></p>'
+      + '<p class="lt-hint" hidden>Fill this in to continue.</p>'
       + '<div class="lt-actions"><button type="button" class="lt-skip">Skip</button>'
       + '<div class="lt-right"><button type="button" class="lt-back" style="display:none;">Back</button>'
       + '<button type="button" class="lt-next">Next</button></div></div>';
@@ -106,6 +111,7 @@
     stepEl = tip.querySelector(".lt-step");
     dotsWrap = tip.querySelector(".lt-dots");
     textEl = tip.querySelector(".lt-text");
+    hintEl = tip.querySelector(".lt-hint");
     btnSkip = tip.querySelector(".lt-skip");
     btnBack = tip.querySelector(".lt-back");
     btnNext = tip.querySelector(".lt-next");
@@ -124,6 +130,14 @@
   }
   // A fixed/sticky target (e.g. the bottom-nav Apply button) is already on screen.
   // Scrolling to it janks the page and gets the topbar's scroll-hide stuck, so skip it.
+  // A field inside a hidden wizard step has no box at all: measuring it puts the
+  // spotlight in the top-left corner and makes the auto-advance read a field the
+  // user cannot see yet.
+  function isVisible(el){
+    if (!el) return false;
+    if (el.getClientRects().length) return true;
+    return !!(el.offsetWidth || el.offsetHeight);
+  }
   function isInFixed(el){
     for (var n = el; n && n !== document.body; n = n.parentElement){
       var p = "";
@@ -145,14 +159,25 @@
     injectStyles();
     buildDom(steps.length);
 
-    var i = 0, poll = null, doneTimer = null;
+    var i = 0, poll = null, doneTimer = null, gated = false;
 
+    function hide(){ tip.style.display = "none"; spot.classList.add("lt-hidden"); }
+    function syncNext(known){
+      if (!gated){ btnNext.disabled = false; hintEl.hidden = true; return; }
+      var ok = known;
+      if (typeof ok !== "boolean"){
+        try { ok = steps[i].done(); } catch(e){ ok = false; }
+      }
+      btnNext.disabled = !ok;
+      hintEl.hidden = !!ok;
+    }
     function clearTimers(){ if (poll){ clearInterval(poll); poll = null; } if (doneTimer){ clearTimeout(doneTimer); doneTimer = null; } }
 
     function position(){
       var step = steps[i];
       var t = document.querySelector(step.sel);
       if (!t){ advance(); return; }
+      if (!isVisible(t)){ hide(); return; }
       var target = step.spot === false ? t : spotOf(t);
       var r = target.getBoundingClientRect();
       var pad = 8;
@@ -183,6 +208,16 @@
       var step = steps[i];
       var t = document.querySelector(step.sel);
       if (!t){ advance(); return; }
+      if (!isVisible(t)){
+        // This field belongs to a later part of the form. Step aside until the
+        // user reaches it, rather than racing ahead through fields they have
+        // not filled in yet.
+        hide();
+        poll = setInterval(function(){
+          if (isVisible(document.querySelector(step.sel))) render();
+        }, 250);
+        return;
+      }
       tip.style.display = "block";
       // restart the entrance animation so each step feels like a new card
       tip.classList.remove("lt-pop");
@@ -199,6 +234,12 @@
       }
       setTimeout(position, 200);
 
+      // Next stays locked until the field is actually filled in, so the tour
+      // can never walk the user past something the application needs. Fields
+      // that are genuinely optional are marked and never lock.
+      gated = (typeof step.done === "function") && step.optional !== true && i < steps.length - 1;
+      syncNext();
+
       // adaptive auto-advance
       if (typeof step.done === "function" && i < steps.length - 1){
         var tag = (t.tagName || "").toUpperCase();
@@ -206,6 +247,7 @@
         poll = setInterval(function(){
           var done = false;
           try { done = step.done(); } catch(e){ done = false; }
+          syncNext(done);
           // for typed fields, only advance once the user moves off the field
           if (done && isTextInput && document.activeElement === t) done = false;
           if (done){
@@ -243,7 +285,7 @@
       if (opts.onSkip) opts.onSkip();
     }
 
-    btnNext.addEventListener("click", advance);
+    btnNext.addEventListener("click", function(){ if (!btnNext.disabled) advance(); });
     btnBack.addEventListener("click", back);
     btnSkip.addEventListener("click", skip);
     window.addEventListener("resize", function(){ if (tip.style.display !== "none") position(); });
@@ -330,7 +372,7 @@
           done: function(){ return val("#currentLiving").length >= 2; } },
         { sel: 'textarea[name="hometown"]', text: "Enter your hometown.",
           done: function(){ return val('textarea[name="hometown"]').length >= 2; } },
-        { sel: "#incomeInput", text: "Your monthly income (optional) — fill it or tap Next.",
+        { sel: "#incomeInput", optional: true, text: "Your monthly income (optional) — fill it or tap Next.",
           done: function(){ return val("#incomeInput").length >= 1; } },
         { sel: "#expensesInput", text: "Your monthly expenses (numbers only).",
           done: function(){ return val("#expensesInput").length >= 1; } },
@@ -338,7 +380,7 @@
           done: function(){ return val("#identityName").length >= 2; } },
         { sel: "#identityNumber", text: "Your ID number.",
           done: function(){ return val("#identityNumber").length >= 1; } },
-        { sel: "#purposeField", text: "Pick why you need the loan (optional) — choose one or tap Next.",
+        { sel: "#purposeField", optional: true, text: "Pick why you need the loan (optional) — choose one or tap Next.",
           done: function(){ return !!document.querySelector('input[name="loan_purposes"]:checked'); }, delay: 500 },
         { sel: "#boxFront", spot: false, text: "Tap to upload the FRONT of your ID.",
           done: function(){ var b = document.getElementById("boxFront"); return !!b && b.classList.contains("has-img"); }, delay: 500 },

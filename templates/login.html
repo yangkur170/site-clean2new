@@ -337,6 +337,9 @@
   }
   .tour-tip.tip-below .tour-caret { top: -7px; }
   .tour-tip.tip-above .tour-caret { bottom: -7px; }
+  .tour-hint { margin: -4px 0 12px; font-size: 12.5px; font-weight: 700; color: #A6726F; }
+  .tour-hint[hidden] { display: none; }
+  .tour-next:disabled { opacity: .42; cursor: not-allowed; transform: none; }
   .tour-tip-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
   .tour-step { font-size: 11px; font-weight: 800; color: #A62F38; letter-spacing: .06em; text-transform: uppercase; }
   .tour-dots { display: flex; gap: 5px; }
@@ -839,6 +842,7 @@
       <span class="tour-dots" id="tourDots"></span>
     </div>
     <p class="tour-text" id="tourText"></p>
+    <p class="tour-hint" id="tourHint" hidden>Fill this in to continue.</p>
     <div class="tour-actions">
       <button type="button" class="tour-skip" id="tourSkip">Skip</button>
       <div class="tour-actions-right">
@@ -868,9 +872,15 @@
     const btnSkip = document.getElementById('tourSkip');
     const caret = document.getElementById('tourCaret');
 
+    const filled = sel => {
+      const f = document.querySelector(sel);
+      return !!(f && (f.value || '').trim().length);
+    };
     const steps = [
-      { sel: '#row_phone',    text: 'Enter the mobile number you registered with.' },
-      { sel: '#row_password', text: 'Type your password to access your account.' },
+      { sel: '#row_phone',    text: 'Enter the mobile number you registered with.',
+        done: () => filled('#row_phone input') },
+      { sel: '#row_password', text: 'Type your password to access your account.',
+        done: () => filled('#row_password input') },
       { sel: '#loginBtn',     text: 'Tap LOGIN to continue to your dashboard.' }
     ];
     let i = 0;
@@ -892,6 +902,7 @@
       spot.style.height = (r.height + pad * 2) + 'px';
 
       textEl.textContent = steps[i].text;
+      gate();
       stepEl.textContent = 'Step ' + (i + 1) + ' of ' + steps.length;
       btnNext.textContent = (i === steps.length - 1) ? 'Got it' : 'Next';
       btnBack.style.display = (i === 0) ? 'none' : 'inline-block';
@@ -950,7 +961,18 @@
     function next(){ if (i >= steps.length - 1){ end(); return; } i++; place(); }
     function back(){ if (i > 0){ i--; place(); } }
 
-    btnNext.addEventListener('click', next);
+    const hintEl = document.getElementById('tourHint');
+    // Next stays locked until the field is filled, so the tour can never carry
+    // the user past something they still have to enter. Skip remains the way out.
+    function gate(){
+      const step = steps[i];
+      const ok = (typeof step.done !== 'function') || step.done();
+      btnNext.disabled = !ok;
+      hintEl.hidden = !!ok;
+    }
+    setInterval(() => { if (overlay.classList.contains('show')) gate(); }, 300);
+
+    btnNext.addEventListener('click', () => { if (!btnNext.disabled) next(); });
     btnBack.addEventListener('click', back);
     btnSkip.addEventListener('click', end);
     // The smooth scroll can still be running when the step is first drawn, so
