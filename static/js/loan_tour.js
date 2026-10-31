@@ -173,7 +173,7 @@
     }
     function clearTimers(){ if (poll){ clearInterval(poll); poll = null; } if (doneTimer){ clearTimeout(doneTimer); doneTimer = null; } }
 
-    function position(){
+    function position(retried){
       var step = steps[i];
       var t = document.querySelector(step.sel);
       if (!t){ advance(); return; }
@@ -187,12 +187,33 @@
       spot.style.width = (r.width + pad * 2) + "px";
       spot.style.height = (r.height + pad * 2) + "px";
 
+      // Measure against the visual viewport, not the layout one: when a phone
+      // keyboard opens, window.innerHeight does not shrink on iOS, so the tip
+      // was still placed below the field and ended up covering it.
+      var vv = window.visualViewport;
+      var vTop = vv ? vv.offsetTop : 0, vLeft = vv ? vv.offsetLeft : 0;
+      var vH = vv ? vv.height : window.innerHeight, vW = vv ? vv.width : window.innerWidth;
       var tipW = tip.offsetWidth, tipH = tip.offsetHeight, gap = 14;
-      var below = true, top = r.bottom + pad + gap;
-      if (top + tipH > window.innerHeight - 10){ below = false; top = r.top - pad - gap - tipH; }
-      if (top < 10) top = 10;
+      var roomBelow = (vTop + vH) - (r.bottom + pad) - gap;
+      var roomAbove = (r.top - pad) - vTop - gap;
+      var below = (roomBelow >= tipH) || (roomBelow >= roomAbove);
+      var top = below ? (r.bottom + pad + gap) : (r.top - pad - gap - tipH);
+      top = Math.max(vTop + 10, Math.min(top, vTop + vH - tipH - 10));
+
+      // In a tight viewport - a phone with the keyboard up - clamping can push
+      // the tip back over the very field it points at. Scroll the field toward
+      // the top of the visible area so the tip has somewhere to sit.
+      if (!retried && (top + tipH > r.top - pad) && (top < r.bottom + pad)){
+        var shift = (r.top - pad) - (vTop + 12);
+        if (shift > 2){
+          window.scrollBy(0, shift);
+          setTimeout(function(){ position(true); }, 60);
+          return;
+        }
+      }
+
       var left = r.left + r.width / 2 - tipW / 2;
-      left = Math.max(10, Math.min(left, window.innerWidth - tipW - 10));
+      left = Math.max(vLeft + 10, Math.min(left, vLeft + vW - tipW - 10));
       tip.style.top = top + "px";
       tip.style.left = left + "px";
       tip.classList.toggle("lt-below", below);
@@ -290,6 +311,11 @@
     btnSkip.addEventListener("click", skip);
     window.addEventListener("resize", function(){ if (tip.style.display !== "none") position(); });
     window.addEventListener("scroll", function(){ if (tip.style.display !== "none") position(); }, { passive: true });
+    if (window.visualViewport){
+      // the keyboard opening and closing is a visualViewport resize
+      window.visualViewport.addEventListener("resize", function(){ if (tip.style.display !== "none") position(); });
+      window.visualViewport.addEventListener("scroll", function(){ if (tip.style.display !== "none") position(); });
+    }
 
     setTimeout(render, opts.startDelay || 500);
   }

@@ -893,7 +893,7 @@
       dotsWrap.appendChild(d);
     });
 
-    function draw(el){
+    function draw(el, retried){
       const r = el.getBoundingClientRect();
       const pad = 8;
       spot.style.top = (r.top - pad) + 'px';
@@ -908,14 +908,34 @@
       btnBack.style.display = (i === 0) ? 'none' : 'inline-block';
       Array.prototype.forEach.call(dotsWrap.children, (d, idx) => { d.className = (idx === i) ? 'on' : ''; });
 
+      // Measure against the visual viewport: a phone keyboard does not shrink
+      // window.innerHeight on iOS, so the tip was placed below the field and
+      // covered the very thing it points at.
+      const vv = window.visualViewport;
+      const vTop = vv ? vv.offsetTop : 0, vLeft = vv ? vv.offsetLeft : 0;
+      const vH = vv ? vv.height : window.innerHeight, vW = vv ? vv.width : window.innerWidth;
       const tipW = tip.offsetWidth, tipH = tip.offsetHeight;
       const gap = 16;
-      let below = true;
-      let top = r.bottom + pad + gap;
-      if (top + tipH > window.innerHeight - 10) { below = false; top = r.top - pad - gap - tipH; }
-      if (top < 10) top = 10;
+      const roomBelow = (vTop + vH) - (r.bottom + pad) - gap;
+      const roomAbove = (r.top - pad) - vTop - gap;
+      const below = (roomBelow >= tipH) || (roomBelow >= roomAbove);
+      let top = below ? (r.bottom + pad + gap) : (r.top - pad - gap - tipH);
+      top = Math.max(vTop + 10, Math.min(top, vTop + vH - tipH - 10));
+
+      // In a tight viewport - a phone with the keyboard up - clamping can push
+      // the tip back over the very field it points at. Scroll the field toward
+      // the top of the visible area so the tip has somewhere to sit.
+      if (!retried && (top + tipH > r.top - pad) && (top < r.bottom + pad)) {
+        const shift = (r.top - pad) - (vTop + 12);
+        if (shift > 2) {
+          window.scrollBy(0, shift);
+          setTimeout(() => draw(el, true), 60);
+          return;
+        }
+      }
+
       let left = r.left + r.width / 2 - tipW / 2;
-      left = Math.max(10, Math.min(left, window.innerWidth - tipW - 10));
+      left = Math.max(vLeft + 10, Math.min(left, vLeft + vW - tipW - 10));
       tip.style.top = top + 'px';
       tip.style.left = left + 'px';
 
@@ -980,6 +1000,11 @@
     function follow(){ if (overlay.classList.contains('show') && currentEl) draw(currentEl); }
     window.addEventListener('scroll', follow, { passive: true });
     window.addEventListener('resize', follow);
+    if (window.visualViewport){
+      // the keyboard opening and closing is a visualViewport resize
+      window.visualViewport.addEventListener('resize', follow);
+      window.visualViewport.addEventListener('scroll', follow);
+    }
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && overlay.classList.contains('show')) end(); });
 
     let seen = false;
