@@ -918,7 +918,18 @@
         caret.style.left = caretLeft + 'px';
       }, 180);
     }
-    function start(){ overlay.classList.add('show'); overlay.setAttribute('aria-hidden','false'); i = 0; place(); }
+    function start(){
+      overlay.classList.add('show');
+      overlay.setAttribute('aria-hidden','false');
+      i = 0;
+      // Measure only once the card's entrance animation has settled, otherwise
+      // the first spotlight is drawn against a position the card has left.
+      const card = document.querySelector('.wrap');
+      const anims = (card && card.getAnimations) ? card.getAnimations() : [];
+      if (!anims.length) { place(); return; }
+      const settled = Promise.all(anims.map(a => a.finished.catch(() => {})));
+      Promise.race([settled, new Promise(r => setTimeout(r, 600))]).then(place);
+    }
     function end(){ overlay.classList.remove('show'); overlay.setAttribute('aria-hidden','true'); try { localStorage.setItem(KEY, '1'); } catch(e){} }
     function next(){ if (i >= steps.length - 1){ end(); return; } i++; place(); }
     function back(){ if (i > 0){ i--; place(); } }
