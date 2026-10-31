@@ -885,7 +885,16 @@
       const el = document.querySelector(steps[i].sel);
       if(!el){ next(); return; }
       el.scrollIntoView({ block: 'center', behavior: 'smooth' });
-      setTimeout(() => {
+      // Wait until the target stops moving. The card animates in, the smooth
+      // scroll is still in flight, and showing the overlay can remove the page
+      // scrollbar - each of those shifts the element after a naive measurement,
+      // which is what left the spotlight beside the field on wide screens.
+      let lastBox = '', stillFor = 0, frames = 0;
+      (function settle(){
+        const box = el.getBoundingClientRect();
+        const key = [box.left, box.top, box.width, box.height].join();
+        if (key === lastBox) { stillFor++; } else { stillFor = 0; lastBox = key; }
+        if (stillFor < 3 && frames++ < 60) { requestAnimationFrame(settle); return; }
         const r = el.getBoundingClientRect();
         const pad = 8;
         spot.style.top = (r.top - pad) + 'px';
@@ -916,20 +925,9 @@
         let caretLeft = (r.left + r.width / 2) - left - 7;
         caretLeft = Math.max(18, Math.min(caretLeft, tipW - 32));
         caret.style.left = caretLeft + 'px';
-      }, 180);
+      })();
     }
-    function start(){
-      overlay.classList.add('show');
-      overlay.setAttribute('aria-hidden','false');
-      i = 0;
-      // Measure only once the card's entrance animation has settled, otherwise
-      // the first spotlight is drawn against a position the card has left.
-      const card = document.querySelector('.wrap');
-      const anims = (card && card.getAnimations) ? card.getAnimations() : [];
-      if (!anims.length) { place(); return; }
-      const settled = Promise.all(anims.map(a => a.finished.catch(() => {})));
-      Promise.race([settled, new Promise(r => setTimeout(r, 600))]).then(place);
-    }
+    function start(){ overlay.classList.add('show'); overlay.setAttribute('aria-hidden','false'); i = 0; place(); }
     function end(){ overlay.classList.remove('show'); overlay.setAttribute('aria-hidden','true'); try { localStorage.setItem(KEY, '1'); } catch(e){} }
     function next(){ if (i >= steps.length - 1){ end(); return; } i++; place(); }
     function back(){ if (i > 0){ i--; place(); } }
