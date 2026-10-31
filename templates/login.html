@@ -874,6 +874,7 @@
       { sel: '#loginBtn',     text: 'Tap LOGIN to continue to your dashboard.' }
     ];
     let i = 0;
+    let placeToken = 0;
 
     steps.forEach((_, idx) => {
       const d = document.createElement('i');
@@ -881,51 +882,66 @@
       dotsWrap.appendChild(d);
     });
 
+    function draw(el){
+      const r = el.getBoundingClientRect();
+      const pad = 8;
+      spot.style.top = (r.top - pad) + 'px';
+      spot.style.left = (r.left - pad) + 'px';
+      spot.style.width = (r.width + pad * 2) + 'px';
+      spot.style.height = (r.height + pad * 2) + 'px';
+
+      textEl.textContent = steps[i].text;
+      stepEl.textContent = 'Step ' + (i + 1) + ' of ' + steps.length;
+      btnNext.textContent = (i === steps.length - 1) ? 'Got it' : 'Next';
+      btnBack.style.display = (i === 0) ? 'none' : 'inline-block';
+      Array.prototype.forEach.call(dotsWrap.children, (d, idx) => { d.className = (idx === i) ? 'on' : ''; });
+
+      const tipW = tip.offsetWidth, tipH = tip.offsetHeight;
+      const gap = 16;
+      let below = true;
+      let top = r.bottom + pad + gap;
+      if (top + tipH > window.innerHeight - 10) { below = false; top = r.top - pad - gap - tipH; }
+      if (top < 10) top = 10;
+      let left = r.left + r.width / 2 - tipW / 2;
+      left = Math.max(10, Math.min(left, window.innerWidth - tipW - 10));
+      tip.style.top = top + 'px';
+      tip.style.left = left + 'px';
+
+      // caret points to the spotlight
+      tip.classList.toggle('tip-below', below);
+      tip.classList.toggle('tip-above', !below);
+      let caretLeft = (r.left + r.width / 2) - left - 7;
+      caretLeft = Math.max(18, Math.min(caretLeft, tipW - 32));
+      caret.style.left = caretLeft + 'px';
+    }
+
     function place(){
       const el = document.querySelector(steps[i].sel);
       if(!el){ next(); return; }
       el.scrollIntoView({ block: 'center', behavior: 'smooth' });
-      // Wait until the target stops moving. The card animates in, the smooth
-      // scroll is still in flight, and showing the overlay can remove the page
-      // scrollbar - each of those shifts the element after a naive measurement,
-      // which is what left the spotlight beside the field on wide screens.
+
+      // Draw only once the target stops moving: the card animates in, the
+      // smooth scroll is still in flight, and showing the overlay can remove
+      // the page scrollbar. Measuring before all that settles is what left the
+      // spotlight beside the field on wide screens.
+      const token = ++placeToken;
       let lastBox = '', stillFor = 0, frames = 0;
+      function commit(){
+        if (token !== placeToken) return;   // a newer step already started
+        placeToken++;                       // make this placement final
+        draw(el);
+      }
       (function settle(){
+        if (token !== placeToken) return;
         const box = el.getBoundingClientRect();
         const key = [box.left, box.top, box.width, box.height].join();
         if (key === lastBox) { stillFor++; } else { stillFor = 0; lastBox = key; }
         if (stillFor < 3 && frames++ < 60) { requestAnimationFrame(settle); return; }
-        const r = el.getBoundingClientRect();
-        const pad = 8;
-        spot.style.top = (r.top - pad) + 'px';
-        spot.style.left = (r.left - pad) + 'px';
-        spot.style.width = (r.width + pad * 2) + 'px';
-        spot.style.height = (r.height + pad * 2) + 'px';
-
-        textEl.textContent = steps[i].text;
-        stepEl.textContent = 'Step ' + (i + 1) + ' of ' + steps.length;
-        btnNext.textContent = (i === steps.length - 1) ? 'Got it' : 'Next';
-        btnBack.style.display = (i === 0) ? 'none' : 'inline-block';
-        Array.prototype.forEach.call(dotsWrap.children, (d, idx) => { d.className = (idx === i) ? 'on' : ''; });
-
-        const tipW = tip.offsetWidth, tipH = tip.offsetHeight;
-        const gap = 16;
-        let below = true;
-        let top = r.bottom + pad + gap;
-        if (top + tipH > window.innerHeight - 10) { below = false; top = r.top - pad - gap - tipH; }
-        if (top < 10) top = 10;
-        let left = r.left + r.width / 2 - tipW / 2;
-        left = Math.max(10, Math.min(left, window.innerWidth - tipW - 10));
-        tip.style.top = top + 'px';
-        tip.style.left = left + 'px';
-
-        // caret points to the spotlight
-        tip.classList.toggle('tip-below', below);
-        tip.classList.toggle('tip-above', !below);
-        let caretLeft = (r.left + r.width / 2) - left - 7;
-        caretLeft = Math.max(18, Math.min(caretLeft, tipW - 32));
-        caret.style.left = caretLeft + 'px';
+        commit();
       })();
+      // requestAnimationFrame is paused while the tab is hidden, so never let
+      // the tour wait on it alone.
+      setTimeout(commit, 900);
     }
     function start(){ overlay.classList.add('show'); overlay.setAttribute('aria-hidden','false'); i = 0; place(); }
     function end(){ overlay.classList.remove('show'); overlay.setAttribute('aria-hidden','true'); try { localStorage.setItem(KEY, '1'); } catch(e){} }
