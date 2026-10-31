@@ -155,7 +155,14 @@ class LoanApplicationAdminForm(forms.ModelForm):
 class PaymentMethodForm(forms.ModelForm):
     class Meta:
         model = PaymentMethod
-        fields = ["bank_name", "bank_account", "wallet_name", "wallet_phone", "paypal_email"]
+        fields = [
+            "bank_name",
+            "bank_account",
+            "wallet_name",
+            "wallet_phone",
+            "paypal_email",
+            "is_default",
+        ]
 
     def clean(self):
         cleaned = super().clean()

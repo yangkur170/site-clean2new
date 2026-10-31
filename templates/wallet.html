@@ -30,9 +30,9 @@
   padding: 0 16px 0 12px;
   border-radius: 999px;
   background: #ffffff;
-  color: #FF6B00 !important;
-  border: 1px solid #FFD4A3;
-  box-shadow: 0 2px 10px rgba(255,107,0,.12);
+  color: #A62F38 !important;
+  border: 1px solid #E9CBCB;
+  box-shadow: 0 2px 10px rgba(166,47,56,.12);
   font-weight: 700;
   font-size: 13px;
   text-decoration: none;
@@ -40,7 +40,7 @@
   margin-bottom: 18px;
 }
 .back-btn svg{ width: 16px; height: 16px; }
-.back-btn:hover  { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(255,107,0,.20); }
+.back-btn:hover  { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(166,47,56,.20); }
 .back-btn:active { transform: translateY(0); opacity: .9; }
 
 /* ── Status alert banner ── */
@@ -54,7 +54,7 @@
   letter-spacing: .4px;
   box-sizing: border-box;
 }
-.status-danger  { background: #dc2626; color: #fff; }
+.status-danger  { background: #B3261E; color: #fff; }
 .status-success { background: #16a34a; color: #fff; }
 .status-warn    { background: #eab308; color: #111; }
 
@@ -75,13 +75,13 @@
 
 /* ── Hero balance card ── */
 .cardx.card-diamond {
-  background: linear-gradient(135deg, #FF6B00 0%, #FF8A33 55%, #FFA64D 100%) !important;
+  background: linear-gradient(135deg, #A62F38 0%, #B93B4C 55%, #DCA7AB 100%) !important;
   border-radius: 22px !important;
   border: 1px solid rgba(255,255,255,.25) !important;
   border-top: 1px solid rgba(255,255,255,.25) !important;
   color: #fff !important;
   padding: 24px;
-  box-shadow: 0 10px 32px rgba(255,107,0,.32) !important;
+  box-shadow: 0 10px 32px rgba(166,47,56,.32) !important;
   margin-bottom: 16px;
   overflow: hidden;
   position: relative;
@@ -117,9 +117,9 @@
 .cardx {
   background: #ffffff;
   border-radius: 18px;
-  border-left: 4px solid #FF6B00;
-  box-shadow: 0 2px 16px rgba(255,107,0,.10), 0 6px 24px rgba(0,0,0,.05);
-  color: #1a1a1a;
+  border-left: 4px solid #A62F38;
+  box-shadow: 0 2px 16px rgba(166,47,56,.10), 0 6px 24px rgba(0,0,0,.05);
+  color: #2A1016;
   padding: 18px;
   margin-bottom: 16px;
   overflow: hidden;
@@ -138,7 +138,7 @@
 .title {
   font-weight: 800;
   font-size: 18px;
-  color: #1a1a1a;
+  color: #2A1016;
 }
 .sub {
   font-size: 12px;
@@ -147,7 +147,7 @@
 }
 /* sub on white cards */
 .cardx:not(.card-diamond) .sub {
-  color: #9a9a9a;
+  color: #9A8E8B;
 }
 
 /* ── Balance amount ── */
@@ -171,9 +171,9 @@
 }
 /* pill on white cards */
 .cardx:not(.card-diamond) .pill {
-  background: #FFE9D6;
-  border: 1px solid #FFD4A3;
-  color: #b8530a;
+  background: #F6E4E3;
+  border: 1px solid #E9CBCB;
+  color: #8A2129;
 }
 
 /* ── Field row (icon badge + input) ── */
@@ -186,8 +186,8 @@
   flex: 0 0 auto;
   width: 38px; height: 38px;
   border-radius: 12px;
-  background: linear-gradient(135deg, #FFE9D6, #FFD4A3);
-  color: #FF6B00;
+  background: linear-gradient(135deg, #F6E4E3, #E9CBCB);
+  color: #A62F38;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -201,7 +201,7 @@
   line-height: 1;
 }
 .field-row-wrap:focus-within .field-icon {
-  background: linear-gradient(135deg, #FF6B00, #FF8A33);
+  background: linear-gradient(135deg, #A62F38, #B93B4C);
   color: #fff;
 }
 .field-main { flex: 1; min-width: 0; }
@@ -215,7 +215,7 @@
 .field-tag {
   font-size: 11px;
   font-weight: 700;
-  color: #9a9a9a;
+  color: #9A8E8B;
   text-transform: uppercase;
   letter-spacing: .04em;
 }
@@ -226,19 +226,19 @@
   margin-top: 6px;
   padding: 11px 14px;
   border-radius: 12px;
-  border: 1.5px solid #E6E6E6;
-  background: #FFFAF5;
-  color: #1a1a1a;
+  border: 1.5px solid #EEDFDD;
+  background: #FBF3F2;
+  color: #2A1016;
   outline: none;
   font-size: 15px;
   font-weight: 600;
   box-sizing: border-box;
   transition: border-color .15s ease, box-shadow .15s ease;
 }
-.num-input::placeholder { color: #9a9a9a; font-weight: 400; }
+.num-input::placeholder { color: #9A8E8B; font-weight: 400; }
 .num-input:focus {
-  border-color: #FF6B00;
-  box-shadow: 0 0 0 3px rgba(255,107,0,.16);
+  border-color: #A62F38;
+  box-shadow: 0 0 0 3px rgba(166,47,56,.16);
   background: #fff;
 }
 
@@ -246,7 +246,7 @@
 .hint {
   margin-top: 8px;
   font-size: 12px;
-  color: #9a9a9a;
+  color: #9A8E8B;
 }
 
 /* ── Withdraw NOW button ── */
@@ -262,14 +262,14 @@
   letter-spacing: .06em;
   text-transform: uppercase;
   color: #fff;
-  background: linear-gradient(135deg, #FF6B00, #FF8A33);
-  box-shadow: 0 8px 22px rgba(255,107,0,.32);
+  background: linear-gradient(135deg, #A62F38, #B93B4C);
+  box-shadow: 0 8px 22px rgba(166,47,56,.32);
   border: 0;
   width: 100%;
   cursor: pointer;
   transition: opacity .2s ease, transform .15s ease, box-shadow .2s ease;
 }
-.big-btn:hover  { transform: translateY(-2px); box-shadow: 0 12px 26px rgba(255,107,0,.40); }
+.big-btn:hover  { transform: translateY(-2px); box-shadow: 0 12px 26px rgba(166,47,56,.40); }
 .big-btn:active { transform: translateY(1px); }
 .big-btn[disabled] {
   opacity: .45;
@@ -292,16 +292,16 @@
   justify-content: space-between;
   gap: 12px;
   padding: 12px 2px;
-  border-top: 1px solid #FFE9D6;
+  border-top: 1px solid #F6E4E3;
   font-size: 13px;
-  color: #1a1a1a;
+  color: #2A1016;
 }
 .list-row:first-of-type { border-top: 0; }
 
 /* ── Muted secondary text ── */
 .muted {
   font-size: 12px;
-  color: #9a9a9a;
+  color: #9A8E8B;
   margin-top: 2px;
 }
 
@@ -313,8 +313,8 @@
   width: 34px;
   height: 34px;
   border-radius: 50%;
-  background: #FFE9D6;
-  border: 1px solid rgba(255,107,0,.20);
+  background: #F6E4E3;
+  border: 1px solid rgba(166,47,56,.20);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -322,13 +322,13 @@
   transition: background .25s ease;
 }
 .tl-bullet.on {
-  background: #FF6B00;
+  background: #A62F38;
   border-color: rgba(255,255,255,.20);
-  box-shadow: 0 0 8px rgba(255,107,0,.50);
+  box-shadow: 0 0 8px rgba(166,47,56,.50);
 }
 .tl-bullet.rejected,
 .tl-bullet.on.rejected {
-  background: #e53935 !important;
+  background: #B3261E !important;
   border-color: rgba(255,255,255,.20) !important;
   box-shadow: none !important;
 }
@@ -357,13 +357,246 @@
 
 .tl-text {
   font-weight: 800;
-  color: #1a1a1a;
+  color: #2A1016;
   font-size: 14px;
 }
-.tl-text.rejected { color: #e53935; font-weight: 850; }
+.tl-text.rejected { color: #B3261E; font-weight: 850; }
 .tl-text.success  { color: #16a34a; }
 
+
+/* ════════════════════════════════════════
+   CLAY PASS — matching the rest of the app
+   Surfaces get soft shadows; only real controls get the pressed side wall.
+   ════════════════════════════════════════ */
+body{
+  background:
+    radial-gradient(120% 50% at 50% 0%, #F7E3E4 0%, transparent 55%),
+    linear-gradient(180deg, #FBF4F2 0%, #F6ECEA 50%, #F3E6E4 100%) !important;
+  background-attachment: fixed !important;
+}
+
+.w-wrap{ position: relative; z-index: 1; padding: 22px 16px 60px; }
+
+/* Back — a real control */
+.back-btn{
+  height: 42px;
+  border: 0;
+  background: linear-gradient(180deg, #FFFFFF 0%, #FDF8F7 100%);
+  color: #A62F38;
+  font-size: 14px;
+  font-weight: 800;
+  box-shadow:
+    0 5px 0 #EADBD9,
+    0 12px 18px rgba(140,80,85,.20),
+    inset 0 2px 2px #fff;
+}
+
+.back-btn:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 7px 0 #EADBD9, 0 16px 24px rgba(140,80,85,.24), inset 0 2px 2px #fff;
+}
+
+.back-btn:active{
+  transform: translateY(4px);
+  box-shadow: 0 1px 0 #EADBD9, 0 5px 9px rgba(140,80,85,.18), inset 0 2px 2px #fff;
+}
+
+/* Wallet balance card — deep cherry */
+.cardx.card-diamond{
+  border: 0 !important;
+  border-radius: 26px !important;
+  padding: 26px !important;
+  background: linear-gradient(135deg, #6E1020 0%, #8E2130 48%, #A3233A 100%) !important;
+  box-shadow:
+    0 20px 38px rgba(110,16,32,.34),
+    inset 0 2px 4px rgba(255,255,255,.16) !important;
+}
+
+/* Info / action cards are surfaces, not buttons */
+.cardx{
+  border-left: 0;
+  border-radius: 24px;
+  padding: 20px;
+  background: linear-gradient(180deg, #FFFFFF 0%, #FFFDFD 70%, #FDF9F8 100%);
+  box-shadow:
+    0 16px 30px rgba(120,70,70,.16),
+    0 3px 8px rgba(120,70,70,.06),
+    inset 0 2px 3px rgba(255,255,255,.95);
+  margin-bottom: 18px;
+}
+
+.title{ color: #5C1522; }
+
+/* Pills */
+.cardx:not(.card-diamond) .pill{
+  background: linear-gradient(170deg, #F3D5D6 0%, #E7B9BC 100%);
+  border: 0;
+  color: #8A2129;
+  padding: 7px 15px;
+  box-shadow: inset 0 1px 2px rgba(255,255,255,.7);
+}
+
+.cardx.card-diamond .pill{
+  background: rgba(255,255,255,.18);
+  border: 1px solid rgba(255,255,255,.30);
+  padding: 8px 16px;
+}
+
+/* Icon tiles — flat rose, they only label the field */
+.field-icon{
+  width: 46px;
+  height: 46px;
+  border-radius: 15px;
+  background: linear-gradient(170deg, #F3D5D6 0%, #E4B0B4 100%);
+  color: #8A2129;
+  box-shadow: inset 0 2px 3px rgba(255,255,255,.65);
+}
+
+.field-icon svg{ width: 21px; height: 21px; }
+
+.field-row-wrap:focus-within .field-icon{
+  background: linear-gradient(170deg, #B13445 0%, #952736 100%);
+  color: #fff;
+}
+
+.field-tag{
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: .2px;
+  color: #3C1018;
+  text-transform: uppercase;
+}
+
+/* Inputs */
+.num-input{
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 1.5px solid #E8CFCE;
+  background: #FFFFFF;
+  font-size: 16px;
+  color: #2A1016;
+}
+
+.num-input::placeholder{ color: #B49FA0; font-weight: 500; }
+
+.num-input:focus{
+  border-color: #C47C83;
+  box-shadow: 0 0 0 4px rgba(166,47,56,.12);
+}
+
+.hint{ font-size: 13px; color: #6E6460; margin-top: 10px; }
+
+/* Withdraw — a real control, so it gets the full clay build */
+.big-btn{
+  height: 60px;
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: .6px;
+  background: linear-gradient(180deg, #A3233A 0%, #8C1E2E 55%, #7A1726 100%) !important;
+  color: #fff !important;
+  border: 0 !important;
+  box-shadow:
+    0 8px 0 #601220,
+    0 18px 26px rgba(130,25,42,.34),
+    inset 0 2px 4px rgba(255,255,255,.20),
+    inset 0 -8px 14px rgba(60,8,16,.28) !important;
+  transition: transform .15s cubic-bezier(.22,.61,.36,1), box-shadow .2s ease, opacity .2s ease;
+}
+
+.big-btn:hover{
+  transform: translateY(-2px);
+  box-shadow:
+    0 10px 0 #601220,
+    0 22px 32px rgba(130,25,42,.38),
+    inset 0 2px 4px rgba(255,255,255,.20),
+    inset 0 -8px 14px rgba(60,8,16,.28) !important;
+}
+
+.big-btn:active{
+  transform: translateY(6px);
+  box-shadow:
+    0 2px 0 #601220,
+    0 6px 10px rgba(130,25,42,.28),
+    inset 0 -5px 10px rgba(60,8,16,.26) !important;
+}
+
+.big-btn[disabled],
+.big-btn.is-disabled{
+  filter: grayscale(.25);
+  opacity: .55;
+}
+
+/* ════════════════════════════════════════
+   FLOATING 3D PROPS
+   ════════════════════════════════════════ */
+.decor-layer{
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.decor-layer img{
+  position: absolute;
+  display: block;
+  opacity: .9;
+  will-change: transform;
+}
+
+@keyframes floatA{
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+  50%      { transform: translate3d(4px, -16px, 0) rotate(7deg); }
+}
+@keyframes floatB{
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+  50%      { transform: translate3d(-6px, -12px, 0) rotate(-9deg); }
+}
+@keyframes floatC{
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(-3deg); }
+  50%      { transform: translate3d(5px, -20px, 0) rotate(5deg); }
+}
+
+.d1 { left: 2%;   top: 2%;     width: 40px; animation: floatA 7.6s ease-in-out infinite; }
+.d2 { right: 6%;  top: 1%;     width: 32px; animation: floatB 8.6s ease-in-out infinite .5s; }
+.d3 { left: 1%;   top: 28%;    width: 34px; animation: floatC 9.4s ease-in-out infinite 1s; }
+.d4 { right: 1%;  top: 22%;    width: 38px; animation: floatA 8.2s ease-in-out infinite 1.4s; }
+.d5 { left: 2%;   top: 56%;    width: 30px; animation: floatB 9s   ease-in-out infinite .3s; }
+.d6 { right: 2%;  top: 62%;    width: 42px; animation: floatC 7.9s ease-in-out infinite 1.7s; }
+.d7 { left: 5%;   bottom: 6%;  width: 36px; animation: floatA 8.8s ease-in-out infinite .9s; }
+.d8 { right: 5%;  bottom: 10%; width: 32px; animation: floatB 9.4s ease-in-out infinite 1.9s; }
+
+@media (max-width: 420px){
+  .d5 { display: none; }
+}
+
+@media (min-width: 900px){
+  .d1 { left: 11%; width: 56px; }
+  .d2 { right: 13%; width: 46px; }
+  .d3 { left: 8%;  width: 48px; }
+  .d4 { right: 7%; width: 54px; }
+  .d5 { left: 12%; width: 44px; }
+  .d6 { right: 11%; width: 58px; }
+  .d7 { left: 15%; width: 50px; }
+  .d8 { right: 14%; width: 46px; }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .decor-layer img{ animation: none !important; }
+}
+
 </style>
+
+<div class="decor-layer" aria-hidden="true">
+  <img class="d1" src="{% static 'img/decor/coin.svg' %}" alt="">
+  <img class="d2" src="{% static 'img/decor/coin-edge.svg' %}" alt="">
+  <img class="d3" src="{% static 'img/decor/coin-edge.svg' %}" alt="">
+  <img class="d4" src="{% static 'img/decor/coin.svg' %}" alt="">
+  <img class="d5" src="{% static 'img/decor/coin.svg' %}" alt="">
+  <img class="d6" src="{% static 'img/decor/coin-edge.svg' %}" alt="">
+  <img class="d7" src="{% static 'img/decor/coin-edge.svg' %}" alt="">
+  <img class="d8" src="{% static 'img/decor/coin.svg' %}" alt="">
+</div>
 
 <div class="w-wrap">
 
@@ -457,7 +690,7 @@
         padding: 10px 12px;
         border-radius: 12px;
         border: 1px solid rgba(185,28,28,.7);
-        background: #dc2626;
+        background: #B3261E;
         color:#fff;
         font-weight:900;
         font-size:13px;
@@ -644,7 +877,7 @@
     if(b3){
       b3.classList.remove("on","success");
       b3.classList.add("rejected");
-      b3.style.setProperty("background", "#dc2626", "important");
+      b3.style.setProperty("background", "#B3261E", "important");
       b3.style.setProperty("border-color", "rgba(255,255,255,.18)", "important");
 
       // ✅ 100% force X
@@ -698,7 +931,7 @@
     if(b3){
       b3.classList.remove("on","success","rejected");
       b3.classList.add("rejected");
-      b3.style.setProperty("background", "#dc2626", "important");
+      b3.style.setProperty("background", "#B3261E", "important");
       b3.style.setProperty("border-color", "rgba(255,255,255,.18)", "important");
       setIconX();
     }

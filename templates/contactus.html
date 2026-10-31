@@ -6,198 +6,267 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
 <style>
+  /* ═════════════════════════════════════════
+     Contact us — cherry / clay
+     ═════════════════════════════════════════ */
+  body{
+    background:
+      radial-gradient(120% 50% at 50% 0%, #F7E3E4 0%, transparent 55%),
+      linear-gradient(180deg, #FBF4F2 0%, #F6ECEA 50%, #F3E6E4 100%) !important;
+    background-attachment: fixed !important;
+  }
 
-.page, .page * {
-  font-family: "Outfit", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-}
+  .wrap{ display: block !important; }
 
-.wrap {
-  align-items: flex-start !important;
-  justify-content: center !important;
-  padding-top: 28px !important;
-}
+  .page{
+    position: relative;
+    z-index: 1;
+    width: min(480px, 94vw);
+    margin: 0 auto;
+    padding: 22px 16px 60px;
+    box-sizing: border-box;
+    font-family: "Outfit", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  }
 
-.page {
-  width: min(480px, 94vw);
-  margin: 0 auto;
-  padding: 0 16px 60px;
-  box-sizing: border-box;
-}
+  .page *{ box-sizing: border-box; }
 
-/* Back button */
-.back-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  height: 38px;
-  padding: 0 16px 0 12px;
-  border-radius: 999px;
-  background: #ffffff;
-  color: #FF6B00;
-  font-weight: 700;
-  font-size: 13px;
-  text-decoration: none;
-  border: 1px solid #FFD4A3;
-  box-shadow: 0 2px 10px rgba(255,107,0,.12);
-  transition: transform .15s ease, box-shadow .15s ease;
-  margin-bottom: 18px;
-}
-.back-btn svg{ width: 16px; height: 16px; }
-.back-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(255,107,0,.20); }
-.back-btn:active { transform: scale(.98); }
+  /* ── Back ── */
+  .back-btn{
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    height: 44px;
+    padding: 0 20px 0 14px;
+    border: 0;
+    border-radius: 999px;
+    text-decoration: none;
+    background: linear-gradient(180deg, #FFFFFF 0%, #FDF8F7 100%);
+    color: #A62F38;
+    font-size: 16px;
+    font-weight: 800;
+    box-shadow:
+      0 5px 0 #EADBD9,
+      0 12px 18px rgba(140,80,85,.20),
+      inset 0 2px 2px #fff;
+    transition: transform .15s cubic-bezier(.22,.61,.36,1), box-shadow .2s ease;
+  }
 
-/* Main card */
-.cardx {
-  background: #ffffff;
-  border-radius: 20px;
-  border: 1.5px solid #FFD4A3;
-  border-top: 4px solid #FF6B00;
-  box-shadow: 0 8px 28px rgba(255,107,0,.14), 0 2px 8px rgba(0,0,0,.04);
-  padding: 22px;
-  color: #1a1a1a;
-  margin-bottom: 16px;
-  position: relative;
-  overflow: hidden;
-}
+  .back-btn svg{ width: 17px; height: 17px; }
+  .back-btn:hover{ transform: translateY(-2px); }
+  .back-btn:active{ transform: translateY(4px); box-shadow: 0 1px 0 #EADBD9, 0 5px 9px rgba(140,80,85,.18); }
 
-.title {
-  font-weight: 800;
-  font-size: 17px;
-  letter-spacing: .02em;
-  margin: 0 0 6px;
-  color: #1a1a1a;
-}
+  /* ── Page title, outside the card ── */
+  .title{
+    margin: 26px 2px 6px;
+    color: #5C1522;
+    font-size: clamp(30px, 8.5vw, 40px);
+    font-weight: 800;
+    letter-spacing: -1px;
+    line-height: 1.05;
+  }
 
-.sub {
-  font-size: 13px;
-  color: #9a9a9a;
-  margin: 0;
-}
+  .sub{
+    margin: 0 2px 20px;
+    color: #4A3438;
+    font-size: 16px;
+    line-height: 1.45;
+  }
 
-/* Field rows (icon badge + input) */
-.field-row-wrap {
-  display: flex;
-  align-items: flex-start;
-  gap: 13px;
-  margin-top: 16px;
-}
-.field-row-wrap:first-of-type{ margin-top: 0; }
-.field-icon {
-  flex: 0 0 auto;
-  width: 38px; height: 38px;
-  border-radius: 12px;
-  background: linear-gradient(135deg, #FFE9D6, #FFD4A3);
-  color: #FF6B00;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 2px;
-}
-.field-icon svg{ width: 18px; height: 18px; }
-.field-row-wrap:focus-within .field-icon {
-  background: linear-gradient(135deg, #FF6B00, #FF8A33);
-  color: #fff;
-}
-.field-main { flex: 1; min-width: 0; }
+  /* ── Frosted card ── */
+  .cardx{
+    border: 1px solid rgba(255,255,255,.65);
+    border-radius: 30px;
+    padding: 24px 20px 26px;
+    background: linear-gradient(180deg, rgba(255,255,255,.80) 0%, rgba(250,238,237,.66) 100%);
+    backdrop-filter: blur(18px) saturate(140%);
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
+    box-shadow:
+      0 20px 38px rgba(120,70,70,.16),
+      0 3px 8px rgba(120,70,70,.06),
+      inset 0 2px 3px rgba(255,255,255,.9);
+  }
 
-/* Labels */
-label {
-  display: block;
-  font-size: 11px;
-  font-weight: 700;
-  color: #9a9a9a;
-  text-transform: uppercase;
-  letter-spacing: .04em;
-  margin: 0 0 6px;
-}
+  /* ── Field: label on top, icon beside the input ── */
+  .field-row{
+    display: grid;
+    grid-template-columns: 62px 1fr;
+    column-gap: 16px;
+    row-gap: 9px;
+    align-items: center;
+    margin-bottom: 20px;
+  }
 
-/* Inputs and textarea */
-input, textarea {
-  width: 100%;
-  box-sizing: border-box;
-  border-radius: 12px;
-  border: 1.5px solid #E6E6E6;
-  background: #FFFAF5;
-  color: #1a1a1a;
-  padding: 11px 14px;
-  outline: none;
-  font-size: 14px;
-  font-weight: 500;
-  font-family: inherit;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
+  .field-row label{
+    grid-column: 2;
+    grid-row: 1;
+    color: #8A2129;
+    font-size: 16px;
+    font-weight: 800;
+    letter-spacing: .5px;
+    text-transform: uppercase;
+  }
 
-input::placeholder, textarea::placeholder {
-  color: #9a9a9a;
-}
+  .field-icon{
+    grid-column: 1;
+    grid-row: 2;
+    width: 62px;
+    height: 62px;
+    border-radius: 19px;
+    background: linear-gradient(170deg, #B13445 0%, #982736 55%, #871F2D 100%);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow:
+      0 8px 16px rgba(150,36,52,.28),
+      inset 0 2px 4px rgba(255,255,255,.26),
+      inset 0 -6px 11px rgba(70,10,18,.30);
+  }
 
-textarea {
-  min-height: 100px;
-  resize: none;
-}
+  .field-icon svg{ width: 27px; height: 27px; }
 
-input:focus, textarea:focus {
-  border-color: #FF6B00;
-  box-shadow: 0 0 0 3px rgba(255,107,0,.16);
-  background: #fff;
-}
+  .field-main{
+    grid-column: 2;
+    grid-row: 2;
+    min-width: 0;
+  }
 
-/* Send button */
-.btn {
-  width: 100%;
-  margin-top: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  border: none;
-  border-radius: 999px;
-  padding: 15px 16px;
-  font-weight: 700;
-  font-size: 14px;
-  letter-spacing: .04em;
-  text-transform: uppercase;
-  color: #fff;
-  cursor: pointer;
-  background: linear-gradient(135deg, #FF6B00, #FF8A33);
-  box-shadow: 0 8px 22px rgba(255,107,0,.32);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-.btn svg{ width: 16px; height: 16px; }
+  .field-main input,
+  .field-main textarea{
+    width: 100%;
+    border: 1px solid rgba(255,255,255,.85);
+    border-radius: 18px;
+    background: linear-gradient(180deg, #FFFFFF 0%, #FBF4F3 100%);
+    padding: 16px 18px;
+    font-family: inherit;
+    font-size: 16px;
+    color: #2A1016;
+    outline: none;
+    box-shadow:
+      0 4px 10px rgba(150,90,95,.10),
+      inset 0 1px 2px rgba(255,255,255,.9);
+    transition: border-color .2s ease, box-shadow .2s ease;
+  }
 
-.btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 26px rgba(255,107,0,.40);
-}
+  .field-main input{ height: 56px; }
 
-.btn:active {
-  transform: translateY(1px);
-}
+  .field-main textarea{
+    min-height: 150px;
+    resize: vertical;
+    line-height: 1.5;
+  }
 
-/* Success alert */
-.alert-success {
-  background: #FFE9D6;
-  border-left: 4px solid #FF6B00;
-  border-radius: 12px;
-  padding: 14px;
-  color: #b8530a;
-  font-weight: 700;
-  font-size: 14px;
-  margin-bottom: 14px;
-}
+  .field-main input::placeholder,
+  .field-main textarea::placeholder{ color: #B49FA0; }
 
-.muted {
-  font-size: 12px;
-  color: #9a9a9a;
-  margin-top: 10px;
-}
+  .field-main input:focus,
+  .field-main textarea:focus{
+    border-color: #C47C83;
+    box-shadow: 0 0 0 4px rgba(166,47,56,.12);
+  }
 
-/* Mobile adjustments */
-@media (max-width: 520px) {
-  .page { padding: 0 12px 60px; }
-}
+  /* the message row lines the icon up with the top of the box */
+  .field-row.is-tall{ align-items: start; }
+  .field-row.is-tall .field-icon{ margin-top: 4px; }
+
+  /* ── Send ── */
+  .btn{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    height: 60px;
+    margin-top: 4px;
+    border: 0;
+    border-radius: 999px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 17px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #fff;
+    background: linear-gradient(180deg, #B13445 0%, #9C2838 55%, #8C2030 100%);
+    box-shadow:
+      0 8px 0 #6E1623,
+      0 18px 26px rgba(150,36,52,.34),
+      inset 0 2px 4px rgba(255,255,255,.22),
+      inset 0 -8px 14px rgba(70,10,18,.28);
+    transition: transform .15s cubic-bezier(.22,.61,.36,1), box-shadow .2s ease;
+  }
+
+  .btn svg{ width: 19px; height: 19px; }
+  .btn:hover{ transform: translateY(-2px); }
+  .btn:active{
+    transform: translateY(6px);
+    box-shadow: 0 2px 0 #6E1623, 0 6px 10px rgba(150,36,52,.28);
+  }
+
+  /* ── Sent notice ── */
+  .alert-success{
+    margin: 0 0 16px;
+    padding: 15px 18px;
+    border-radius: 20px;
+    background: linear-gradient(180deg, #E9F9EF 0%, #DCF3E5 100%);
+    border: 1px solid #C7EFD6;
+    color: #15803D;
+    font-size: 15px;
+    font-weight: 700;
+    box-shadow: inset 0 2px 3px rgba(255,255,255,.8);
+  }
+
+  /* ═════ floating 3D props ═════ */
+  .decor-layer{ position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+  .decor-layer img{ position: absolute; display: block; opacity: .9; will-change: transform; }
+
+  @keyframes floatA{ 0%,100%{ transform: translate3d(0,0,0) rotate(0deg);} 50%{ transform: translate3d(4px,-16px,0) rotate(7deg);} }
+  @keyframes floatB{ 0%,100%{ transform: translate3d(0,0,0) rotate(0deg);} 50%{ transform: translate3d(-6px,-12px,0) rotate(-9deg);} }
+  @keyframes floatC{ 0%,100%{ transform: translate3d(0,0,0) rotate(-3deg);} 50%{ transform: translate3d(5px,-20px,0) rotate(5deg);} }
+
+  .d1 { right: 8%;  top: 4%;    width: 30px; animation: floatA 7.6s ease-in-out infinite; }
+  .d2 { right: 3%;  top: 11%;   width: 20px; animation: floatB 8.6s ease-in-out infinite .5s; }
+  .d3 { left: 1%;   top: 34%;   width: 26px; animation: floatC 9.4s ease-in-out infinite 1s; }
+  .d4 { right: 1%;  top: 44%;   width: 22px; animation: floatA 8.2s ease-in-out infinite 1.4s; }
+  .d5 { left: 2%;   top: 66%;   width: 32px; animation: floatB 9s   ease-in-out infinite .3s; }
+  .d6 { right: 2%;  top: 76%;   width: 26px; animation: floatC 7.9s ease-in-out infinite 1.7s; }
+  .d7 { left: 6%;   bottom: 5%; width: 24px; animation: floatA 8.8s ease-in-out infinite .9s; }
+  .d8 { right: 7%;  bottom: 9%; width: 30px; animation: floatB 9.4s ease-in-out infinite 1.9s; }
+
+  @media (max-width: 420px){ .d3, .d7 { display: none; } }
+
+  @media (min-width: 900px){
+    .d1 { right: 16%; width: 42px; }
+    .d2 { right: 10%; width: 30px; }
+    .d3 { left: 9%;   width: 38px; }
+    .d4 { right: 8%;  width: 32px; }
+    .d5 { left: 12%;  width: 44px; }
+    .d6 { right: 11%; width: 36px; }
+    .d7 { left: 16%;  width: 34px; }
+    .d8 { right: 15%; width: 42px; }
+  }
+
+  @media (prefers-reduced-motion: reduce){ .decor-layer img{ animation: none !important; } }
+
+  @media (max-width: 400px){
+    .field-row{ grid-template-columns: 54px 1fr; column-gap: 13px; }
+    .field-icon{ width: 54px; height: 54px; border-radius: 17px; }
+    .field-icon svg{ width: 24px; height: 24px; }
+  }
 </style>
+
+<div class="decor-layer" aria-hidden="true">
+  <img class="d1" src="{% static 'img/decor/sphere.svg' %}" alt="">
+  <img class="d2" src="{% static 'img/decor/sphere.svg' %}" alt="">
+  <img class="d3" src="{% static 'img/decor/sphere.svg' %}" alt="">
+  <img class="d4" src="{% static 'img/decor/sphere.svg' %}" alt="">
+  <img class="d5" src="{% static 'img/decor/sphere.svg' %}" alt="">
+  <img class="d6" src="{% static 'img/decor/sphere.svg' %}" alt="">
+  <img class="d7" src="{% static 'img/decor/sphere.svg' %}" alt="">
+  <img class="d8" src="{% static 'img/decor/sphere.svg' %}" alt="">
+</div>
 
 <div class="page">
 
@@ -206,14 +275,12 @@ input:focus, textarea:focus {
     Back
   </a>
 
-  <div class="cardx">
-    <div class="title">Contact Us</div>
-    <p class="sub">Send us a message — we will contact you soon.</p>
-  </div>
+  <h1 class="title">Contact Us</h1>
+  <p class="sub">Send us a message &mdash; we will contact you soon.</p>
 
   {% if sent %}
     <div class="alert-success">
-      ✅ Thank you! We will contact you soon.
+      &#10003; Thank you! We will contact you soon.
     </div>
   {% endif %}
 
@@ -221,49 +288,49 @@ input:focus, textarea:focus {
     <form method="POST" action="/contact/">
       {% csrf_token %}
 
-      <div class="field-row-wrap">
+      <div class="field-row">
+        <label for="cu_name">Full name</label>
         <div class="field-icon" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
         </div>
         <div class="field-main">
-          <label>Full name</label>
-          <input type="text" name="full_name" required>
+          <input id="cu_name" type="text" name="full_name" required>
         </div>
       </div>
 
-      <div class="field-row-wrap">
+      <div class="field-row">
+        <label for="cu_phone">Phone number</label>
         <div class="field-icon" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
         </div>
         <div class="field-main">
-          <label>Phone / WhatsApp</label>
-          <input type="tel" name="phone" required>
+          <input id="cu_phone" type="tel" name="phone" required>
         </div>
       </div>
 
-      <div class="field-row-wrap">
+      <div class="field-row">
+        <label for="cu_subject">Subject (optional)</label>
         <div class="field-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z" opacity="0"/><path d="M3 12h18M3 6h18M3 18h12"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M4 12h16M4 17h10"/></svg>
         </div>
         <div class="field-main">
-          <label>Subject (optional)</label>
-          <input type="text" name="subject">
+          <input id="cu_subject" type="text" name="subject">
         </div>
       </div>
 
-      <div class="field-row-wrap">
+      <div class="field-row is-tall">
+        <label for="cu_message">Message</label>
         <div class="field-icon" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
         </div>
         <div class="field-main">
-          <label>Message</label>
-          <textarea name="message" required></textarea>
+          <textarea id="cu_message" name="message" required></textarea>
         </div>
       </div>
 
       <button class="btn" type="submit">
         <span>Send Message</span>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-7-7l7 7-7 7"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-7-7l7 7-7 7"/></svg>
       </button>
     </form>
   </div>

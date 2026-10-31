@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-  /* ===== Loan Apply — orange/peach brand ===== */
+  /* ===== Loan Apply — cherry/white brand ===== */
 
   .page, .page * {
     font-family: 'Outfit', sans-serif;
@@ -32,28 +32,28 @@
     padding: 0 16px 0 12px;
     border-radius: 999px;
     background: #ffffff;
-    color: #FF6B00;
+    color: #A62F38;
     font-weight: 700;
     font-size: 13px;
     text-decoration: none;
-    border: 1px solid #FFD4A3;
-    box-shadow: 0 2px 10px rgba(255,107,0,.12);
+    border: 1px solid #E9CBCB;
+    box-shadow: 0 2px 10px rgba(166,47,56,.12);
     transition: transform .15s ease, box-shadow .15s ease;
     margin-bottom: 18px;
   }
   .back-btn svg{ width: 16px; height: 16px; }
-  .back-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(255,107,0,.20); }
+  .back-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(166,47,56,.20); }
   .back-btn::before { display: none; }
 
   /* ===== Cards ===== */
   .cardx {
     background: #ffffff;
     border-radius: 20px;
-    border: 1.5px solid #FFD4A3;
-    border-top: 4px solid #FF6B00;
-    box-shadow: 0 8px 28px rgba(255,107,0,.14), 0 2px 8px rgba(0,0,0,.04);
+    border: 1.5px solid #E9CBCB;
+    border-top: 4px solid #A62F38;
+    box-shadow: 0 8px 28px rgba(166,47,56,.14), 0 2px 8px rgba(0,0,0,.04);
     padding: 20px;
-    color: #1a1a1a;
+    color: #2A1016;
     margin-bottom: 16px;
     overflow: visible;
     position: relative;
@@ -62,11 +62,11 @@
 
   /* ===== Section titles ===== */
   .section-title {
-    color: #1a1a1a;
+    color: #2A1016;
     font-weight: 800;
     font-size: 15px;
     padding-bottom: 12px;
-    border-bottom: 1.5px solid #FFE9D6;
+    border-bottom: 1.5px solid #F6E4E3;
     margin-bottom: 16px;
     letter-spacing: .01em;
   }
@@ -83,8 +83,8 @@
     flex: 0 0 auto;
     width: 36px; height: 36px;
     border-radius: 11px;
-    background: linear-gradient(135deg, #FFE9D6, #FFD4A3);
-    color: #FF6B00;
+    background: linear-gradient(135deg, #F6E4E3, #E9CBCB);
+    color: #A62F38;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -92,14 +92,14 @@
   }
   .field-icon svg{ width: 17px; height: 17px; }
   .field-row-wrap:focus-within .field-icon {
-    background: linear-gradient(135deg, #FF6B00, #FF8A33);
+    background: linear-gradient(135deg, #A62F38, #B93B4C);
     color: #fff;
   }
   .field-main { flex: 1; min-width: 0; }
 
   label {
     display: block;
-    color: #9a9a9a;
+    color: #9A8E8B;
     font-weight: 700;
     font-size: 11px;
     text-transform: uppercase;
@@ -117,10 +117,10 @@
     height: 42px;
     min-height: 42px;
     max-height: 42px;
-    background: #FFFAF5;
-    border: 1.5px solid #E6E6E6;
+    background: #FBF3F2;
+    border: 1.5px solid #EEDFDD;
     border-radius: 11px;
-    color: #1a1a1a;
+    color: #2A1016;
     padding: 11px 13px;
     font-size: 14px;
     font-weight: 500;
@@ -143,14 +143,14 @@
   input[type="tel"]::placeholder,
   input[type="email"]::placeholder,
   textarea::placeholder {
-    color: #9a9a9a;
+    color: #9A8E8B;
   }
 
   input:focus,
   textarea:focus {
     outline: none;
-    border-color: #FF6B00;
-    box-shadow: 0 0 0 3px rgba(255,107,0,.16);
+    border-color: #A62F38;
+    box-shadow: 0 0 0 3px rgba(166,47,56,.16);
     background: #fff;
   }
 
@@ -190,23 +190,23 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    background: #FFFAF5;
-    border: 1.5px solid #E6E6E6;
+    background: #FBF3F2;
+    border: 1.5px solid #EEDFDD;
     border-radius: 14px;
     padding: 6px 14px;
     transition: border-color .2s ease, box-shadow .2s ease;
   }
   .amount-field-wrap:focus-within {
-    border-color: #FF6B00;
-    box-shadow: 0 0 0 3px rgba(255,107,0,.16);
+    border-color: #A62F38;
+    box-shadow: 0 0 0 3px rgba(166,47,56,.16);
     background: #fff;
   }
   .amount-icon {
     flex: 0 0 auto;
     width: 36px; height: 36px;
     border-radius: 11px;
-    background: linear-gradient(135deg, #FFE9D6, #FFD4A3);
-    color: #FF6B00;
+    background: linear-gradient(135deg, #F6E4E3, #E9CBCB);
+    color: #A62F38;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -243,21 +243,21 @@
   .term-btn {
     padding: 12px 8px;
     border-radius: 999px;
-    border: 1.5px solid #E6E6E6;
-    background: #FFFAF5;
-    color: #1a1a1a;
+    border: 1.5px solid #EEDFDD;
+    background: #FBF3F2;
+    color: #2A1016;
     font-weight: 700;
     font-size: 14px;
     cursor: pointer;
     transition: all .2s ease;
   }
-  .term-btn:hover { border-color: #FFD4A3; background: #FFF3E9; }
+  .term-btn:hover { border-color: #E9CBCB; background: #F9EEED; }
   .term-btn:active { transform: scale(.97); }
   .term-btn.active {
-    background: linear-gradient(135deg, #FF6B00, #FF8A33);
+    background: linear-gradient(135deg, #A62F38, #B93B4C);
     border-color: transparent;
     color: #ffffff;
-    box-shadow: 0 6px 16px rgba(255,107,0,.35);
+    box-shadow: 0 6px 16px rgba(166,47,56,.35);
   }
 
   /* ===== Loan purpose pills ===== */
@@ -278,9 +278,9 @@
     gap: 10px;
     padding: 12px 14px;
     border-radius: 999px;
-    border: 1.5px solid #E6E6E6;
-    background: #FFFAF5;
-    color: #6a6a6a;
+    border: 1.5px solid #EEDFDD;
+    background: #FBF3F2;
+    color: #6E6460;
     font-weight: 700;
     font-size: 13px;
     cursor: pointer;
@@ -291,7 +291,7 @@
   .purpose-pill input {
     width: 18px; height: 18px;
     margin: 0;
-    accent-color: #FF6B00;
+    accent-color: #A62F38;
     flex: 0 0 auto;
   }
   .purpose-pill span {
@@ -302,18 +302,18 @@
     text-overflow: ellipsis;
   }
   .purpose-pill:has(input:checked) {
-    background: linear-gradient(135deg, #FF6B00, #FF8A33);
+    background: linear-gradient(135deg, #A62F38, #B93B4C);
     border-color: transparent;
     color: #fff;
-    box-shadow: 0 4px 14px rgba(255,107,0,.30);
+    box-shadow: 0 4px 14px rgba(166,47,56,.30);
   }
   .purpose-pill:has(input:checked) * { color: #fff; }
 
   /* ===== Summary section ===== */
   .summary {
     margin-top: 16px;
-    background: #FFFAF5;
-    border: 1px solid #FFE9D6;
+    background: #FBF3F2;
+    border: 1px solid #F6E4E3;
     border-radius: 14px;
     padding: 4px 14px;
     display: grid;
@@ -325,7 +325,7 @@
     align-items: center;
     justify-content: space-between;
     gap: 10px;
-    border-bottom: 1px solid #FFE9D6;
+    border-bottom: 1px solid #F6E4E3;
     padding: 12px 0;
   }
   .summary .row:last-child {
@@ -333,9 +333,9 @@
     margin-top: 2px;
     font-size: 16px;
   }
-  .summary .k { color: #9a9a9a; }
-  .summary .v { color: #1a1a1a; font-weight: 800; }
-  .summary .row:last-child .v { color: #FF6B00; }
+  .summary .k { color: #9A8E8B; }
+  .summary .v { color: #2A1016; font-weight: 800; }
+  .summary .row:last-child .v { color: #A62F38; }
 
   .cta { margin-top: 14px; width: 100%; }
 
@@ -347,26 +347,26 @@
     justify-content: center;
     gap: 8px;
     padding: 16px;
-    background: linear-gradient(135deg, #FF6B00, #FF8A33);
+    background: linear-gradient(135deg, #A62F38, #B93B4C);
     color: #fff;
     border: none;
     border-radius: 999px;
     font-weight: 700;
     font-size: 15px;
     letter-spacing: .02em;
-    box-shadow: 0 8px 22px rgba(255,107,0,.32);
+    box-shadow: 0 8px 22px rgba(166,47,56,.32);
     cursor: pointer;
     transition: opacity .2s, transform .15s, box-shadow .2s;
   }
   .btn.btn-primary svg{ width: 16px; height: 16px; }
-  .btn.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 26px rgba(255,107,0,.40); }
+  .btn.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 26px rgba(166,47,56,.40); }
   .btn.btn-primary:active { transform: translateY(1px); }
   .btn.btn-primary:disabled { opacity: .55; cursor: not-allowed; transform: none; }
 
   /* ===== HR divider ===== */
   hr {
     border: 0;
-    border-top: 1px solid #FFE9D6;
+    border-top: 1px solid #F6E4E3;
     margin: 14px 0;
   }
 
@@ -391,8 +391,8 @@
     height: 220px;
     padding: 16px 10px;
     border-radius: 16px;
-    border: 2px dashed #FFA64D;
-    background: #FFF3E9;
+    border: 2px dashed #DCA7AB;
+    background: #F9EEED;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -403,19 +403,19 @@
     position: relative;
     overflow: hidden;
     transition: border-color .2s, background .2s;
-    color: #6a6a6a;
+    color: #6E6460;
   }
-  .idbox:hover { border-color: #FF6B00; background: #FFE9D6; }
-  .idbox small { opacity: .85; font-weight: 700; color: #9a9a9a; font-size: 12px; }
-  .idbox strong { font-weight: 800; letter-spacing: .02em; color: #1a1a1a; }
+  .idbox:hover { border-color: #A62F38; background: #F6E4E3; }
+  .idbox small { opacity: .85; font-weight: 700; color: #9A8E8B; font-size: 12px; }
+  .idbox strong { font-weight: 800; letter-spacing: .02em; color: #2A1016; }
   .id-text { display: flex; flex-direction: column; align-items: center; gap: 2px; }
-  .id-text strong { font-weight: 800; letter-spacing: .02em; color: #1a1a1a; }
-  .id-text small { opacity: .85; color: #9a9a9a; }
+  .id-text strong { font-weight: 800; letter-spacing: .02em; color: #2A1016; }
+  .id-text small { opacity: .85; color: #9A8E8B; }
   .id-ico {
     width: 44px; height: 44px;
     border-radius: 14px;
-    background: linear-gradient(135deg, #FFE9D6, #FFD4A3);
-    color: #FF6B00;
+    background: linear-gradient(135deg, #F6E4E3, #E9CBCB);
+    color: #A62F38;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -448,7 +448,7 @@
     z-index: 2;
     display: none;
   }
-  .idbox.has-img { border-style: solid; border-color: #FF6B00; }
+  .idbox.has-img { border-style: solid; border-color: #A62F38; }
   .idbox.has-img .id-preview { display: block; }
   .idbox.has-img .id-guide { display: none; }
   .idbox.has-img .id-text { display: none; }
@@ -457,7 +457,7 @@
     position: absolute;
     top: 8px; right: 8px;
     z-index: 3;
-    background: #FF6B00;
+    background: #A62F38;
     color: #fff;
     font-size: 10px;
     font-weight: 800;
@@ -471,14 +471,14 @@
     display: inline-block;
     padding: 8px 12px;
     border-radius: 8px;
-    background: #FFE9D6;
-    border: 1px solid #FFD4A3;
-    color: #FF6B00;
+    background: #F6E4E3;
+    border: 1px solid #E9CBCB;
+    color: #A62F38;
     font-weight: 700;
     font-size: 12px;
     transition: background .2s;
   }
-  .choose-btn:hover { background: #FFD4A3; }
+  .choose-btn:hover { background: #E9CBCB; }
 
   /* ===== Signature box ===== */
   #sigBox {
@@ -490,7 +490,7 @@
     text-align: left !important;
     gap: 10px !important;
     border-style: solid;
-    border-color: #FFD4A3;
+    border-color: #E9CBCB;
     background: #ffffff;
   }
 
@@ -498,8 +498,8 @@
     width: 100%;
     height: 140px;
     border-radius: 12px;
-    border: 2px dashed #FFA64D;
-    background: #FFFAF5;
+    border: 2px dashed #DCA7AB;
+    background: #FBF3F2;
     box-sizing: border-box;
     display: block;
     position: relative;
@@ -508,7 +508,7 @@
   }
   #sigBox { position: relative; }
   #sigBox .sig-canvas { position: relative; z-index: 2; }
-  #sigBox img#sigPreviewImg { background: #FFFAF5; }
+  #sigBox img#sigPreviewImg { background: #FBF3F2; }
 
   .sig-clear-wrap {
     width: 100%;
@@ -519,23 +519,23 @@
   .sig-clear-wrap .sig-btn {
     padding: 8px 16px;
     border-radius: 999px;
-    border: 1px solid #FFD4A3;
-    background: #FFE9D6;
-    color: #FF6B00;
+    border: 1px solid #E9CBCB;
+    background: #F6E4E3;
+    color: #A62F38;
     font-weight: 800;
     font-size: 12px;
     cursor: pointer;
     transition: background .2s, color .2s;
   }
   .sig-clear-wrap .sig-btn:hover {
-    background: #ffebee;
-    color: #c62828;
+    background: #FBEAE9;
+    color: #8C1D18;
     border-color: rgba(198,40,40,.3);
   }
   .sig-clear-wrap .sig-btn:active { transform: scale(.97); }
 
   /* ===== muted text ===== */
-  .muted { color: #9a9a9a; font-size: 13px; }
+  .muted { color: #9A8E8B; font-size: 13px; }
 
   /* ===== Submitting state ===== */
   .btn.btn-primary.is-loading { opacity: .85; pointer-events: none; }
@@ -560,13 +560,414 @@
   @keyframes popin { from{ transform: scale(.94); opacity: 0; } to{ transform: scale(1); opacity: 1; } }
   .submit-spin {
     width: 54px; height: 54px; margin: 0 auto 16px; border-radius: 50%;
-    border: 5px solid #FFE9D6; border-top-color: #FF6B00;
+    border: 5px solid #F6E4E3; border-top-color: #A62F38;
     animation: ltspin .8s linear infinite;
   }
   @keyframes ltspin { to { transform: rotate(360deg); } }
-  .submit-title { font-weight: 800; font-size: 17px; color: #1a1a1a; margin: 0 0 6px; }
-  .submit-sub { font-size: 13px; color: #9a9a9a; line-height: 1.5; margin: 0; }
+  .submit-title { font-weight: 800; font-size: 17px; color: #2A1016; margin: 0 0 6px; }
+  .submit-sub { font-size: 13px; color: #9A8E8B; line-height: 1.5; margin: 0; }
+
+  /* ════════════════════════════════════════
+     CLAY PASS + 4-STEP WIZARD
+     The form is unchanged; it is just shown four fields-groups at a time.
+     ════════════════════════════════════════ */
+  body{
+    background:
+      radial-gradient(120% 50% at 50% 0%, #F7E3E4 0%, transparent 55%),
+      linear-gradient(180deg, #FBF4F2 0%, #F6ECEA 50%, #F3E6E4 100%) !important;
+    background-attachment: fixed !important;
+  }
+
+  .page{ position: relative; z-index: 1; }
+
+  .back-btn{
+    height: 42px;
+    border: 0;
+    background: linear-gradient(180deg, #FFFFFF 0%, #FDF8F7 100%);
+    color: #A62F38;
+    font-size: 15px;
+    font-weight: 800;
+    box-shadow:
+      0 5px 0 #EADBD9,
+      0 12px 18px rgba(140,80,85,.20),
+      inset 0 2px 2px #fff;
+  }
+
+  .back-btn:hover{ transform: translateY(-2px); }
+  .back-btn:active{ transform: translateY(4px); box-shadow: 0 1px 0 #EADBD9, 0 5px 9px rgba(140,80,85,.18); }
+
+  /* ── Stepper ── */
+  .stepper{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    margin: 18px 0 6px;
+  }
+
+  .stepper .sp{
+    cursor: pointer;
+    user-select: none;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    font-weight: 800;
+    color: #B98B91;
+    background: linear-gradient(180deg, #FFFFFF 0%, #F8ECEB 100%);
+    box-shadow: inset 0 2px 3px rgba(255,255,255,.9), 0 3px 8px rgba(150,90,95,.16);
+    flex: 0 0 auto;
+    transition: background .25s ease, color .25s ease, box-shadow .25s ease;
+  }
+
+  .stepper .sp:hover{ transform: translateY(-2px); }
+  .stepper .sp:active{ transform: translateY(1px); }
+  .stepper .sp:focus-visible{ outline: 3px solid rgba(166,47,56,.35); outline-offset: 2px; }
+
+  .stepper .sp.done,
+  .stepper .sp.on{
+    color: #fff;
+    background: linear-gradient(180deg, #B13445 0%, #952736 100%);
+    box-shadow: 0 4px 0 #6E1623, 0 9px 14px rgba(150,36,52,.30), inset 0 2px 3px rgba(255,255,255,.26);
+  }
+
+  .stepper .sl{
+    width: 26px;
+    height: 3px;
+    border-radius: 999px;
+    background: #EBD5D5;
+    flex: 0 0 auto;
+    transition: background .25s ease;
+  }
+
+  .stepper .sl.done{ background: #A62F38; }
+
+  .step-caption{
+    text-align: center;
+    color: #8A2129;
+    font-weight: 700;
+    font-size: 13.5px;
+    margin: 10px 0 2px;
+  }
+
+  .step-heading{
+    text-align: center;
+    color: #5C1522;
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -.7px;
+    margin: 2px 0 16px;
+  }
+
+  /* ── Steps ── */
+  .step[hidden]{ display: none !important; }
+
+  .step-nav{
+    display: flex;
+    gap: 12px;
+    margin-top: 18px;
+  }
+
+  .step-nav .btn-step{
+    flex: 1 1 0;
+    height: 56px;
+    border: 0;
+    border-radius: 999px;
+    font-size: 16px;
+    font-weight: 800;
+    letter-spacing: .3px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    transition: transform .15s cubic-bezier(.22,.61,.36,1), box-shadow .2s ease;
+  }
+
+  .btn-step.next{
+    background: linear-gradient(180deg, #B13445 0%, #9C2838 55%, #8C2030 100%);
+    color: #fff;
+    box-shadow:
+      0 7px 0 #6E1623,
+      0 16px 24px rgba(150,36,52,.32),
+      inset 0 2px 4px rgba(255,255,255,.22),
+      inset 0 -7px 12px rgba(70,10,18,.28);
+  }
+
+  .btn-step.next:hover{ transform: translateY(-2px); }
+  .btn-step.next:active{ transform: translateY(5px); box-shadow: 0 2px 0 #6E1623, 0 6px 10px rgba(150,36,52,.28); }
+
+  .btn-step.prev{
+    flex: 0 0 38%;
+    background: linear-gradient(180deg, #FFFFFF 0%, #FBF0F0 100%);
+    color: #8A2129;
+    box-shadow:
+      0 6px 0 #E6D2D2,
+      0 14px 20px rgba(140,80,85,.18),
+      inset 0 2px 2px #fff;
+  }
+
+  .btn-step.prev:hover{ transform: translateY(-2px); }
+  .btn-step.prev:active{ transform: translateY(4px); box-shadow: 0 2px 0 #E6D2D2, 0 5px 9px rgba(140,80,85,.16); }
+
+  /* ── Frosted cards ── */
+  .cardx{
+    border: 1px solid rgba(255,255,255,.65);
+    border-top: 1px solid rgba(255,255,255,.65);
+    border-left: 0;
+    border-radius: 30px;
+    padding: 22px 18px;
+    background: linear-gradient(180deg, rgba(255,255,255,.82) 0%, rgba(253,246,245,.70) 100%);
+    backdrop-filter: blur(18px) saturate(140%);
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
+    box-shadow:
+      0 20px 38px rgba(120,70,70,.16),
+      0 3px 8px rgba(120,70,70,.06),
+      inset 0 2px 3px rgba(255,255,255,.9);
+    margin-bottom: 16px;
+  }
+
+  .section-title{
+    color: #8A2129;
+    font-size: 15px;
+    font-weight: 800;
+    letter-spacing: .4px;
+    text-transform: uppercase;
+  }
+
+  .field > label,
+  .field label{ color: #8A2129; font-weight: 800; font-size: 13px; letter-spacing: .3px; }
+
+  .field input,
+  .field textarea,
+  .field select{
+    border-radius: 16px !important;
+    border: 1px solid #EFDCDB !important;
+    background: #FFFFFF !important;
+    font-size: 15px !important;
+    color: #2A1016 !important;
+  }
+
+  .field input:focus,
+  .field textarea:focus{
+    border-color: #C47C83 !important;
+    box-shadow: 0 0 0 4px rgba(166,47,56,.12) !important;
+  }
+
+  /* field icon badges stay flat — they are labels, not controls */
+  .f-ico,
+  .field-icon{
+    background: linear-gradient(170deg, #B13445 0%, #952736 100%) !important;
+    color: #fff !important;
+    box-shadow: inset 0 2px 3px rgba(255,255,255,.24) !important;
+  }
+
+  .f-ico svg,
+  .field-icon svg{ stroke: #fff !important; color: #fff !important; }
+
+  /* ── Loan purpose chips ── */
+  .purpose-grid{
+    display: flex !important;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .purpose-pill{
+    border: 1.5px solid #E2BFC1 !important;
+    border-radius: 999px !important;
+    background: transparent !important;
+    padding: 11px 18px !important;
+    color: #8A2129 !important;
+    font-size: 15px !important;
+    font-weight: 700 !important;
+    cursor: pointer;
+    transition: background .2s ease, color .2s ease, box-shadow .2s ease, border-color .2s ease;
+  }
+
+  .purpose-pill input{ display: none !important; }
+
+  .purpose-pill:has(input:checked){
+    background: linear-gradient(180deg, #B13445 0%, #952736 100%) !important;
+    border-color: transparent !important;
+    color: #fff !important;
+    box-shadow: 0 4px 0 #6E1623, 0 10px 16px rgba(150,36,52,.28);
+  }
+
+  .purpose-pill:has(input:checked) span{ color: #fff !important; }
+
+  /* ── Write-in purpose, shown only when "Other" is picked ── */
+  .other-purpose{
+    margin-top: 14px;
+    animation: otherIn .22s cubic-bezier(.22,.61,.36,1) both;
+  }
+
+  .other-purpose[hidden]{ display: none !important; }
+
+  @keyframes otherIn{
+    from { opacity: 0; transform: translateY(-6px); }
+    to   { opacity: 1; transform: none; }
+  }
+
+  .other-purpose label{
+    display: block;
+    color: #8A2129;
+    font-weight: 800;
+    font-size: 13px;
+    letter-spacing: .3px;
+    margin-bottom: 7px;
+  }
+
+  .other-purpose input{
+    width: 100%;
+    box-sizing: border-box;
+    padding: 14px 16px;
+    border-radius: 16px;
+    border: 1px solid #EFDCDB;
+    background: #FFFFFF;
+    color: #2A1016;
+    font-size: 15px;
+    outline: none;
+    transition: border-color .2s ease, box-shadow .2s ease;
+  }
+
+  .other-purpose input::placeholder{ color: #B49FA0; }
+
+  .other-purpose input:focus{
+    border-color: #C47C83;
+    box-shadow: 0 0 0 4px rgba(166,47,56,.12);
+  }
+
+  /* ── Upload tiles with the 3D artwork ── */
+  .id-grid{ display: grid !important; grid-template-columns: 1fr; gap: 14px; }
+
+  .idbox{
+    height: auto !important;
+    min-height: 150px;
+    padding: 18px 14px !important;
+    border-radius: 24px !important;
+    border: 2px dashed #D9A9AE !important;
+    background: linear-gradient(180deg, #FFFFFF 0%, #FBF2F1 100%) !important;
+  }
+
+  /* the tiles use .id-guide for their illustration, so the 3D artwork
+     replaces that rather than the small .id-ico badge */
+  .idbox .id-guide{
+    width: 136px !important;
+    height: 84px !important;
+    margin: 0 auto 6px !important;
+    background: center/contain no-repeat !important;
+    filter: drop-shadow(0 8px 9px rgba(90,20,30,.20));
+  }
+
+  .idbox .id-guide svg{ display: none !important; }
+
+  #boxFront  .id-guide{ background-image: url("{% static 'img/id-front-3d.webp' %}") !important; }
+  #boxBack   .id-guide{ background-image: url("{% static 'img/id-back-3d.webp' %}") !important; }
+  #boxSelfie .id-guide{
+    background-image: url("{% static 'img/selfie-id-3d.webp' %}") !important;
+    height: 106px !important;
+  }
+
+  /* keep the small badge hidden on the upload tiles */
+  .idbox:not(#sigBox) .id-ico{ display: none !important; }
+
+  .idbox strong{ color: #2A1016; font-size: 15px; letter-spacing: .3px; }
+  .idbox small{ color: #8E7B7D; font-size: 13px; }
+
+  /* signature keeps its own card */
+  #sigBox{
+    border: 0 !important;
+    border-radius: 24px !important;
+    background: #FFFFFF !important;
+    box-shadow: 0 10px 20px rgba(120,70,70,.12), inset 0 2px 3px rgba(255,255,255,.9);
+  }
+
+  #sigBox .id-ico{
+    width: 46px !important;
+    height: 46px !important;
+    border-radius: 15px !important;
+    background: linear-gradient(170deg, #F3D5D6 0%, #E4B0B4 100%) !important;
+    filter: none;
+  }
+
+  #sigBox .id-ico svg{ display: block !important; stroke: #8A2129 !important; }
+
+  /* ── Summary ── */
+  .summary{
+    background: linear-gradient(180deg, rgba(255,255,255,.72) 0%, rgba(246,228,227,.60) 100%);
+    border: 1px solid rgba(255,255,255,.7);
+    border-radius: 20px;
+    padding: 4px 16px;
+    font-size: 15px;
+  }
+
+  .summary .row{ border-bottom: 1px solid rgba(150,90,95,.14); padding: 14px 0; }
+  .summary .k{ color: #4A3A3C; }
+  .summary .v{ color: #2A1016; font-weight: 800; }
+  .summary .row:last-child .v{ color: #A62F38; }
+
+  /* ── Confirm ── */
+  .cta{
+    height: 60px;
+    border-radius: 999px;
+    font-size: 17px;
+    font-weight: 800;
+    background: linear-gradient(180deg, #B13445 0%, #9C2838 55%, #8C2030 100%) !important;
+    color: #fff !important;
+    border: 0 !important;
+    box-shadow:
+      0 8px 0 #6E1623,
+      0 18px 26px rgba(150,36,52,.34),
+      inset 0 2px 4px rgba(255,255,255,.22),
+      inset 0 -8px 14px rgba(70,10,18,.28) !important;
+  }
+
+  .cta:hover:not([disabled]){ transform: translateY(-2px); }
+  .cta:active:not([disabled]){ transform: translateY(6px); box-shadow: 0 2px 0 #6E1623, 0 6px 10px rgba(150,36,52,.28) !important; }
+
+  /* ════════════════════════════════════════
+     FLOATING 3D PROPS
+     ════════════════════════════════════════ */
+  .decor-layer{ position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+  .decor-layer img{ position: absolute; display: block; opacity: .9; will-change: transform; }
+
+  @keyframes floatA{ 0%,100%{ transform: translate3d(0,0,0) rotate(0deg);} 50%{ transform: translate3d(4px,-16px,0) rotate(7deg);} }
+  @keyframes floatB{ 0%,100%{ transform: translate3d(0,0,0) rotate(0deg);} 50%{ transform: translate3d(-6px,-12px,0) rotate(-9deg);} }
+  @keyframes floatC{ 0%,100%{ transform: translate3d(0,0,0) rotate(-3deg);} 50%{ transform: translate3d(5px,-20px,0) rotate(5deg);} }
+
+  .d1 { left: 1%;  top: 3%;    width: 40px; animation: floatA 7.6s ease-in-out infinite; }
+  .d2 { right: 2%; top: 1%;    width: 44px; animation: floatB 8.6s ease-in-out infinite .5s; }
+  .d3 { left: 2%;  top: 34%;   width: 30px; animation: floatC 9.4s ease-in-out infinite 1s; }
+  .d4 { right: 1%; top: 28%;   width: 34px; animation: floatA 8.2s ease-in-out infinite 1.4s; }
+  .d5 { left: 1%;  top: 64%;   width: 36px; animation: floatB 9s   ease-in-out infinite .3s; }
+  .d6 { right: 2%; top: 72%;   width: 40px; animation: floatC 7.9s ease-in-out infinite 1.7s; }
+
+  @media (max-width: 420px){ .d3 { display: none; } }
+
+  @media (min-width: 900px){
+    .d1 { left: 10%; width: 56px; }
+    .d2 { right: 11%; width: 58px; }
+    .d3 { left: 8%;  width: 44px; }
+    .d4 { right: 8%; width: 48px; }
+    .d5 { left: 12%; width: 50px; }
+    .d6 { right: 10%; width: 54px; }
+  }
+
+  @media (prefers-reduced-motion: reduce){ .decor-layer img{ animation: none !important; } }
+
 </style>
+<div class="decor-layer" aria-hidden="true">
+  <img class="d1" src="{% static 'img/decor/coin.svg' %}" alt="">
+  <img class="d2" src="{% static 'img/decor/coin-edge.svg' %}" alt="">
+  <img class="d3" src="{% static 'img/decor/sphere.svg' %}" alt="">
+  <img class="d4" src="{% static 'img/decor/coin.svg' %}" alt="">
+  <img class="d5" src="{% static 'img/decor/coin-edge.svg' %}" alt="">
+  <img class="d6" src="{% static 'img/decor/sphere.svg' %}" alt="">
+</div>
+
 <div class="page">
 
   <a class="back-btn" href="javascript:history.back()">
@@ -577,7 +978,17 @@
     <form method="POST" enctype="multipart/form-data">
       {% csrf_token %}
 
-  <!-- ===== Section 1: Personal Information ===== -->
+  <div class="stepper">
+    <span class="sp on" data-sp="1" role="button" tabindex="0" aria-label="Go to step 1">1</span><span class="sl" data-sl="1"></span>
+    <span class="sp" data-sp="2" role="button" tabindex="0" aria-label="Go to step 2">2</span><span class="sl" data-sl="2"></span>
+    <span class="sp" data-sp="3" role="button" tabindex="0" aria-label="Go to step 3">3</span><span class="sl" data-sl="3"></span>
+    <span class="sp" data-sp="4" role="button" tabindex="0" aria-label="Go to step 4">4</span>
+  </div>
+  <div class="step-caption" id="stepCaption">Step 1 of 4</div>
+  <h2 class="step-heading" id="stepHeading">Personal Details</h2>
+
+  <!-- ===== Step 1: Personal Information ===== -->
+  <section class="step" data-step="1">
   <div class="cardx">
     <div class="section-title">Personal Information</div>
 
@@ -720,14 +1131,29 @@
         id="identityNumber"
         value="{{ loan.identity_number|default:'' }}"
         placeholder="Identify Number"
-        inputmode="numeric"
-        pattern="[0-9]*"
+        inputmode="text"
+        autocapitalize="characters"
+        pattern="[A-Za-z0-9 \-]*"
+        title="Letters, numbers, spaces and dashes"
         {% if locked %}readonly{% endif %}
         required>
             </div>
           </div>
         </div>
 
+      </div><!-- /grid-2 -->
+
+    <div class="step-nav">
+      <button type="button" class="btn-step next" data-go="2">Next Step &rarr;</button>
+    </div>
+  </div><!-- /cardx -->
+  </section>
+
+  <!-- ===== Step 2: Loan purpose ===== -->
+  <section class="step" data-step="2" hidden>
+  <div class="cardx">
+    <div class="section-title">Loan Purpose</div>
+      <div class="grid-2">
         <div class="field" id="purposeField" style="grid-column: 1 / -1;">
           <label>Loan purposes (optional)</label>
 
@@ -789,15 +1215,30 @@
             </label>
           </div>
 
+          <div class="other-purpose" id="otherPurposeWrap" hidden>
+            <label for="otherPurposeText">Tell us your purpose</label>
+            <input type="text" id="otherPurposeText" maxlength="120"
+                   placeholder="e.g. Car repair, family event, travel"
+                   {% if locked %}readonly{% endif %}>
+          </div>
+
           <div class="muted" style="margin-top:8px;">Choose one or more (optional)</div>
+          {% if loan %}{{ loan.loan_purposes|json_script:"loanPurposesData" }}{% endif %}
         </div>
 
       </div>
-  </div>
 
-  <!-- ===== Section 2: ID Upload + Signature ===== -->
+    <div class="step-nav">
+      <button type="button" class="btn-step prev" data-go="1">&larr; Back</button>
+      <button type="button" class="btn-step next" data-go="3">Next Step &rarr;</button>
+    </div>
+  </div><!-- /cardx -->
+  </section>
+
+  <!-- ===== Step 3: Document verification ===== -->
+  <section class="step" data-step="3" hidden>
   <div class="cardx">
-        <div class="section-title">ID Required (Upload)</div>
+        <div class="section-title">Document Verification</div>
 
         <div class="id-grid">
 
@@ -809,12 +1250,12 @@
 
             <div class="id-guide" aria-hidden="true">
               <svg viewBox="0 0 120 80" fill="none">
-                <rect x="3" y="3" width="114" height="74" rx="12" fill="#FFE9D6" stroke="#FFA64D" stroke-width="2.5"/>
-                <circle cx="32" cy="33" r="13" fill="#FFD4A3"/>
-                <path d="M16 58c0-9 7.2-13 16-13s16 4 16 13" fill="#FFD4A3"/>
-                <rect x="58" y="22" width="46" height="6" rx="3" fill="#FF8A33"/>
-                <rect x="58" y="36" width="38" height="6" rx="3" fill="#FFD4A3"/>
-                <rect x="58" y="50" width="30" height="6" rx="3" fill="#FFD4A3"/>
+                <rect x="3" y="3" width="114" height="74" rx="12" fill="#F6E4E3" stroke="#DCA7AB" stroke-width="2.5"/>
+                <circle cx="32" cy="33" r="13" fill="#E9CBCB"/>
+                <path d="M16 58c0-9 7.2-13 16-13s16 4 16 13" fill="#E9CBCB"/>
+                <rect x="58" y="22" width="46" height="6" rx="3" fill="#B93B4C"/>
+                <rect x="58" y="36" width="38" height="6" rx="3" fill="#E9CBCB"/>
+                <rect x="58" y="50" width="30" height="6" rx="3" fill="#E9CBCB"/>
               </svg>
             </div>
             <div class="id-text">
@@ -838,17 +1279,17 @@
 
             <div class="id-guide" aria-hidden="true">
               <svg viewBox="0 0 120 80" fill="none">
-                <rect x="3" y="3" width="114" height="74" rx="12" fill="#FFE9D6" stroke="#FFA64D" stroke-width="2.5"/>
-                <rect x="16" y="18" width="3" height="22" fill="#FF8A33"/>
-                <rect x="22" y="18" width="2" height="22" fill="#FFA64D"/>
-                <rect x="27" y="18" width="4" height="22" fill="#FF8A33"/>
-                <rect x="34" y="18" width="2" height="22" fill="#FFA64D"/>
-                <rect x="39" y="18" width="3" height="22" fill="#FF8A33"/>
-                <rect x="45" y="18" width="2" height="22" fill="#FFA64D"/>
-                <rect x="50" y="18" width="4" height="22" fill="#FF8A33"/>
-                <rect x="86" y="14" width="22" height="22" rx="3" fill="#FFD4A3"/>
-                <rect x="16" y="50" width="60" height="6" rx="3" fill="#FFD4A3"/>
-                <rect x="16" y="60" width="40" height="6" rx="3" fill="#FFD4A3"/>
+                <rect x="3" y="3" width="114" height="74" rx="12" fill="#F6E4E3" stroke="#DCA7AB" stroke-width="2.5"/>
+                <rect x="16" y="18" width="3" height="22" fill="#B93B4C"/>
+                <rect x="22" y="18" width="2" height="22" fill="#DCA7AB"/>
+                <rect x="27" y="18" width="4" height="22" fill="#B93B4C"/>
+                <rect x="34" y="18" width="2" height="22" fill="#DCA7AB"/>
+                <rect x="39" y="18" width="3" height="22" fill="#B93B4C"/>
+                <rect x="45" y="18" width="2" height="22" fill="#DCA7AB"/>
+                <rect x="50" y="18" width="4" height="22" fill="#B93B4C"/>
+                <rect x="86" y="14" width="22" height="22" rx="3" fill="#E9CBCB"/>
+                <rect x="16" y="50" width="60" height="6" rx="3" fill="#E9CBCB"/>
+                <rect x="16" y="60" width="40" height="6" rx="3" fill="#E9CBCB"/>
               </svg>
             </div>
             <div class="id-text">
@@ -872,15 +1313,15 @@
 
             <div class="id-guide" aria-hidden="true">
               <svg viewBox="0 0 100 100" fill="none">
-                <circle cx="50" cy="50" r="46" fill="#FFE9D6"/>
-                <path d="M27 93 Q27 68 50 64 Q73 68 73 93 Z" fill="#FF8A33"/>
-                <circle cx="50" cy="42" r="19" fill="#FFD4A3"/>
-                <circle cx="43.5" cy="40" r="2.4" fill="#1a1a1a"/>
-                <circle cx="56.5" cy="40" r="2.4" fill="#1a1a1a"/>
-                <path d="M42 49q8 6 16 0" stroke="#1a1a1a" stroke-width="2.2" fill="none" stroke-linecap="round"/>
-                <rect x="63" y="56" width="17" height="27" rx="4" fill="#FF6B00"/>
-                <rect x="66" y="60" width="11" height="15" rx="1.5" fill="#FFE9D6"/>
-                <circle cx="71.5" cy="78" r="1.6" fill="#FFE9D6"/>
+                <circle cx="50" cy="50" r="46" fill="#F6E4E3"/>
+                <path d="M27 93 Q27 68 50 64 Q73 68 73 93 Z" fill="#B93B4C"/>
+                <circle cx="50" cy="42" r="19" fill="#E9CBCB"/>
+                <circle cx="43.5" cy="40" r="2.4" fill="#2A1016"/>
+                <circle cx="56.5" cy="40" r="2.4" fill="#2A1016"/>
+                <path d="M42 49q8 6 16 0" stroke="#2A1016" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+                <rect x="63" y="56" width="17" height="27" rx="4" fill="#A62F38"/>
+                <rect x="66" y="60" width="11" height="15" rx="1.5" fill="#F6E4E3"/>
+                <circle cx="71.5" cy="78" r="1.6" fill="#F6E4E3"/>
               </svg>
             </div>
             <div class="id-text">
@@ -897,6 +1338,16 @@
 
         </div>
 
+    <div class="step-nav">
+      <button type="button" class="btn-step prev" data-go="2">&larr; Back</button>
+      <button type="button" class="btn-step next" data-go="4">Next Step &rarr;</button>
+    </div>
+  </div><!-- /cardx -->
+  </section>
+
+  <!-- ===== Step 4: Signature & final review ===== -->
+  <section class="step" data-step="4" hidden>
+  <div class="cardx">
           <!-- SIGNATURE (DRAW) -->
 <div class="idbox" id="sigBox" style="margin-top:14px;">
   <div class="id-text" style="position:relative; z-index:2;">
@@ -933,9 +1384,9 @@
 </div>
   </div>
 
-  <!-- ===== Section 3: Review & Confirm ===== -->
+  <!-- ===== Review & confirm (same step) ===== -->
   <div class="cardx">
-      <div class="section-title">Review your loan</div>
+      <div class="section-title">Loan Summary</div>
 
       <!-- amount & term are chosen on the Quick Loan page; carried here as hidden values -->
       <input type="hidden" name="loan_amount" id="loanAmount" value="{{ loan.amount|default:'' }}">
@@ -961,6 +1412,8 @@
 {% endif %}
 
   </div>
+
+  </section>
 
     </form>
 </div>
@@ -1106,8 +1559,16 @@
         const el = document.getElementById("identityNumber");
         if(!el) return;
 
+        /* ID numbers carry letters as well as digits, so keep both
+           (plus spaces and dashes) and only drop anything else. */
         el.addEventListener("input", function(){
-          this.value = this.value.replace(/[^0-9]/g, "");
+          const caret = this.selectionStart;
+          const before = this.value;
+          const after = before.replace(/[^A-Za-z0-9 \-]/g, "");
+          if (after !== before) {
+            this.value = after;
+            this.setSelectionRange(caret - 1, caret - 1);
+          }
         });
       })();
     </script>
@@ -1158,7 +1619,7 @@
           ctx.lineWidth = 3;
           ctx.lineCap = "round";
           ctx.lineJoin = "round";
-          ctx.strokeStyle = "#000000";
+          ctx.strokeStyle = "#A62F38";   // signed in brand ink, like a real pen
         }
 
         let drawing = false;
@@ -1254,15 +1715,56 @@ clearBtn && clearBtn.addEventListener("click", clear);
 })();
       </script>
 <script>
-  document.querySelectorAll('input[name="loan_purposes"]').forEach(cb => {
-    cb.addEventListener('change', function () {
-      if (this.checked) {
-        document.querySelectorAll('input[name="loan_purposes"]').forEach(other => {
-          if (other !== this) other.checked = false;
-        });
-      }
+  /* One purpose at a time; picking "Other" opens a box to type your own.
+     The typed text rides along in the checkbox value, so the server keeps
+     storing a plain list in loan_purposes with no change needed. */
+  (function () {
+    var boxes = Array.prototype.slice.call(document.querySelectorAll('input[name="loan_purposes"]'));
+    var other = boxes.filter(function (b) { return b.value.indexOf('Other') === 0; })[0];
+    var wrap = document.getElementById('otherPurposeWrap');
+    var text = document.getElementById('otherPurposeText');
+
+    boxes.forEach(function (cb) {
+      cb.addEventListener('change', function () {
+        if (this.checked) {
+          boxes.forEach(function (o) { if (o !== cb) o.checked = false; });
+        }
+        sync();
+      });
     });
-  });
+
+    function sync() {
+      if (!other || !wrap) return;
+      wrap.hidden = !other.checked;
+      if (other.checked && text) { setTimeout(function () { text.focus(); }, 60); }
+    }
+
+    /* restore what was saved last time */
+    var data = document.getElementById('loanPurposesData');
+    if (data && other) {
+      var saved = [];
+      try { saved = JSON.parse(data.textContent) || []; } catch (e) {}
+      saved.forEach(function (v) {
+        if (typeof v !== 'string') return;
+        if (v.indexOf('Other') === 0) {
+          other.checked = true;
+          if (text) text.value = v.slice(5).replace(/^[:\s]+/, '');
+        }
+      });
+    }
+
+    if (other && other.checked && wrap) wrap.hidden = false;
+
+    var form = other && other.form;
+    if (form) {
+      form.addEventListener('submit', function () {
+        if (other.checked) {
+          var t = text ? text.value.trim() : '';
+          other.value = t ? ('Other: ' + t) : 'Other';
+        }
+      });
+    }
+  })();
 </script>
 
 <!-- Submitting overlay (prevents confusion / double submit) -->
@@ -1293,5 +1795,109 @@ clearBtn && clearBtn.addEventListener("click", clear);
   })();
 </script>
 
-<script src="{% static 'js/loan_tour.js' %}?v=4"></script>
+<script src="{% static 'js/loan_tour.js' %}?v=9"></script>
+
+<script>
+/* Four-step wizard. Every field stays in the DOM, so the POST body is
+   exactly what the single long form used to send. */
+(function () {
+  var steps = Array.prototype.slice.call(document.querySelectorAll('.step'));
+  if (!steps.length) return;
+
+  var caption = document.getElementById('stepCaption');
+  var heading = document.getElementById('stepHeading');
+  var titles = {
+    1: 'Personal Details',
+    2: 'Loan Purpose',
+    3: 'Document Verification',
+    4: 'Signature & Final Review'
+  };
+
+  function show(n) {
+    steps.forEach(function (sec) {
+      sec.hidden = (sec.getAttribute('data-step') !== String(n));
+    });
+
+    document.querySelectorAll('.stepper .sp').forEach(function (dot) {
+      var i = Number(dot.getAttribute('data-sp'));
+      dot.classList.toggle('on', i === n);
+      dot.classList.toggle('done', i < n);
+    });
+
+    document.querySelectorAll('.stepper .sl').forEach(function (line) {
+      line.classList.toggle('done', Number(line.getAttribute('data-sl')) < n);
+    });
+
+    if (caption) caption.textContent = 'Step ' + n + ' of 4';
+    if (heading) heading.textContent = titles[n] || '';
+
+    /* The signature canvas sizes itself from its box. On load that box is
+       inside a hidden step, so it comes out 0x0 and strokes go nowhere.
+       Size it the first time step 4 is actually on screen. */
+    if (n === 4) {
+      var cv = document.getElementById('sigCanvas');
+      if (cv && !cv.width) {
+        requestAnimationFrame(function () {
+          window.dispatchEvent(new Event('resize'));
+        });
+      }
+    }
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  /* Only block the step when a required field in it is empty. */
+  function valid(n) {
+    var sec = document.querySelector('.step[data-step="' + n + '"]');
+    if (!sec) return true;
+    var fields = sec.querySelectorAll('input[required], textarea[required], select[required]');
+    for (var i = 0; i < fields.length; i++) {
+      var f = fields[i];
+      if (f.type === 'file') continue;          // files are checked on submit
+      if (!f.checkValidity()) {
+        f.reportValidity();
+        return false;
+      }
+    }
+    return true;
+  }
+
+  document.addEventListener('click', function (e) {
+    var btn = e.target.closest('.btn-step');
+    if (btn) {
+      var go = Number(btn.getAttribute('data-go'));
+      if (btn.classList.contains('next') && !valid(go - 1)) return;
+      show(go);
+      return;
+    }
+
+    /* The numbers are a shortcut back to any step, so the details can be
+       checked again after submitting. Going forward still needs the
+       required fields filled in. */
+    var dot = e.target.closest('.stepper .sp');
+    if (!dot) return;
+    var target = Number(dot.getAttribute('data-sp'));
+    var current = Number((document.querySelector('.stepper .sp.on') || {}).getAttribute
+      ? document.querySelector('.stepper .sp.on').getAttribute('data-sp')
+      : 1);
+    if (target > current) {
+      for (var i = current; i < target; i++) {
+        if (!valid(i)) return;
+      }
+    }
+    show(target);
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    var dot = e.target.closest && e.target.closest('.stepper .sp');
+    if (!dot) return;
+    e.preventDefault();
+    dot.click();
+  });
+
+  show(1);
+})();
+</script>
+
 {% endblock %}

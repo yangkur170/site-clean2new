@@ -283,6 +283,31 @@ class LoanApplication(models.Model):
         return f"{self.user} - {self.amount} - {self.term_months}m - {self.status}"
 
 
+class AgreementAcceptance(models.Model):
+    """One row per time a user accepts the loan agreement.
+
+    Kept as its own table rather than a flag on the user so the history
+    survives wording changes and can stand as evidence of what was accepted
+    and when.
+    """
+
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="agreement_acceptances",
+    )
+
+    accepted_at = models.DateTimeField(auto_now_add=True)
+    ip_address = models.GenericIPAddressField(null=True, blank=True)
+    user_agent = models.CharField(max_length=400, blank=True, default="")
+
+    class Meta:
+        ordering = ["-accepted_at"]
+
+    def __str__(self):
+        return f"{self.user} accepted the agreement on {self.accepted_at:%Y-%m-%d %H:%M}"
+
+
 class PaymentMethod(models.Model):
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL,
@@ -300,6 +325,9 @@ class PaymentMethod(models.Model):
 
     # PayPal
     paypal_email = models.EmailField(blank=True)
+
+    # use this bank for future payouts (chosen by the user on the form)
+    is_default = models.BooleanField(default=False)
 
     # lock after first submit
     locked = models.BooleanField(default=False)

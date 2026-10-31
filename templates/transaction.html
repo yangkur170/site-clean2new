@@ -1,259 +1,303 @@
 {% extends "base.html" %}
+{% load static %}
 {% block title %}Transactions{% endblock %}
 
 {% block content %}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
 <style>
+  /* ═════════════════════════════════════════
+     Transactions — cherry / clay
+     ═════════════════════════════════════════ */
+  body{
+    background:
+      radial-gradient(120% 50% at 50% 0%, #F7E3E4 0%, transparent 55%),
+      linear-gradient(180deg, #FBF4F2 0%, #F6ECEA 50%, #F3E6E4 100%) !important;
+    background-attachment: fixed !important;
+  }
 
-.tx-page, .tx-page * {
-  font-family: "Outfit", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-}
+  .wrap{ display: block !important; }
 
-/* ── Wrapper ── */
-.tx-wrap {
-  width: min(480px, 94vw);
-  max-width: 480px;
-  margin: 0 auto;
-  padding: 28px 16px 60px;
-  box-sizing: border-box;
-}
+  .tx-wrap{
+    position: relative;
+    z-index: 1;
+    width: min(480px, 94vw);
+    margin: 0 auto;
+    padding: 22px 16px 60px;
+    box-sizing: border-box;
+    font-family: "Outfit", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  }
 
-/* ── Header row ── */
-.row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
+  .tx-wrap *{ box-sizing: border-box; }
 
-/* ── Page title ── */
-.title {
-  font-weight: 800;
-  font-size: 18px;
-  color: #1a1a1a;
-}
-.sub {
-  font-size: 12px;
-  color: #9a9a9a;
-  margin-top: 2px;
-}
+  /* ── Card ── */
+  .tx-card{
+    border: 1px solid rgba(255,255,255,.65);
+    border-radius: 30px;
+    padding: 24px 18px 22px;
+    background: linear-gradient(180deg, rgba(255,255,255,.82) 0%, rgba(250,238,237,.68) 100%);
+    backdrop-filter: blur(18px) saturate(140%);
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
+    box-shadow:
+      0 20px 38px rgba(120,70,70,.16),
+      0 3px 8px rgba(120,70,70,.06),
+      inset 0 2px 3px rgba(255,255,255,.9);
+  }
 
-/* ── Balance badge ── */
-.badge {
-  background: #FFE9D6;
-  color: #b8530a;
-  border-radius: 999px;
-  padding: 7px 15px;
-  font-weight: 800;
-  font-size: 12.5px;
-  white-space: nowrap;
-  border: 1px solid #FFD4A3;
-}
+  .title{
+    color: #5C1522;
+    font-size: 32px;
+    font-weight: 800;
+    letter-spacing: -1px;
+    margin: 0 0 16px;
+  }
 
-/* ── Main card ── */
-.tx-card {
-  background: #ffffff;
-  border-radius: 22px;
-  border: 1.5px solid #FFD4A3;
-  border-top: 4px solid #FF6B00;
-  box-shadow: 0 8px 28px rgba(255,107,0,.14), 0 2px 8px rgba(0,0,0,.04);
-  overflow: hidden;
-  padding: 20px;
-  margin-top: 16px;
-}
+  /* ── Filter chips ── */
+  .tx-filters{
+    display: flex;
+    gap: 8px;
+    margin-bottom: 6px;
+    overflow-x: auto;
+    padding-bottom: 6px;
+    scrollbar-width: none;
+  }
 
-/* ── Transaction list rows ── */
-.list-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  padding: 14px 0;
-  border-top: 1px solid #FFE9D6;
-  font-size: 13px;
-  color: #1a1a1a;
-}
-.list-row:first-of-type {
-  border-top: none;
-}
+  .tx-filters::-webkit-scrollbar{ display: none; }
 
-.tx-left {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  min-width: 0;
-}
+  .chip{
+    flex: 0 0 auto;
+    height: 42px;
+    padding: 0 15px;
+    border: 0;
+    border-radius: 999px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    color: #8A2129;
+    background: rgba(214,170,172,.34);
+    transition: background .2s ease, color .2s ease, box-shadow .2s ease, transform .15s ease;
+  }
 
-.tx-icon {
-  flex: 0 0 auto;
-  width: 38px; height: 38px;
-  border-radius: 12px;
-  background: #ffebee;
-  color: #e53935;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.tx-icon svg { width: 18px; height: 18px; }
+  .chip:hover{ background: rgba(214,170,172,.48); }
+  .chip:active{ transform: scale(.97); }
 
-/* ── Amount text ── */
-.amount-positive {
-  font-weight: 800;
-  color: #16a34a;
-}
-.amount-negative {
-  font-weight: 800;
-  color: #1a1a1a;
-}
+  .chip.is-on{
+    color: #fff;
+    background: linear-gradient(180deg, #C32A42 0%, #A62033 100%);
+    box-shadow: 0 5px 0 #6E1623, 0 10px 16px rgba(150,36,52,.28);
+  }
 
-/* ── Meta / muted text ── */
-.muted {
-  font-size: 12px;
-  color: #9a9a9a;
-  margin-top: 3px;
-}
+  /* ── Rows ── */
+  .list-row{
+    display: grid;
+    grid-template-columns: 58px 1fr auto;
+    align-items: center;
+    column-gap: 14px;
+    padding: 18px 2px;
+    border-bottom: 1px solid rgba(150,90,95,.16);
+  }
 
-/* ── Status pills ── */
-.pill {
-  padding: 5px 11px;
-  border-radius: 999px;
-  font-weight: 800;
-  font-size: 11px;
-  white-space: nowrap;
-  flex: 0 0 auto;
-}
-.pill-success {
-  background: #dcfce7;
-  color: #16a34a;
-}
-.pill-danger {
-  background: #ffebee;
-  color: #c62828;
-}
+  .list-row:last-of-type{ border-bottom: 0; }
+  .list-row[hidden]{ display: none; }
 
-/* ── Empty state ── */
-.empty-state {
-  text-align: center;
-  padding: 44px 16px 36px;
-}
-.empty-icon {
-  width: 56px; height: 56px;
-  border-radius: 50%;
-  margin: 0 auto 14px;
-  background: linear-gradient(135deg, #FFE9D6, #FFD4A3);
-  color: #FF6B00;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.empty-icon svg{ width: 26px; height: 26px; }
-.empty-title {
-  font-weight: 700;
-  font-size: 14px;
-  color: #1a1a1a;
-}
-.empty-sub {
-  margin-top: 4px;
-  font-size: 12.5px;
-  color: #9a9a9a;
-}
+  .tx-art{
+    width: 58px;
+    height: 58px;
+    object-fit: contain;
+    filter: drop-shadow(0 5px 6px rgba(90,20,30,.20));
+  }
 
-/* ── Action buttons row ── */
-.btn-row {
-  margin-top: 16px;
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  flex-wrap: wrap;
-}
+  .tx-name{
+    color: #2A1016;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.2;
+  }
 
-/* ── Ghost / back button ── */
-.btn-ghost {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  height: 40px;
-  padding: 0 18px 0 14px;
-  border-radius: 999px;
-  background: #ffffff;
-  color: #FF6B00 !important;
-  border: 1px solid #FFD4A3;
-  box-shadow: 0 2px 10px rgba(255,107,0,.12);
-  font-weight: 700;
-  font-size: 14px;
-  text-decoration: none;
-  transition: transform .15s ease, box-shadow .15s ease;
-}
-.btn-ghost svg{ width: 15px; height: 15px; }
-.btn-ghost:hover  { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(255,107,0,.20); }
-.btn-ghost:active { transform: scale(.98); }
+  .tx-date{
+    margin-top: 4px;
+    color: #8E7B7D;
+    font-size: 13px;
+    white-space: nowrap;
+  }
 
-/* ── Primary button ── */
-.btn-primary {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  height: 40px;
-  padding: 0 20px;
-  border-radius: 999px;
-  background: linear-gradient(135deg, #FF6B00, #FF8A33) !important;
-  color: #ffffff !important;
-  border: 0 !important;
-  font-weight: 700;
-  font-size: 14px;
-  text-decoration: none;
-  box-shadow: 0 8px 22px rgba(255,107,0,.32);
-  transition: transform .15s ease, box-shadow .2s ease;
-}
-.btn-primary svg{ width: 15px; height: 15px; }
-.btn-primary:hover  { transform: translateY(-2px); box-shadow: 0 12px 26px rgba(255,107,0,.40); }
-.btn-primary:active { transform: translateY(1px); }
+  .tx-right{ text-align: right; }
 
+  .amount-negative{ color: #A62F38; font-size: 18px; font-weight: 800; white-space: nowrap; }
+  .amount-positive{ color: #15803D; font-size: 18px; font-weight: 800; white-space: nowrap; }
+
+  .pill{
+    display: inline-block;
+    margin-top: 7px;
+    padding: 5px 13px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .pill-success{ background: #D6F5E1; color: #15803D; }
+  .pill-danger{ background: #FBDADE; color: #A62F38; }
+
+  /* ── Empty ── */
+  .empty-state{ text-align: center; padding: 34px 10px 30px; }
+
+  .empty-art{
+    width: 132px;
+    height: auto;
+    margin: 0 auto 18px;
+    display: block;
+    filter: drop-shadow(0 10px 12px rgba(90,20,30,.20));
+  }
+
+  .empty-title{ color: #5C1522; font-size: 22px; font-weight: 800; }
+  .empty-sub{ margin-top: 6px; color: #8E7B7D; font-size: 15px; }
+
+  /* ── Buttons ── */
+  .btn-row{ display: flex; gap: 12px; margin-top: 20px; }
+
+  .btn{
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    height: 58px;
+    border: 0;
+    border-radius: 999px;
+    text-decoration: none;
+    font-size: 17px;
+    font-weight: 800;
+    transition: transform .15s cubic-bezier(.22,.61,.36,1), box-shadow .2s ease;
+  }
+
+  .btn svg{ width: 18px; height: 18px; }
+
+  .btn-ghost{
+    background: linear-gradient(180deg, #FFFFFF 0%, #FBF0F0 100%);
+    color: #8A2129;
+    box-shadow: 0 6px 0 #E6D2D2, 0 14px 20px rgba(140,80,85,.18), inset 0 2px 2px #fff;
+  }
+
+  .btn-ghost:hover{ transform: translateY(-2px); }
+  .btn-ghost:active{ transform: translateY(4px); box-shadow: 0 2px 0 #E6D2D2, 0 6px 10px rgba(140,80,85,.16); }
+
+  .btn-primary{
+    background: linear-gradient(180deg, #B13445 0%, #9C2838 55%, #8C2030 100%);
+    color: #fff;
+    box-shadow:
+      0 8px 0 #6E1623,
+      0 18px 26px rgba(150,36,52,.34),
+      inset 0 2px 4px rgba(255,255,255,.22),
+      inset 0 -8px 14px rgba(70,10,18,.28);
+  }
+
+  .btn-primary:hover{ transform: translateY(-2px); }
+  .btn-primary:active{ transform: translateY(6px); box-shadow: 0 2px 0 #6E1623, 0 6px 10px rgba(150,36,52,.28); }
+
+  .tx-none{
+    display: none;
+    text-align: center;
+    padding: 28px 10px;
+    color: #8E7B7D;
+    font-size: 15px;
+  }
+
+  /* ═════ floating 3D props ═════ */
+  .decor-layer{ position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+  .decor-layer img{ position: absolute; display: block; opacity: .9; will-change: transform; }
+
+  @keyframes floatA{ 0%,100%{ transform: translate3d(0,0,0) rotate(0deg);} 50%{ transform: translate3d(4px,-16px,0) rotate(7deg);} }
+  @keyframes floatB{ 0%,100%{ transform: translate3d(0,0,0) rotate(0deg);} 50%{ transform: translate3d(-6px,-12px,0) rotate(-9deg);} }
+  @keyframes floatC{ 0%,100%{ transform: translate3d(0,0,0) rotate(-3deg);} 50%{ transform: translate3d(5px,-20px,0) rotate(5deg);} }
+
+  .d1 { right: 2%;  top: 1%;    width: 52px; animation: floatA 7.6s ease-in-out infinite; }
+  .d2 { right: 18%; top: 5%;    width: 24px; animation: floatB 8.6s ease-in-out infinite .5s; }
+  .d3 { left: 1%;   top: 30%;   width: 28px; animation: floatC 9.4s ease-in-out infinite 1s; }
+  .d4 { right: 1%;  top: 42%;   width: 44px; animation: floatA 8.2s ease-in-out infinite 1.4s; }
+  .d5 { left: 2%;   top: 62%;   width: 46px; animation: floatB 9s   ease-in-out infinite .3s; }
+  .d6 { right: 2%;  top: 74%;   width: 22px; animation: floatC 7.9s ease-in-out infinite 1.7s; }
+  .d7 { left: 7%;   bottom: 5%; width: 34px; animation: floatA 8.8s ease-in-out infinite .9s; }
+
+  @media (max-width: 420px){ .d3{ display: none; } }
+
+  @media (min-width: 900px){
+    .d1 { right: 11%; width: 64px; }
+    .d2 { right: 26%; width: 34px; }
+    .d3 { left: 9%;   width: 40px; }
+    .d4 { right: 9%;  width: 56px; }
+    .d5 { left: 12%;  width: 58px; }
+    .d6 { right: 13%; width: 32px; }
+    .d7 { left: 17%;  width: 44px; }
+  }
+
+  @media (prefers-reduced-motion: reduce){ .decor-layer img{ animation: none !important; } }
+
+  @media (max-width: 400px){
+    .list-row{ grid-template-columns: 50px 1fr auto; column-gap: 11px; }
+    .tx-art{ width: 50px; height: 50px; }
+    .tx-name{ font-size: 16px; }
+    .title{ font-size: 28px; }
+  }
 </style>
 
+<div class="decor-layer" aria-hidden="true">
+  <img class="d1" src="{% static 'img/decor/coin.svg' %}" alt="">
+  <img class="d2" src="{% static 'img/decor/sphere.svg' %}" alt="">
+  <img class="d3" src="{% static 'img/decor/sphere.svg' %}" alt="">
+  <img class="d4" src="{% static 'img/decor/coin.svg' %}" alt="">
+  <img class="d5" src="{% static 'img/decor/coin-edge.svg' %}" alt="">
+  <img class="d6" src="{% static 'img/decor/sphere.svg' %}" alt="">
+  <img class="d7" src="{% static 'img/decor/coin.svg' %}" alt="">
+</div>
+
 <div class="tx-wrap tx-page">
+
   <div class="tx-card">
-    <div class="row" style="margin-bottom:4px;">
-      <div>
-        <div class="title">Transactions</div>
-        <div class="sub">Only Payment sent / Rejected (Latest 20)</div>
-      </div>
-      <span class="badge">PHP {{ request.user.balance|default:"0" }}</span>
+
+    <h1 class="title">Transactions</h1>
+
+    {% if withdrawals %}
+    <div class="tx-filters" role="group" aria-label="Filter transactions">
+      <button type="button" class="chip is-on" data-filter="all">All</button>
+      <button type="button" class="chip" data-filter="paid">Payment sent</button>
+      <button type="button" class="chip" data-filter="rejected">Rejected</button>
     </div>
+    {% endif %}
 
     {% for w in withdrawals %}
-      <div class="list-row">
-        <div class="tx-left">
-          <div class="tx-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg>
-          </div>
-          <div>
-            <div class="amount-negative">PHP {{ w.amount }} {{ w.currency }}</div>
-            <div class="muted">{{ w.created_at|date:"M d, Y, P" }}</div>
-          </div>
+      <div class="list-row" data-status="{{ w.status }}">
+        <img class="tx-art" src="{% static 'img/tx-money-3d.webp' %}" alt="">
+
+        <div>
+          <div class="tx-name">Withdrawal</div>
+          <div class="tx-date">{{ w.created_at|date:"M d" }} &bull; {{ w.created_at|date:"g:i A" }}</div>
         </div>
 
-        {% if w.status == "paid" %}
-          <div class="pill pill-success">Payment sent</div>
-        {% else %}
-          <div class="pill pill-danger">Rejected</div>
-        {% endif %}
+        <div class="tx-right">
+          <div class="amount-negative">&minus; &#8369;{{ w.amount }}</div>
+          {% if w.status == "paid" %}
+            <span class="pill pill-success">Payment sent</span>
+          {% else %}
+            <span class="pill pill-danger">Rejected</span>
+          {% endif %}
+        </div>
       </div>
     {% empty %}
       <div class="empty-state">
-        <div class="empty-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10h18M7 15h2m4 0h4M5 6h14a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2z"/></svg>
-        </div>
+        <img class="empty-art" src="{% static 'img/tx-money-3d.webp' %}" alt="">
         <div class="empty-title">No transactions yet</div>
         <div class="empty-sub">Your payment history will show up here</div>
       </div>
     {% endfor %}
 
+    <div class="tx-none" id="txNone">Nothing in this filter yet.</div>
+
     <div class="btn-row">
       <a class="btn btn-ghost" href="/profile/">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 6l-6 6 6 6"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 6l-6 6 6 6"/></svg>
         Back
       </a>
       <a class="btn btn-primary" href="/dashboard/">
@@ -261,6 +305,34 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-7-7l7 7-7 7"/></svg>
       </a>
     </div>
+
   </div>
 </div>
+
+<script>
+/* Filter chips. Everything is already on the page, so this just hides rows. */
+(function () {
+  var chips = Array.prototype.slice.call(document.querySelectorAll('.chip'));
+  var rows = Array.prototype.slice.call(document.querySelectorAll('.list-row'));
+  var none = document.getElementById('txNone');
+  if (!chips.length) return;
+
+  chips.forEach(function (chip) {
+    chip.addEventListener('click', function () {
+      var want = chip.getAttribute('data-filter');
+
+      chips.forEach(function (c) { c.classList.toggle('is-on', c === chip); });
+
+      var shown = 0;
+      rows.forEach(function (row) {
+        var match = (want === 'all') || (row.getAttribute('data-status') === want);
+        row.hidden = !match;
+        if (match) shown++;
+      });
+
+      if (none) none.style.display = shown ? 'none' : 'block';
+    });
+  });
+})();
+</script>
 {% endblock %}

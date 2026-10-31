@@ -21,32 +21,66 @@
   function injectStyles(){
     if (document.getElementById("loanTourStyles")) return;
     var css = ''
-      + '.lt-spot{position:fixed;top:0;left:0;width:0;height:0;border-radius:14px;'
-      + 'box-shadow:0 0 0 9999px rgba(17,17,17,.60);transition:top .3s ease,left .3s ease,width .3s ease,height .3s ease;'
+      + '.lt-spot{position:fixed;top:0;left:0;width:0;height:0;border-radius:22px;'
+      + 'box-shadow:0 0 0 9999px rgba(40,16,22,.52);transition:top .3s cubic-bezier(.22,.61,.36,1),left .3s cubic-bezier(.22,.61,.36,1),width .3s ease,height .3s ease;'
       + 'pointer-events:none;z-index:2147482000;}'
       + '.lt-spot.lt-hidden{display:none;}'
-      + '.lt-tip{position:fixed;top:50%;left:50%;width:min(300px,88vw);background:#fff;border-radius:18px;'
-      + 'padding:15px 16px 13px;box-shadow:0 18px 44px rgba(0,0,0,.32);z-index:2147483000;'
+
+      + '.lt-tip{position:fixed;top:50%;left:50%;width:min(330px,90vw);border-radius:26px;'
+      + 'padding:20px 20px 18px;z-index:2147483000;'
+      + 'background:linear-gradient(180deg,rgba(255,255,255,.96) 0%,rgba(250,238,237,.94) 100%);'
+      + '-webkit-backdrop-filter:blur(18px) saturate(150%);backdrop-filter:blur(18px) saturate(150%);'
+      + 'box-shadow:0 22px 46px rgba(90,40,50,.30),0 3px 8px rgba(90,40,50,.10),inset 0 2px 3px rgba(255,255,255,.95);'
       + "font-family:'Outfit',system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;"
-      + 'transition:top .3s ease,left .3s ease;}'
-      + '.lt-caret{position:absolute;left:24px;width:14px;height:14px;background:#fff;transform:rotate(45deg);}'
-      + '.lt-tip.lt-below .lt-caret{top:-7px;}'
-      + '.lt-tip.lt-above .lt-caret{bottom:-7px;}'
-      + '.lt-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}'
-      + '.lt-step{font-size:11px;font-weight:800;color:#FF6B00;letter-spacing:.05em;text-transform:uppercase;}'
-      + '.lt-dots{display:flex;gap:5px;}'
-      + '.lt-dots i{width:6px;height:6px;border-radius:50%;background:#FFD4A3;display:block;transition:all .2s ease;}'
-      + '.lt-dots i.on{background:#FF6B00;width:16px;border-radius:3px;}'
-      + '.lt-text{font-size:14px;color:#1a1a1a;line-height:1.5;font-weight:500;margin:0 0 13px;}'
+      + 'transition:top .3s cubic-bezier(.22,.61,.36,1),left .3s cubic-bezier(.22,.61,.36,1);}'
+
+      + '.lt-caret{position:absolute;left:26px;width:16px;height:16px;background:#FDF5F4;transform:rotate(45deg);border-radius:3px;}'
+      + '.lt-tip.lt-below .lt-caret{top:-8px;}'
+      + '.lt-tip.lt-above .lt-caret{bottom:-8px;}'
+
+      + '.lt-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}'
+      + '.lt-step{font-size:12px;font-weight:800;color:#A62F38;letter-spacing:.06em;text-transform:uppercase;}'
+      + '.lt-dots{display:flex;gap:6px;align-items:center;}'
+      + '.lt-dots i{width:7px;height:7px;border-radius:50%;background:#E6C6C8;display:block;transition:all .22s cubic-bezier(.22,.61,.36,1);}'
+      + '.lt-dots i.on{background:linear-gradient(180deg,#C32A42,#A62033);width:20px;border-radius:999px;}'
+
+      + '.lt-text{font-size:15px;color:#2A1016;line-height:1.55;font-weight:500;margin:0 0 16px;}'
+
       + '.lt-actions{display:flex;align-items:center;justify-content:space-between;gap:10px;}'
-      + '.lt-right{display:flex;align-items:center;gap:8px;}'
-      + '.lt-skip{background:none;border:0;color:#9a9a9a;font-size:13px;font-weight:600;cursor:pointer;padding:8px 4px;}'
-      + '.lt-back{background:#FFF3E9;border:1px solid #FFD4A3;color:#FF6B00;font-size:13px;font-weight:700;cursor:pointer;border-radius:999px;padding:8px 14px;}'
-      + '.lt-next{background:linear-gradient(135deg,#FF6B00,#FF8A33);color:#fff;border:0;border-radius:999px;'
-      + 'padding:9px 18px;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 6px 16px rgba(255,107,0,.32);}'
-      + '.lt-next:active,.lt-back:active{transform:scale(.97);}'
-      + '.lt-done .lt-text:before{content:"\\2713 ";color:#16a34a;font-weight:800;}'
-      + '@media (prefers-reduced-motion: reduce){.lt-spot,.lt-tip{transition:none;}}';
+      + '.lt-right{display:flex;align-items:center;gap:9px;}'
+
+      + '.lt-skip{background:none;border:0;color:#9A8E8B;font-size:14px;font-weight:700;cursor:pointer;padding:8px 4px;}'
+      + '.lt-skip:hover{color:#6E6460;}'
+
+      + '.lt-back{border:0;cursor:pointer;border-radius:999px;padding:11px 18px;font-size:14px;font-weight:800;'
+      + 'color:#8A2129;background:linear-gradient(180deg,#FFFFFF 0%,#FBF0F0 100%);'
+      + 'box-shadow:0 4px 0 #E6D2D2,0 9px 14px rgba(140,80,85,.18),inset 0 2px 2px #fff;'
+      + 'transition:transform .15s cubic-bezier(.22,.61,.36,1),box-shadow .2s ease;}'
+      + '.lt-back:hover{transform:translateY(-2px);}'
+      + '.lt-back:active{transform:translateY(3px);box-shadow:0 1px 0 #E6D2D2,0 4px 8px rgba(140,80,85,.16);}'
+
+      + '.lt-next{border:0;cursor:pointer;border-radius:999px;padding:12px 22px;font-size:14px;font-weight:800;color:#fff;'
+      + 'background:linear-gradient(180deg,#B13445 0%,#9C2838 55%,#8C2030 100%);'
+      + 'box-shadow:0 5px 0 #6E1623,0 12px 18px rgba(150,36,52,.32),inset 0 2px 3px rgba(255,255,255,.22);'
+      + 'transition:transform .15s cubic-bezier(.22,.61,.36,1),box-shadow .2s ease;}'
+      + '.lt-next:hover{transform:translateY(-2px);}'
+      + '.lt-next:active{transform:translateY(4px);box-shadow:0 1px 0 #6E1623,0 5px 9px rgba(150,36,52,.28);}'
+
+
+      + '.lt-tip.lt-pop{animation:ltPop .34s cubic-bezier(.22,1.2,.36,1) both;}'
+      + '@keyframes ltPop{from{opacity:0;transform:scale(.90) translateY(8px);}to{opacity:1;transform:scale(1) translateY(0);}}'
+
+      + '.lt-text{animation:ltFade .34s ease both .04s;}'
+      + '@keyframes ltFade{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:none;}}'
+
+      + '.lt-next{position:relative;animation:ltPulse 2.4s ease-in-out infinite 1s;}'
+      + '@keyframes ltPulse{0%,100%{box-shadow:0 5px 0 #6E1623,0 12px 18px rgba(150,36,52,.32),inset 0 2px 3px rgba(255,255,255,.22);}'
+      + '50%{box-shadow:0 5px 0 #6E1623,0 12px 22px rgba(150,36,52,.46),0 0 0 6px rgba(166,47,56,.10),inset 0 2px 3px rgba(255,255,255,.22);}}'
+      + '.lt-next:hover,.lt-next:active{animation:none;}'
+
+
+      + '.lt-done .lt-text:before{content:"\\2713 ";color:#15803D;font-weight:800;}'
+      + '@media (prefers-reduced-motion: reduce){.lt-spot,.lt-tip,.lt-dots i{transition:none;}.lt-tip.lt-pop,.lt-text,.lt-next{animation:none !important;}}';
     var st = document.createElement("style");
     st.id = "loanTourStyles";
     st.textContent = css;
@@ -150,6 +184,10 @@
       var t = document.querySelector(step.sel);
       if (!t){ advance(); return; }
       tip.style.display = "block";
+      // restart the entrance animation so each step feels like a new card
+      tip.classList.remove("lt-pop");
+      void tip.offsetWidth;
+      tip.classList.add("lt-pop");
       textEl.textContent = step.text;
       stepEl.textContent = "Step " + (i + 1) + " of " + steps.length;
       btnBack.style.display = (i === 0) ? "none" : "inline-block";

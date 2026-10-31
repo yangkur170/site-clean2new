@@ -1,154 +1,292 @@
 {% extends "base.html" %}
+{% load static %}
 {% block title %}Payment Schedule{% endblock %}
 
 {% block content %}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
 <style>
-  .pm-page, .pm-page *{
-  font-family: "Outfit", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-}
-.wrap{ align-items:flex-start; justify-content:center; padding-top:28px; padding-bottom:40px; }
-@media(max-width:480px){ .wrap{ padding-top:18px; } }
+  /* ═════════════════════════════════════════
+     Payment schedule — cherry / clay
+     ═════════════════════════════════════════ */
+  body{
+    background:
+      radial-gradient(120% 50% at 50% 0%, #F7E3E4 0%, transparent 55%),
+      linear-gradient(180deg, #FBF4F2 0%, #F6ECEA 50%, #F3E6E4 100%) !important;
+    background-attachment: fixed !important;
+  }
 
-/* ✅ main container */
-.ps-card{
-  width:min(480px, 94vw);
-  border-radius: 22px;
-  padding: 20px;
-  text-align:left;
+  .wrap{ display: block !important; }
 
-  position: relative;
-  overflow: hidden;
+  .ps-page{
+    position: relative;
+    z-index: 1;
+    width: min(480px, 94vw);
+    margin: 0 auto;
+    padding: 22px 16px 60px;
+    box-sizing: border-box;
+    font-family: "Outfit", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  }
 
-  background: #ffffff;
-  border: 1.5px solid #FFD4A3;
-  border-top: 4px solid #FF6B00;
+  .ps-page *{ box-sizing: border-box; }
 
-  box-shadow: 0 8px 28px rgba(255,107,0,.14), 0 2px 8px rgba(0,0,0,.04);
-}
-.ps-card > *{ position:relative; z-index:1; }
+  /* ── Title ── */
+  .title{
+    margin: 4px 2px 4px;
+    color: #5C1522;
+    font-size: clamp(30px, 8.5vw, 40px);
+    font-weight: 800;
+    letter-spacing: -1px;
+    line-height: 1.05;
+  }
 
-.head{ display:flex; justify-content:space-between; gap:10px; margin-bottom:16px; align-items:flex-start; }
-.title{ font-size:18px; font-weight:800; color:#1a1a1a; line-height:1.1; }
-.sub{ font-size:12px; color: #9a9a9a; margin-top:2px; }
+  .sub{
+    margin: 0 2px 20px;
+    color: #4A3438;
+    font-size: 16px;
+  }
 
-.pill{
-  padding:7px 14px; border-radius:999px;
-  border:1px solid #FFD4A3;
-  background: #FFE9D6;
-  color:#b8530a;
-  font-weight:800;
-  font-size:12px;
-  white-space:nowrap;
-}
+  /* ── Summary ── */
+  .ps-summary{
+    border: 1px solid rgba(255,255,255,.65);
+    border-radius: 30px;
+    padding: 24px 20px;
+    margin-bottom: 24px;
+    text-align: center;
+    background: linear-gradient(180deg, rgba(255,255,255,.82) 0%, rgba(250,238,237,.68) 100%);
+    backdrop-filter: blur(18px) saturate(140%);
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
+    box-shadow:
+      0 20px 38px rgba(120,70,70,.16),
+      0 3px 8px rgba(120,70,70,.06),
+      inset 0 2px 3px rgba(255,255,255,.9);
+  }
 
-/* ✅ each schedule item */
-.item{
-  border-radius:16px;
-  border:1.5px solid #FFE9D6;
-  background: #FFFAF5;
-  padding:14px 16px;
-  margin-bottom:10px;
-}
-.item-head{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  padding-bottom:10px;
-  margin-bottom:10px;
-  border-bottom:1px solid #FFE9D6;
-}
-.item-icon{
-  flex:0 0 auto;
-  width:32px; height:32px;
-  border-radius:10px;
-  background:linear-gradient(135deg,#FFE9D6,#FFD4A3);
-  color:#FF6B00;
-  display:flex; align-items:center; justify-content:center;
-}
-.item-icon svg{ width:16px; height:16px; }
+  .sum-label{ color: #A62F38; font-size: 19px; font-weight: 700; }
 
-.row{ display:flex; justify-content:space-between; gap:10px; }
-.kv{ line-height:1.3; }
-.kv b{ color:#1a1a1a; font-weight:800; }
-.kv span{ display:block; color: #9a9a9a; font-weight:600; font-size:11px; text-transform:uppercase; letter-spacing:.03em; margin-bottom:2px; }
+  .sum-amount{
+    margin-top: 6px;
+    color: #2A1016;
+    font-size: 40px;
+    font-weight: 800;
+    letter-spacing: -1.5px;
+  }
 
-.repay{ color:#FF6B00; font-weight:800; }
+  .sum-divider{
+    height: 1px;
+    background: rgba(150,90,95,.20);
+    margin: 20px 4px;
+  }
 
-.actions{ margin-top:14px; display:flex; gap:10px; flex-wrap:wrap; justify-content:center; }
+  .sum-next-label{ color: #4A3438; font-size: 18px; }
+  .sum-next{ margin-top: 3px; color: #2A1016; font-size: 24px; font-weight: 800; }
 
-.btn-primary{
-  display:inline-flex; align-items:center; gap:6px;
-  border:0 !important;
-  background: linear-gradient(135deg, #FF6B00, #FF8A33) !important;
-  color:#fff !important;
-  box-shadow: 0 8px 22px rgba(255,107,0,.32) !important;
-}
-.btn-primary svg{ width:15px; height:15px; }
-.btn-primary:hover{ transform: translateY(-2px); }
-.btn-primary:active{ transform: translateY(1px); }
+  .sum-pill{
+    display: inline-block;
+    margin-top: 14px;
+    padding: 8px 18px;
+    border-radius: 999px;
+    background: linear-gradient(180deg, #FFFFFF 0%, #FBF1F1 100%);
+    color: #5C1522;
+    font-size: 14.5px;
+    font-weight: 700;
+    box-shadow: 0 4px 10px rgba(150,90,95,.16), inset 0 2px 2px #fff;
+  }
 
-/* ✅ Back button */
-.btn-ghost{
-  display:inline-flex; align-items:center; gap:6px;
-  background: #ffffff !important;
-  color: #FF6B00 !important;
-  border: 1px solid #FFD4A3 !important;
-  box-shadow: 0 2px 10px rgba(255,107,0,.12) !important;
-}
-.btn-ghost svg{ width:15px; height:15px; }
+  /* ── List ── */
+  .list-label{
+    color: #8A2129;
+    font-size: 15px;
+    font-weight: 800;
+    letter-spacing: .6px;
+    text-transform: uppercase;
+    margin: 0 2px 12px;
+  }
 
-.btn-ghost:hover{
-  transform: translateY(-1px);
-  box-shadow: 0 4px 14px rgba(255,107,0,.20) !important;
-}
+  .item{
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: start;
+    column-gap: 12px;
+    border: 1px solid rgba(255,255,255,.6);
+    border-radius: 24px;
+    padding: 18px 20px;
+    margin-bottom: 12px;
+    background: linear-gradient(180deg, rgba(255,255,255,.78) 0%, rgba(246,228,227,.60) 100%);
+    box-shadow:
+      0 12px 24px rgba(120,70,70,.12),
+      inset 0 2px 3px rgba(255,255,255,.85);
+  }
 
-.btn-ghost:active{
-  transform: scale(.98);
-}
+  .item-no{ color: #2A1016; font-size: 20px; font-weight: 800; letter-spacing: -.3px; }
+  .item-amount{ margin-top: 4px; color: #2A1016; font-size: 22px; font-weight: 800; }
+  .item-due{ margin-top: 4px; color: #8E7B7D; font-size: 15px; }
+
+  .state{
+    justify-self: end;
+    padding: 7px 15px;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .state-upcoming{ background: #F4EAEA; color: #6E5054; }
+  .state-due{ background: #FBE2A6; color: #7A5410; }
+  .state-overdue{ background: #FBDADE; color: #A62F38; }
+
+  /* ── Empty ── */
+  .ps-empty{
+    border: 1px solid rgba(255,255,255,.65);
+    border-radius: 30px;
+    padding: 40px 22px;
+    text-align: center;
+    background: linear-gradient(180deg, rgba(255,255,255,.82) 0%, rgba(250,238,237,.68) 100%);
+    backdrop-filter: blur(18px) saturate(140%);
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
+    box-shadow:
+      0 20px 38px rgba(120,70,70,.16),
+      inset 0 2px 3px rgba(255,255,255,.9);
+  }
+
+  .ps-empty img{
+    width: 128px;
+    height: auto;
+    margin: 0 auto 18px;
+    display: block;
+    filter: drop-shadow(0 10px 12px rgba(90,20,30,.20));
+  }
+
+  .ps-empty-title{ color: #5C1522; font-size: 22px; font-weight: 800; }
+  .ps-empty-sub{ margin-top: 6px; color: #8E7B7D; font-size: 15px; }
+
+  /* ── Actions ── */
+  .actions{ display: flex; gap: 12px; margin-top: 22px; }
+
+  .btn{
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    height: 58px;
+    border: 0;
+    border-radius: 999px;
+    text-decoration: none;
+    font-size: 17px;
+    font-weight: 800;
+    transition: transform .15s cubic-bezier(.22,.61,.36,1), box-shadow .2s ease;
+  }
+
+  .btn svg{ width: 18px; height: 18px; }
+
+  .btn-ghost{
+    background: linear-gradient(180deg, #FFFFFF 0%, #FBF0F0 100%);
+    color: #8A2129;
+    box-shadow: 0 6px 0 #E6D2D2, 0 14px 20px rgba(140,80,85,.18), inset 0 2px 2px #fff;
+  }
+
+  .btn-ghost:hover{ transform: translateY(-2px); }
+  .btn-ghost:active{ transform: translateY(4px); box-shadow: 0 2px 0 #E6D2D2, 0 6px 10px rgba(140,80,85,.16); }
+
+  .btn-primary{
+    background: linear-gradient(180deg, #B13445 0%, #9C2838 55%, #8C2030 100%);
+    color: #fff;
+    box-shadow:
+      0 8px 0 #6E1623,
+      0 18px 26px rgba(150,36,52,.34),
+      inset 0 2px 4px rgba(255,255,255,.22),
+      inset 0 -8px 14px rgba(70,10,18,.28);
+  }
+
+  .btn-primary:hover{ transform: translateY(-2px); }
+  .btn-primary:active{ transform: translateY(6px); box-shadow: 0 2px 0 #6E1623, 0 6px 10px rgba(150,36,52,.28); }
+
+  /* ═════ floating 3D props ═════ */
+  .decor-layer{ position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+  .decor-layer img{ position: absolute; display: block; opacity: .9; will-change: transform; }
+
+  @keyframes floatA{ 0%,100%{ transform: translate3d(0,0,0) rotate(0deg);} 50%{ transform: translate3d(4px,-16px,0) rotate(7deg);} }
+  @keyframes floatB{ 0%,100%{ transform: translate3d(0,0,0) rotate(0deg);} 50%{ transform: translate3d(-6px,-12px,0) rotate(-9deg);} }
+  @keyframes floatC{ 0%,100%{ transform: translate3d(0,0,0) rotate(-3deg);} 50%{ transform: translate3d(5px,-20px,0) rotate(5deg);} }
+
+  .d1 { right: 2%;  top: 1%;   width: 56px; animation: floatA 7.6s ease-in-out infinite; }
+  .d2 { right: 20%; top: 5%;   width: 24px; animation: floatB 8.6s ease-in-out infinite .5s; }
+  .d3 { left: 1%;   top: 28%;  width: 44px; animation: floatC 9.4s ease-in-out infinite 1s; }
+  .d4 { right: 1%;  top: 44%;  width: 26px; animation: floatA 8.2s ease-in-out infinite 1.4s; }
+  .d5 { left: 2%;   top: 66%;  width: 48px; animation: floatB 9s   ease-in-out infinite .3s; }
+  .d6 { right: 2%;  top: 78%;  width: 40px; animation: floatC 7.9s ease-in-out infinite 1.7s; }
+
+  @media (max-width: 420px){ .d4{ display: none; } }
+
+  @media (min-width: 900px){
+    .d1 { right: 11%; width: 66px; }
+    .d2 { right: 26%; width: 34px; }
+    .d3 { left: 9%;   width: 56px; }
+    .d4 { right: 9%;  width: 36px; }
+    .d5 { left: 12%;  width: 60px; }
+    .d6 { right: 12%; width: 52px; }
+  }
+
+  @media (prefers-reduced-motion: reduce){ .decor-layer img{ animation: none !important; } }
 </style>
 
-<div class="ps-card pm-page">
-  <div class="head">
-    <div>
-      <div class="title">Payment Schedule</div>
-      <div class="sub">Created from your approved loan</div>
-    </div>
-    <div class="pill">Repayment</div>
-  </div>
+<div class="decor-layer" aria-hidden="true">
+  <img class="d1" src="{% static 'img/decor/coin.svg' %}" alt="">
+  <img class="d2" src="{% static 'img/decor/sphere.svg' %}" alt="">
+  <img class="d3" src="{% static 'img/decor/coin.svg' %}" alt="">
+  <img class="d4" src="{% static 'img/decor/sphere.svg' %}" alt="">
+  <img class="d5" src="{% static 'img/decor/coin-edge.svg' %}" alt="">
+  <img class="d6" src="{% static 'img/decor/coin.svg' %}" alt="">
+</div>
+
+<div class="ps-page pm-page">
+
+  <h1 class="title">Payment Schedule</h1>
+  <p class="sub">Created from your active loan</p>
 
   {% if latest_loan %}
+
+    <div class="ps-summary">
+      <div class="sum-label">Total Remaining Balance</div>
+      <div class="sum-amount">&#8369; {{ remaining_total|floatformat:0 }}</div>
+
+      <div class="sum-divider"></div>
+
+      <div class="sum-next-label">Next Payment Due Date</div>
+      <div class="sum-next">{% if next_due %}{{ next_due|date:"M d, Y" }}{% else %}&mdash;{% endif %}</div>
+
+      <div class="sum-pill">{{ installments_left }} of {{ installments_total }} Installments Left</div>
+    </div>
+
+    <div class="list-label">Repayments</div>
+
     {% for s in schedules %}
       <div class="item">
-        <div class="item-head">
-          <div class="item-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
-          </div>
-          <b>{{ s.due_date }}</b>
+        <div>
+          <div class="item-no">Installment #{{ s.number }}</div>
+          <div class="item-amount">&#8369; {{ s.repayment|floatformat:0 }}</div>
+          <div class="item-due">Due {{ s.due|date:"M d, Y" }}</div>
         </div>
-
-        <div class="row" style="margin-top:8px;">
-          <div class="kv"><span>Loan Amount</span> <b>PHP {{ s.loan_amount }}</b></div>
-          <div class="kv"><span>Loan Period</span> <b>{{ s.term_months }} months</b></div>
-        </div>
-
-        <div class="row" style="margin-top:10px;">
-          <div class="kv"><span>Repayment Amount</span> <b class="repay">PHP {{ s.repayment }}</b></div>
-          <div class="kv"><span>Interest Rate</span> <b>{{ s.interest_rate }}</b></div>
-        </div>
+        <span class="state state-{{ s.state }}">{{ s.state_label }}</span>
       </div>
     {% endfor %}
+
   {% else %}
-    <div class="item" style="text-align:center; color:#9a9a9a;">
-      No approved loan found yet.
+
+    <div class="ps-empty">
+      <img src="{% static 'img/tx-money-3d.webp' %}" alt="">
+      <div class="ps-empty-title">No approved loan yet</div>
+      <div class="ps-empty-sub">Your repayment schedule will appear here once a loan is approved.</div>
     </div>
+
   {% endif %}
 
   <div class="actions">
     <a class="btn btn-ghost" href="/profile/">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 6l-6 6 6 6"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 6l-6 6 6 6"/></svg>
       Back
     </a>
     <a class="btn btn-primary" href="/dashboard/">
@@ -156,5 +294,6 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-7-7l7 7-7 7"/></svg>
     </a>
   </div>
+
 </div>
 {% endblock %}

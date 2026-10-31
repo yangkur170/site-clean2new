@@ -224,6 +224,44 @@
 {% endif %}
   </div>
 
+  <!-- Agreement acceptance — evidence of consent -->
+  <div class="agree-log">
+    <div class="agree-log-head">
+      <span class="agree-log-title">Loan agreement</span>
+      {% if agreement_latest %}
+        <span class="agree-log-pill ok">Accepted</span>
+      {% else %}
+        <span class="agree-log-pill no">Not accepted</span>
+      {% endif %}
+    </div>
+
+    {% if agreement_latest %}
+      <div class="agree-log-main">
+        Accepted on <b>{{ agreement_latest.accepted_at|date:"M d, Y H:i" }}</b>
+      </div>
+      <div class="agree-log-meta">
+        IP {{ agreement_latest.ip_address|default:"—" }}
+        &nbsp;&bull;&nbsp;
+        {{ agreement_latest.user_agent|default:"—"|truncatechars:70 }}
+      </div>
+
+      {% if agreement_acceptances|length > 1 %}
+        <details class="agree-log-more">
+          <summary>Earlier acceptances ({{ agreement_acceptances|length|add:"-1" }})</summary>
+          <ul>
+            {% for a in agreement_acceptances %}
+              {% if not forloop.first %}
+                <li>{{ a.accepted_at|date:"M d, Y H:i" }} &nbsp;&bull;&nbsp; IP {{ a.ip_address|default:"—" }}</li>
+              {% endif %}
+            {% endfor %}
+          </ul>
+        </details>
+      {% endif %}
+    {% else %}
+      <div class="agree-log-meta">This user has not accepted the loan agreement yet.</div>
+    {% endif %}
+  </div>
+
   {% if not loan %}
     <div class="muted" style="margin-top:8px;">No loan yet. Nothing to show.</div>
 
@@ -464,6 +502,81 @@
   color:#ef4444;
   opacity:.85;
 }
+
+/* ===== Agreement acceptance log =====
+   Colours are set explicitly (not inherited) so the text stays legible
+   on the dark staff panel. */
+.agree-log{
+  margin-top: 14px;
+  padding: 16px 18px;
+  border-radius: 14px;
+  background: #14223A !important;
+  border: 1px solid rgba(255,255,255,.14);
+  color: #E8EDF6 !important;
+}
+
+.agree-log *{ color: inherit; }
+
+.agree-log-head{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.agree-log-title{
+  color: #FFFFFF !important;
+  font-weight: 900;
+  font-size: 15px;
+  letter-spacing: .2px;
+}
+
+.agree-log-pill{
+  padding: 6px 13px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.agree-log-pill.ok{ background: #1E8E3E; color: #FFFFFF !important; }
+.agree-log-pill.no{ background: #9B1C1C; color: #FFE4E4 !important; }
+
+.agree-log-main{
+  color: #FFFFFF !important;
+  font-size: 14.5px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.agree-log-main b{ color: #FFFFFF !important; font-weight: 900; }
+
+.agree-log-meta{
+  color: #AFC0D8 !important;
+  font-size: 12.5px;
+  line-height: 1.55;
+  word-break: break-word;
+}
+
+.agree-log-more{ margin-top: 12px; }
+
+.agree-log-more summary{
+  cursor: pointer;
+  color: #9FD2FF !important;
+  font-size: 12.5px;
+  font-weight: 700;
+}
+
+.agree-log-more ul{
+  margin: 8px 0 0;
+  padding-left: 18px;
+  font-size: 12.5px;
+  color: #AFC0D8 !important;
+}
+
+.agree-log-more li{ margin: 5px 0; }
+
 </style>
 
 <style>

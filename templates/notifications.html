@@ -1,12 +1,13 @@
 {% extends "base.html" %}
 {% block title %}Notifications{% endblock %}
 
+{% load static %}
 {% block content %}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-/* ===== Notifications — orange/peach brand ===== */
+/* ===== Notifications — cherry/white brand ===== */
 .dash-wrap, .notif-title, .notif-head-text, .notif-text, .back-btn{
   font-family: 'Outfit', sans-serif;
 }
@@ -27,26 +28,26 @@
   padding: 0 16px 0 12px;
   border-radius: 999px;
   background: #ffffff;
-  color: #FF6B00;
+  color: #A62F38;
   font-weight: 700;
   font-size: 13px;
   text-decoration: none;
-  border: 1px solid #FFD4A3;
-  box-shadow: 0 2px 10px rgba(255,107,0,.12);
+  border: 1px solid #E9CBCB;
+  box-shadow: 0 2px 10px rgba(166,47,56,.12);
   transition: transform .15s ease, box-shadow .15s ease;
   margin-bottom: 18px;
 }
 .back-btn svg{ width: 16px; height: 16px; }
-.back-btn:hover{ transform: translateY(-1px); box-shadow: 0 4px 14px rgba(255,107,0,.20); }
+.back-btn:hover{ transform: translateY(-1px); box-shadow: 0 4px 14px rgba(166,47,56,.20); }
 .back-btn:active{ transform: translateY(0); opacity: .9; }
 
 /* ===== Main card ===== */
 .notif-card{
   background: #ffffff;
   border-radius: 22px;
-  border: 1.5px solid #FFD4A3;
-  border-top: 4px solid #FF6B00;
-  box-shadow: 0 8px 28px rgba(255,107,0,.14), 0 2px 8px rgba(0,0,0,.04);
+  border: 1.5px solid #E9CBCB;
+  border-top: 4px solid #A62F38;
+  box-shadow: 0 8px 28px rgba(166,47,56,.14), 0 2px 8px rgba(0,0,0,.04);
   padding: 4px 18px;
   overflow: hidden;
 }
@@ -56,19 +57,19 @@
   align-items: center;
   justify-content: space-between;
   padding: 16px 2px 14px;
-  border-bottom: 1.5px solid #FFE9D6;
+  border-bottom: 1.5px solid #F6E4E3;
 }
 .notif-title{
   margin: 0;
   font-size: 16px;
   font-weight: 800;
-  color: #1a1a1a;
+  color: #2A1016;
 }
 .notif-count{
   font-size: 11px;
   font-weight: 700;
-  color: #b8530a;
-  background: #FFE9D6;
+  color: #8A2129;
+  background: #F6E4E3;
   padding: 4px 10px;
   border-radius: 999px;
 }
@@ -79,7 +80,7 @@
   gap: 13px;
   align-items: flex-start;
   padding: 16px 2px;
-  border-bottom: 1px solid #FFE9D6;
+  border-bottom: 1px solid #F6E4E3;
 }
 .notif-row:last-child{ border-bottom: 0; }
 
@@ -90,8 +91,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #FFE9D6, #FFD4A3);
-  color: #FF6B00;
+  background: linear-gradient(135deg, #F6E4E3, #E9CBCB);
+  color: #A62F38;
 }
 .notif-row.danger .notif-ico{
   background: #ffebee;
@@ -103,7 +104,7 @@
 .notif-head-text{
   font-weight: 800;
   font-size: 14.5px;
-  color: #1a1a1a;
+  color: #2A1016;
   margin: 0 0 3px;
 }
 .notif-row.danger .notif-head-text{ color: #c62828; }
@@ -120,7 +121,7 @@
 .notif-meta{
   margin-top: 6px;
   font-size: 11px;
-  color: #9a9a9a;
+  color: #9A8E8B;
 }
 .notif-row.danger .notif-meta{ color: #c17070; }
 
@@ -133,36 +134,252 @@
   width: 64px; height: 64px;
   border-radius: 50%;
   margin: 0 auto 16px;
-  background: linear-gradient(135deg, #FFE9D6, #FFD4A3);
+  background: linear-gradient(135deg, #F6E4E3, #E9CBCB);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #FF6B00;
+  color: #A62F38;
 }
 .empty-title{
   font-weight: 800;
   font-size: 15px;
-  color: #1a1a1a;
+  color: #2A1016;
 }
 .empty-sub{
   margin-top: 6px;
   font-size: 13px;
-  color: #9a9a9a;
+  color: #9A8E8B;
 }
+
+/* ════════════════════════════════════════
+   CLAY PASS — matching welcome / sign-in / dashboard
+   ════════════════════════════════════════ */
+body{
+  background:
+    radial-gradient(120% 50% at 50% 0%, #F7E3E4 0%, transparent 55%),
+    linear-gradient(180deg, #FBF4F2 0%, #F6ECEA 50%, #F3E6E4 100%) !important;
+  background-attachment: fixed !important;
+}
+
+.dash-wrap{
+  position: relative;
+  z-index: 1;
+  width: min(480px, 94vw);
+  padding: 22px 16px 40px;
+}
+
+/* page header: back button + title, like the rest of the app */
+.page-head{
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.page-title{
+  font-family: 'Outfit', sans-serif;
+  font-size: 23px;
+  font-weight: 800;
+  letter-spacing: -.6px;
+  color: #5C1522;
+  margin: 0;
+}
+
+/* Back is a real control, so it gets the clay treatment */
+.back-btn{
+  margin-bottom: 0;
+  height: 42px;
+  border: 0;
+  background: linear-gradient(180deg, #FFFFFF 0%, #FDF8F7 100%);
+  color: #A62F38;
+  font-size: 14px;
+  font-weight: 800;
+  box-shadow:
+    0 5px 0 #EADBD9,
+    0 12px 18px rgba(140,80,85,.20),
+    inset 0 2px 2px #fff;
+}
+
+.back-btn:hover{
+  transform: translateY(-2px);
+  box-shadow:
+    0 7px 0 #EADBD9,
+    0 16px 24px rgba(140,80,85,.24),
+    inset 0 2px 2px #fff;
+}
+
+.back-btn:active{
+  transform: translateY(4px);
+  box-shadow:
+    0 1px 0 #EADBD9,
+    0 5px 9px rgba(140,80,85,.18),
+    inset 0 2px 2px #fff;
+}
+
+/* Card is a surface, so soft shadow only — no pressed side wall */
+.notif-card{
+  border: 0;
+  border-top: 0;
+  border-radius: 28px;
+  padding: 6px 20px;
+  background: linear-gradient(180deg, #FFFFFF 0%, #FFFDFD 70%, #FDF9F8 100%);
+  box-shadow:
+    0 20px 38px rgba(120,70,70,.18),
+    0 3px 8px rgba(120,70,70,.07),
+    inset 0 2px 3px rgba(255,255,255,.95);
+}
+
+.notif-head{ border-bottom: 1px solid #F2E3E1; }
+
+.notif-title{ color: #5C1522; font-weight: 800; letter-spacing: -.3px; }
+
+.notif-count{
+  background: linear-gradient(180deg, #B13445 0%, #952736 100%);
+  color: #fff;
+  border: 0;
+}
+
+.notif-ico{
+  border-radius: 14px;
+  background: linear-gradient(170deg, #F6DEDF 0%, #E9BDC0 100%);
+  color: #8A2129;
+}
+
+.notif-row.danger .notif-ico{
+  background: linear-gradient(170deg, #F6DCDA 0%, #EDC2BF 100%);
+  color: #8C1D18;
+}
+
+/* Empty state — big rose disc with the bell sitting in it */
+.empty-state{ padding: 46px 10px 50px; }
+
+.empty-icon{
+  width: 132px !important;
+  height: 132px !important;
+  border-radius: 50%;
+  margin: 0 auto 26px;
+  background: radial-gradient(120% 120% at 34% 26%, #F3D3D4 0%, #E6AFB3 58%, #D89CA2 100%);
+  color: #9C2838;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    inset 0 4px 8px rgba(255,255,255,.55),
+    inset 0 -10px 18px rgba(150,80,88,.22),
+    0 14px 26px rgba(150,80,88,.22);
+}
+
+.empty-icon{ overflow: visible; }
+
+.empty-bell{
+  width: 104px;
+  height: auto;
+  display: block;
+  margin-top: -10px;
+  filter: drop-shadow(0 10px 12px rgba(90,20,30,.26));
+}
+
+.empty-title{
+  font-size: 25px;
+  font-weight: 800;
+  letter-spacing: -.5px;
+  color: #5C1522;
+}
+
+.empty-sub{
+  font-size: 15px;
+  color: #8E6C70;
+  margin-top: 8px;
+}
+
+/* ════════════════════════════════════════
+   FLOATING 3D PROPS
+   ════════════════════════════════════════ */
+.decor-layer{
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.decor-layer img{
+  position: absolute;
+  display: block;
+  opacity: .9;
+  will-change: transform;
+}
+
+@keyframes floatA{
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+  50%      { transform: translate3d(4px, -16px, 0) rotate(7deg); }
+}
+@keyframes floatB{
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+  50%      { transform: translate3d(-6px, -12px, 0) rotate(-9deg); }
+}
+@keyframes floatC{
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(-3deg); }
+  50%      { transform: translate3d(5px, -20px, 0) rotate(5deg); }
+}
+
+.d1 { left: 2%;   top: 3%;     width: 40px; animation: floatA 7.6s ease-in-out infinite; }
+.d2 { right: 4%;  top: 2%;     width: 32px; animation: floatB 8.6s ease-in-out infinite .5s; }
+.d3 { left: -4%;  top: 24%;    width: 74px; animation: floatC 10s  ease-in-out infinite 1s; }
+.d4 { right: -4%; top: 6%;     width: 74px; animation: floatA 10.6s ease-in-out infinite 1.4s; }
+.d5 { left: 3%;   top: 54%;    width: 34px; animation: floatB 9s   ease-in-out infinite .3s; }
+.d6 { right: 2%;  top: 48%;    width: 42px; animation: floatC 7.9s ease-in-out infinite 1.7s; }
+.d7 { left: 8%;   bottom: 10%; width: 30px; animation: floatA 8.8s ease-in-out infinite .9s; }
+.d8 { right: 7%;  bottom: 14%; width: 38px; animation: floatB 9.4s ease-in-out infinite 1.9s; }
+
+@media (max-width: 420px){
+  .d5 { display: none; }
+  .d3, .d4 { width: 62px; opacity: .82; }
+}
+
+@media (min-width: 900px){
+  .d1 { left: 10%; width: 56px; }
+  .d2 { right: 12%; width: 46px; }
+  .d3 { left: 4%;  width: 104px; }
+  .d4 { right: 4%; width: 104px; }
+  .d5 { left: 12%; width: 48px; }
+  .d6 { right: 10%; width: 56px; }
+  .d7 { left: 16%; width: 42px; }
+  .d8 { right: 15%; width: 52px; }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .decor-layer img{ animation: none !important; }
+}
+
 </style>
+
+<div class="decor-layer" aria-hidden="true">
+  <img class="d1" src="{% static 'img/decor/coin.svg' %}" alt="">
+  <img class="d2" src="{% static 'img/decor/coin-edge.svg' %}" alt="">
+  <img class="d3" src="{% static 'img/decor/bubble-white.png' %}" alt="">
+  <img class="d4" src="{% static 'img/decor/bubble-rose.png' %}" alt="">
+  <img class="d5" src="{% static 'img/decor/coin-edge.svg' %}" alt="">
+  <img class="d6" src="{% static 'img/decor/coin.svg' %}" alt="">
+  <img class="d7" src="{% static 'img/decor/coin-edge.svg' %}" alt="">
+  <img class="d8" src="{% static 'img/decor/coin.svg' %}" alt="">
+</div>
 
 <div class="dash-wrap">
 
-  <a class="back-btn" href="{% url 'dashboard' %}">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 6l-6 6 6 6"/></svg>
-    Back
-  </a>
+  <div class="page-head">
+    <a class="back-btn" href="{% url 'dashboard' %}">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 6l-6 6 6 6"/></svg>
+      Back
+    </a>
+    <h1 class="page-title">Notifications</h1>
+  </div>
 
   <div class="notif-card">
 
     {% if items %}
       <div class="notif-head">
-        <h3 class="notif-title">Notifications</h3>
+        <h3 class="notif-title">Latest</h3>
         <span class="notif-count">{{ items|length }}</span>
       </div>
 
@@ -202,9 +419,7 @@
     {% else %}
       <div class="empty-state">
         <div class="empty-icon" aria-hidden="true">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 22a2 2 0 0 0 2-2h-4a2 2 0 0 0 2 2zm6-6V11a6 6 0 1 0-12 0v5L4 18v1h16v-1l-2-2z"/>
-          </svg>
+          <img class="empty-bell" src="{% static 'img/bell-3d.webp' %}" alt="">
         </div>
         <div class="empty-title">No notifications</div>
         <div class="empty-sub">You don't have any new messages right now.</div>

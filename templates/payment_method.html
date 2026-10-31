@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block title %}Bank Information{% endblock %}
 
+{% load static %}
 {% block content %}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,11 +22,11 @@
     position: relative;
     background: #ffffff;
     border-radius: 22px;
-    border: 1.5px solid #FFD4A3;
-    border-top: 4px solid #FF6B00;
-    box-shadow: 0 8px 28px rgba(255,107,0,.14), 0 2px 8px rgba(0,0,0,.04);
+    border: 1.5px solid #E9CBCB;
+    border-top: 4px solid #A62F38;
+    box-shadow: 0 8px 28px rgba(166,47,56,.14), 0 2px 8px rgba(0,0,0,.04);
     padding: 22px;
-    color: #1a1a1a;
+    color: #2A1016;
     margin-bottom: 16px;
     overflow: visible;
   }
@@ -36,11 +37,11 @@
     font-family: "Outfit", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
   }
 
-  .muted { color: #9a9a9a; font-size: 13px; }
+  .muted { color: #9A8E8B; font-size: 13px; }
 
   /* ===== Card header title ===== */
   h2 {
-    color: #1a1a1a;
+    color: #2A1016;
     font-weight: 800;
     font-size: 20px;
     margin: 0;
@@ -54,9 +55,9 @@
     border-radius: 999px;
     font-weight: 800;
     font-size: 12px;
-    background: #FFE9D6;
-    color: #b8530a;
-    border: 1px solid #FFD4A3;
+    background: #F6E4E3;
+    color: #8A2129;
+    border: 1px solid #E9CBCB;
     white-space: nowrap;
   }
 
@@ -65,17 +66,17 @@
     margin: 18px 0 6px;
     padding: 6px 16px;
     border-radius: 16px;
-    border: 1.5px solid #FFE9D6;
-    background: #FFFAF5;
+    border: 1.5px solid #F6E4E3;
+    background: #FBF3F2;
   }
 
   /* ===== Section title ===== */
   .pm-title {
-    color: #1a1a1a;
+    color: #2A1016;
     font-weight: 800;
     font-size: 13px;
     padding: 14px 0 12px;
-    border-bottom: 1px solid #FFE9D6;
+    border-bottom: 1px solid #F6E4E3;
   }
 
   /* ===== Field row (icon badge + input) ===== */
@@ -86,14 +87,14 @@
     padding: 14px 0;
   }
   .pm-field-row + .pm-field-row {
-    border-top: 1px solid #FFE9D6;
+    border-top: 1px solid #F6E4E3;
   }
   .pm-field-icon {
     flex: 0 0 auto;
     width: 36px; height: 36px;
     border-radius: 11px;
-    background: linear-gradient(135deg, #FFE9D6, #FFD4A3);
-    color: #FF6B00;
+    background: linear-gradient(135deg, #F6E4E3, #E9CBCB);
+    color: #A62F38;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -101,7 +102,7 @@
   }
   .pm-field-icon svg { width: 17px; height: 17px; }
   .pm-field-row:focus-within .pm-field-icon {
-    background: linear-gradient(135deg, #FF6B00, #FF8A33);
+    background: linear-gradient(135deg, #A62F38, #B93B4C);
     color: #fff;
   }
   .pm-field-main { flex: 1; min-width: 0; }
@@ -116,9 +117,9 @@
     width: 100%;
     padding: 11px 13px;
     border-radius: 11px;
-    border: 1.5px solid #E6E6E6;
+    border: 1.5px solid #EEDFDD;
     background: #ffffff;
-    color: #1a1a1a;
+    color: #2A1016;
     font-size: 14px;
     font-weight: 500;
     outline: none;
@@ -126,20 +127,20 @@
     transition: border-color .2s, box-shadow .2s, background .2s;
   }
   .pm-section input::placeholder {
-    color: #9a9a9a;
+    color: #9A8E8B;
   }
   .pm-section input:focus {
     outline: none;
-    border-color: #FF6B00;
-    box-shadow: 0 0 0 3px rgba(255,107,0,.16);
+    border-color: #A62F38;
+    box-shadow: 0 0 0 3px rgba(166,47,56,.16);
     background: #fff;
   }
 
   /* ===== Locked / read-only inputs ===== */
   .pm-locked input {
-    background: #FFE9D6;
+    background: #F6E4E3;
     border-color: transparent;
-    color: #b8530a;
+    color: #8A2129;
     pointer-events: none;
     cursor: not-allowed;
     opacity: 1;
@@ -167,17 +168,17 @@
     gap: 8px;
     border-radius: 999px;
     border: none;
-    background: linear-gradient(135deg, #FF6B00, #FF8A33);
+    background: linear-gradient(135deg, #A62F38, #B93B4C);
     color: #fff;
     font-weight: 700;
     font-size: 15px;
     letter-spacing: .02em;
-    box-shadow: 0 8px 22px rgba(255,107,0,.32);
+    box-shadow: 0 8px 22px rgba(166,47,56,.32);
     cursor: pointer;
     transition: transform .15s, box-shadow .2s;
   }
   .nav-btn svg{ width: 16px; height: 16px; }
-  .nav-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 26px rgba(255,107,0,.40); }
+  .nav-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 26px rgba(166,47,56,.40); }
   .nav-btn:active { transform: translateY(1px); }
   .nav-btn:disabled {
     opacity: .55;
@@ -198,20 +199,304 @@
     max-width: 320px !important;
     flex: 0 0 auto !important;
   }
+
+  /* ════════════════════════════════════════
+     CLAY PASS — matching the rest of the app
+     ════════════════════════════════════════ */
+  body{
+    background:
+      radial-gradient(120% 50% at 50% 0%, #F7E3E4 0%, transparent 55%),
+      linear-gradient(180deg, #FBF4F2 0%, #F6ECEA 50%, #F3E6E4 100%) !important;
+    background-attachment: fixed !important;
+  }
+
+  .dash-wrap{ position: relative; z-index: 1; }
+
+  /* Frosted card */
+  .cardx{
+    border: 1px solid rgba(255,255,255,.65);
+    border-top: 1px solid rgba(255,255,255,.65);
+    border-radius: 30px;
+    padding: 24px 20px;
+    background: linear-gradient(180deg, rgba(255,255,255,.82) 0%, rgba(253,246,245,.70) 100%);
+    backdrop-filter: blur(18px) saturate(140%);
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
+    box-shadow:
+      0 20px 38px rgba(120,70,70,.16),
+      0 3px 8px rgba(120,70,70,.06),
+      inset 0 2px 3px rgba(255,255,255,.9);
+  }
+
+  .pm-page h1,
+  .pm-page h2,
+  .pm-page .pm-heading{
+    color: #5C1522;
+    font-size: 30px;
+    font-weight: 800;
+    letter-spacing: -.8px;
+    margin: 0;
+  }
+
+  /* badge above the title, so "Bank Information" keeps one full-width line */
+  .pm-head{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .pm-head-text{ width: 100%; }
+
+  @media (min-width: 560px){
+    .pm-head{
+      flex-direction: row-reverse;
+      align-items: flex-start;
+      justify-content: space-between;
+    }
+  }
+
+  .badge{
+    background: linear-gradient(170deg, #F3D5D6 0%, #E7B9BC 100%);
+    border: 0;
+    color: #8A2129;
+    padding: 8px 16px;
+    box-shadow: inset 0 1px 2px rgba(255,255,255,.7);
+  }
+
+  /* Inner panel */
+  .pm-section{
+    margin: 20px 0 6px;
+    padding: 6px 18px;
+    border: 1px solid rgba(255,255,255,.7);
+    border-radius: 24px;
+    background: linear-gradient(180deg, rgba(255,255,255,.72) 0%, rgba(246,228,227,.58) 100%);
+    box-shadow: inset 0 2px 4px rgba(150,90,95,.10);
+  }
+
+  .pm-title{
+    color: #8A2129;
+    font-size: 14px;
+    letter-spacing: .5px;
+    text-transform: uppercase;
+    padding: 16px 0 13px;
+    border-bottom: 1px solid rgba(150,90,95,.16);
+  }
+
+  .pm-field-row{ padding: 16px 0; gap: 14px; align-items: center; }
+  .pm-field-row + .pm-field-row{ border-top: 1px solid rgba(150,90,95,.16); }
+
+  /* badge, not a control — stays flat */
+  .pm-field-icon{
+    width: 46px;
+    height: 46px;
+    border-radius: 15px;
+    background: linear-gradient(170deg, #F3D5D6 0%, #E4B0B4 100%);
+    color: #8A2129;
+    box-shadow: inset 0 2px 3px rgba(255,255,255,.65);
+    margin-top: 0;
+  }
+
+  .pm-field-icon svg{ width: 21px; height: 21px; }
+
+  .pm-field-row:focus-within .pm-field-icon{
+    background: linear-gradient(170deg, #B13445 0%, #952736 100%);
+    color: #fff;
+  }
+
+  .pm-field-main .muted{
+    color: #2A1016;
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  .pm-section input{
+    border-radius: 16px !important;
+    border: 1px solid #EFDCDB !important;
+    background: #FFFFFF !important;
+    padding: 14px 16px !important;
+    font-size: 15px !important;
+    color: #2A1016 !important;
+  }
+
+  .pm-section input:focus{
+    border-color: #C47C83 !important;
+    box-shadow: 0 0 0 4px rgba(166,47,56,.12) !important;
+  }
+
+  /* Default-payout row, bottom of the panel like the mock.
+     There is one bank on file per account, so this states a fact rather
+     than offering a setting — it is shown on, and is not clickable. */
+  .pm-default-row{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 16px 0 18px;
+    border-top: 1px solid rgba(150,90,95,.16);
+  }
+
+  .pm-default-text strong{
+    display: block;
+    color: #2A1016;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+
+  .pm-default-text small{
+    display: block;
+    margin-top: 4px;
+    color: #8E7B7D;
+    font-size: 13px;
+  }
+
+  .pm-switch{
+    flex: 0 0 auto;
+    position: relative;
+    display: inline-flex;
+    cursor: pointer;
+  }
+
+  .pm-switch input{
+    position: absolute;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    cursor: pointer;
+  }
+
+  .pm-switch-track{
+    display: block;
+    width: 58px;
+    height: 32px;
+    border-radius: 999px;
+    position: relative;
+    background: #E3CBCB;
+    box-shadow: inset 0 2px 4px rgba(150,90,95,.22);
+    transition: background .22s ease, box-shadow .22s ease;
+  }
+
+  .pm-switch-track::after{
+    content: "";
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: #FFFFFF;
+    box-shadow: 0 2px 5px rgba(90,30,40,.30);
+    transition: transform .22s cubic-bezier(.22,.61,.36,1);
+  }
+
+  .pm-switch input:checked + .pm-switch-track{
+    background: linear-gradient(180deg, #C32A42 0%, #A62033 100%);
+    box-shadow:
+      inset 0 2px 3px rgba(255,255,255,.22),
+      0 4px 10px rgba(150,36,52,.26);
+  }
+
+  .pm-switch input:checked + .pm-switch-track::after{ transform: translateX(26px); }
+
+  .pm-switch input:focus-visible + .pm-switch-track{
+    box-shadow: 0 0 0 4px rgba(166,47,56,.22);
+  }
+
+  .pm-switch input:disabled{ cursor: default; }
+  .pm-switch input:disabled + .pm-switch-track{ opacity: .6; }
+
+  .sr-only{
+    position: absolute;
+    width: 1px; height: 1px;
+    padding: 0; margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  /* Save — a real control */
+  .nav-btn{
+    max-width: none;
+    height: 60px;
+    font-size: 17px;
+    font-weight: 800;
+    border: 0;
+    background: linear-gradient(180deg, #B13445 0%, #9C2838 55%, #8C2030 100%);
+    box-shadow:
+      0 8px 0 #6E1623,
+      0 18px 26px rgba(150,36,52,.34),
+      inset 0 2px 4px rgba(255,255,255,.22),
+      inset 0 -8px 14px rgba(70,10,18,.28);
+    transition: transform .15s cubic-bezier(.22,.61,.36,1), box-shadow .2s ease;
+  }
+
+  .nav-inner{ width: 100%; }
+
+  .nav-btn:hover:not([disabled]){ transform: translateY(-2px); }
+  .nav-btn:active:not([disabled]){
+    transform: translateY(6px);
+    box-shadow: 0 2px 0 #6E1623, 0 6px 10px rgba(150,36,52,.28);
+  }
+
+  .nav-btn[disabled]{ filter: grayscale(.25); opacity: .6; }
+
+  /* ════════════════════════════════════════
+     FLOATING 3D PROPS
+     ════════════════════════════════════════ */
+  .decor-layer{ position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+  .decor-layer img{ position: absolute; display: block; opacity: .9; will-change: transform; }
+
+  @keyframes floatA{ 0%,100%{ transform: translate3d(0,0,0) rotate(0deg);} 50%{ transform: translate3d(4px,-16px,0) rotate(7deg);} }
+  @keyframes floatB{ 0%,100%{ transform: translate3d(0,0,0) rotate(0deg);} 50%{ transform: translate3d(-6px,-12px,0) rotate(-9deg);} }
+  @keyframes floatC{ 0%,100%{ transform: translate3d(0,0,0) rotate(-3deg);} 50%{ transform: translate3d(5px,-20px,0) rotate(5deg);} }
+
+  .d1 { left: 2%;  top: 3%;    width: 42px; animation: floatA 7.6s ease-in-out infinite; }
+  .d2 { right: 2%; top: 1%;    width: 48px; animation: floatB 8.6s ease-in-out infinite .5s; }
+  .d3 { left: 1%;  top: 36%;   width: 32px; animation: floatC 9.4s ease-in-out infinite 1s; }
+  .d4 { right: 1%; top: 30%;   width: 28px; animation: floatA 8.2s ease-in-out infinite 1.4s; }
+  .d5 { left: 3%;  top: 66%;   width: 38px; animation: floatB 9s   ease-in-out infinite .3s; }
+  .d6 { right: 3%; top: 72%;   width: 44px; animation: floatC 7.9s ease-in-out infinite 1.7s; }
+
+  @media (max-width: 420px){ .d3 { display: none; } }
+
+  @media (min-width: 900px){
+    .d1 { left: 11%; width: 58px; }
+    .d2 { right: 12%; width: 62px; }
+    .d3 { left: 8%;  width: 46px; }
+    .d4 { right: 9%; width: 42px; }
+    .d5 { left: 13%; width: 52px; }
+    .d6 { right: 11%; width: 58px; }
+  }
+
+  @media (prefers-reduced-motion: reduce){ .decor-layer img{ animation: none !important; } }
+
 </style>
 
+<div class="decor-layer" aria-hidden="true">
+  <img class="d1" src="{% static 'img/decor/coin.svg' %}" alt="">
+  <img class="d2" src="{% static 'img/decor/coin-edge.svg' %}" alt="">
+  <img class="d3" src="{% static 'img/decor/sphere.svg' %}" alt="">
+  <img class="d4" src="{% static 'img/decor/sphere.svg' %}" alt="">
+  <img class="d5" src="{% static 'img/decor/coin.svg' %}" alt="">
+  <img class="d6" src="{% static 'img/decor/coin-edge.svg' %}" alt="">
+</div>
+
 <div class="dash-wrap pm-page">
+
   <div class="cardx">
 
-    <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px;">
-      <div>
-        <h2>Bank Information</h2>
-        <div class="muted" style="margin-top:4px;">Add or update your payout details</div>
-      </div>
-
+    <div class="pm-head">
       <span class="badge">
         {% if saved %}Saved{% else %}Not set{% endif %}
       </span>
+
+      <div class="pm-head-text">
+        <h2>Bank Information</h2>
+        <div class="muted" style="margin-top:4px;">Add or update your payout details</div>
+      </div>
     </div>
 
     <form method="post">
@@ -240,10 +525,24 @@
             {{ form.bank_account }}
           </div>
         </div>
+
+        <div class="pm-default-row">
+          <div class="pm-default-text">
+            <strong>Set as Default Payment Method</strong>
+            <small>Use this bank for future payouts</small>
+          </div>
+          <label class="pm-switch">
+            <input type="checkbox" name="is_default" value="1"
+                   {% if form.instance.is_default %}checked{% endif %}
+                   {% if locked %}disabled{% endif %}>
+            <span class="pm-switch-track" aria-hidden="true"></span>
+            <span class="sr-only">Set as default payment method</span>
+          </label>
+        </div>
       </div>
 
       {% if locked %}
-        <div class="muted" style="margin-top:10px;">Locked: Please contact staff to update.</div>
+        <div class="muted" style="margin-top:10px;">Locked: Please contact to support update.</div>
       {% endif %}
 
       <div class="bottom-nav">
@@ -251,7 +550,7 @@
           <button class="nav-btn" type="button" disabled>Saved</button>
         {% else %}
           <button class="nav-btn" type="submit">
-            <span>Save</span>
+            <span>Save Bank Details</span>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-7-7l7 7-7 7"/></svg>
           </button>
         {% endif %}
@@ -263,5 +562,5 @@
 </div>
 
 {% load static %}
-<script src="{% static 'js/loan_tour.js' %}?v=4"></script>
+<script src="{% static 'js/loan_tour.js' %}?v=9"></script>
 {% endblock %}

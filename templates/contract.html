@@ -3,383 +3,417 @@
 {% block title %}Contract{% endblock %}
 
 {% block content %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
 <style>
+  /* ═════════════════════════════════════════
+     Loan contract — cherry / clay
+     ═════════════════════════════════════════ */
+  body{
+    background:
+      radial-gradient(120% 50% at 50% 0%, #F7E3E4 0%, transparent 55%),
+      linear-gradient(180deg, #FBF4F2 0%, #F6ECEA 50%, #F3E6E4 100%) !important;
+    background-attachment: fixed !important;
+  }
 
-@font-face {
-  font-family: 'ArialNarrowCustom';
-  src: url("{% static 'fonts/arialnarrow.ttf' %}") format("truetype");
-  font-weight: normal;
-  font-style: normal;
-}
-  :root{
-  --c1:#FF6B00;
-  --c2:#FF8A33;
-  --ink:#0b0f0c;
-  --paper:#ffffff;
-  --mut:#9a9a9a;
-  --line:#FFE9D6;
-}
+  .wrap{ display: block !important; }
 
-  /* container */
   .ct-wrap{
-  width: min(900px, 94vw);
-  margin: 0 auto;
-  padding: 14px 14px 26px;   /* ✅ remove big top space */
-  box-sizing: border-box;
-}
-
-/* ✅ Mobile: little tighter */
-@media (max-width: 520px){
-  .ct-wrap{
-    padding: 10px 12px 20px;
-  }
-}
-
-  .paper{
-  background: var(--paper);
-  color: #111827;
-  border-radius: 20px;
-  box-shadow: 0 8px 28px rgba(255,107,0,.14), 0 2px 8px rgba(0,0,0,.06);
-  overflow: hidden;
-  position: relative;
-  border: 1.5px solid #FFD4A3;
-  border-top: 4px solid #FF6B00;
-}
-
-.ct-wrap, 
-.ct-wrap * {
-  font-family: 'ArialNarrowCustom', Arial, sans-serif !important;
-}
-/* Back button - GreenLeaf style */
-.back-btn{
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  justify-content: center;
-  height: 38px;
-  padding: 0 16px 0 12px;
-  border-radius: 999px;
-  background: #ffffff;
-  color: #FF6B00;
-  font-weight: 700;
-  font-size: 13px;
-  text-decoration: none;
-  border: 1px solid #FFD4A3;
-  box-shadow: 0 2px 10px rgba(255,107,0,.12);
-  transition: transform .15s ease, box-shadow .15s ease;
-}
-.back-btn svg{ width: 16px; height: 16px; }
-.back-btn:hover{ transform: translateY(-1px); box-shadow: 0 4px 14px rgba(255,107,0,.20); }
-.back-btn:active{ transform: translateY(0); opacity: .9; }
-
-@media (max-width:520px){
-  .top-actions{ padding: 10px 12px 0; }
-  .top-actions-line{ margin: 10px 12px 0; }
-  .back-btn{ height: 38px; font-size: 13px; }
-}
-
-  /* header - GreenLeaf gradient */
-  .head{
-  position: relative;
-  padding: 16px 18px 14px;
-  border-bottom: 1px solid var(--line);
-  background: linear-gradient(135deg, #FF6B00 0%, #FF8A33 55%, #FFA64D 100%);
-  color: #fff;
-}
-
-  .head-inner{
-    display:flex;
-    align-items:flex-start;
-    justify-content:space-between;
-    gap: 16px;
+    position: relative;
+    z-index: 1;
+    width: min(480px, 94vw);
+    margin: 0 auto;
+    padding: 22px 16px 46px;
+    box-sizing: border-box;
+    font-family: "Outfit", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
   }
 
-  .brand{
-    display:flex;
-    align-items:center;
-    gap: 12px;
-    min-width: 220px;
+  .ct-wrap *{ box-sizing: border-box; }
+
+  /* ── Header: back + title ── */
+  .ct-head{
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 18px;
   }
-  .brand-logo{
-    width:54px;height:54px;
-    border-radius: 14px;
-    background: rgba(255,255,255,.18);
-    border: 1px solid rgba(255,255,255,.22);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    overflow:hidden;
+
+  .back-btn{
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
     flex: 0 0 auto;
+    height: 42px;
+    padding: 0 18px 0 13px;
+    border: 0;
+    border-radius: 999px;
+    text-decoration: none;
+    background: linear-gradient(180deg, #FFFFFF 0%, #FDF8F7 100%);
+    color: #A62F38;
+    font-size: 15px;
+    font-weight: 800;
+    box-shadow:
+      0 5px 0 #EADBD9,
+      0 12px 18px rgba(140,80,85,.20),
+      inset 0 2px 2px #fff;
+    transition: transform .15s cubic-bezier(.22,.61,.36,1), box-shadow .2s ease;
   }
-  .brand-logo img{ width:100%; height:100%; object-fit:cover; display:block; }
 
-  .brand-title{
-    line-height: 1.05;
-    font-weight: 950;
-    letter-spacing: .02em;
-    font-size: 20px;
+  .back-btn svg{ width: 16px; height: 16px; }
+  .back-btn:hover{ transform: translateY(-2px); }
+  .back-btn:active{ transform: translateY(4px); box-shadow: 0 1px 0 #EADBD9, 0 5px 9px rgba(140,80,85,.18); }
+
+  .ct-title{
+    flex: 1 1 auto;
+    margin: 0;
+    text-align: center;
+    color: #5C1522;
+    font-size: 21px;
+    font-weight: 800;
+    letter-spacing: -.3px;
+    line-height: 1.15;
+    text-transform: uppercase;
   }
-  .brand-sub{
-    margin-top: 4px;
-    font-size: 12px;
-    opacity: .92;
+
+  /* ── Frosted sheet ── */
+  .paper{
+    border: 1px solid rgba(255,255,255,.65);
+    border-radius: 30px;
+    padding: 22px 18px 24px;
+    background: linear-gradient(180deg, rgba(255,255,255,.82) 0%, rgba(253,246,245,.70) 100%);
+    backdrop-filter: blur(18px) saturate(140%);
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
+    box-shadow:
+      0 20px 38px rgba(120,70,70,.16),
+      0 3px 8px rgba(120,70,70,.06),
+      inset 0 2px 3px rgba(255,255,255,.9);
+  }
+
+  .sec-label{
+    color: #8A2129;
+    font-size: 15px;
+    font-weight: 800;
+    letter-spacing: .5px;
+    text-transform: uppercase;
+    margin: 0 0 12px;
+  }
+
+  /* ── Summary ── */
+  .summary{
+    background: linear-gradient(180deg, rgba(255,255,255,.76) 0%, rgba(246,228,227,.60) 100%);
+    border: 1px solid rgba(255,255,255,.7);
+    border-radius: 22px;
+    padding: 2px 18px;
+    box-shadow: inset 0 2px 4px rgba(150,90,95,.08);
+    margin-bottom: 16px;
+  }
+
+  .summary .row{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 15px 0;
+    border-bottom: 1px solid rgba(150,90,95,.14);
+  }
+
+  .summary .row:last-child{ border-bottom: 0; }
+  .summary .k{ color: #2A1016; font-size: 16px; }
+  .summary .v{ color: #2A1016; font-size: 17px; font-weight: 800; }
+  .summary .v.accent{ color: #A62F38; }
+
+  /* ── Collapsible blocks ── */
+  .fold{
+    background: linear-gradient(180deg, rgba(255,255,255,.76) 0%, rgba(246,228,227,.58) 100%);
+    border: 1px solid rgba(255,255,255,.7);
+    border-radius: 22px;
+    margin-bottom: 12px;
+    overflow: hidden;
+    box-shadow: inset 0 2px 4px rgba(150,90,95,.07);
+  }
+
+  .fold > summary{
+    list-style: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 16px 18px;
+    color: #2A1016;
+    font-size: 17px;
     font-weight: 700;
   }
 
-  .contact{
-    text-align:right;
-    font-size: 12px;
-    line-height: 1.4;
-    opacity: .95;
-    max-width: 360px;
-    color: #ffffff;
-  }
-  .contact .row{ display:flex; gap:8px; justify-content:flex-end; }
-  .contact b{ font-weight: 900; }
+  .fold > summary::-webkit-details-marker{ display: none; }
 
-  /* body */
-  .body{
-    padding: 18px;
+  .fold .chev{
+    width: 11px;
+    height: 11px;
+    flex: 0 0 auto;
+    border-right: 2.4px solid #9B5A62;
+    border-bottom: 2.4px solid #9B5A62;
+    transform: rotate(45deg) translate(-2px, -2px);
+    transition: transform .22s cubic-bezier(.22,.61,.36,1);
   }
 
-  .top-grid{
-    display:grid;
-    grid-template-columns: 1fr; /* ✅ DATE removed */
-    gap: 14px;
-    align-items:start;
+  .fold[open] .chev{ transform: rotate(-135deg) translate(-2px, -2px); }
+
+  .fold-body{
+    padding: 0 18px 16px;
+    color: #4A3A3C;
+    font-size: 14px;
+    line-height: 1.6;
   }
 
-  .box{
-    border: 1.5px solid #FFE9D6;
-    border-top: 3px solid #FF6B00;
-    border-radius: 16px;
-    padding: 16px;
-    background: #FFFAF5;
+  .fold-body p{ margin: 0 0 10px; }
+  .fold-body p:last-child{ margin-bottom: 0; }
+  .fold-body b{ color: #2A1016; }
+
+  .kv-line{
+    display: flex;
+    gap: 8px;
+    font-size: 16px;
+    color: #6E6460;
+    padding: 3px 0;
   }
 
-  .box h4{
-    margin: 0 0 10px;
-    font-size: 13px;
-    letter-spacing: .08em;
-    text-transform: uppercase;
-    color: #b8530a;
-    font-weight: 800;
+  .kv-line b{ color: #2A1016; font-weight: 700; }
+
+  .scroll-terms{
+    max-height: 190px;
+    overflow-y: auto;
+    padding-right: 6px;
+    scrollbar-width: thin;
   }
 
-  .kv{
-  display: grid;
-  grid-template-columns: 1fr auto; /* ✅ label , value auto ->  */
-  gap: 10px 18px;
-  font-size: 13px;
-  color: #111827;
-  align-items: center;
-}
-
-@media (max-width: 520px){
-  .kv{
-    grid-template-columns: 120px 1fr; /* still 2 columns on phone */
-  }
-}
-  .k{ color: #FF6B00; font-weight: 800; }
-  .v{
-  color: #1a2e0a;
-  font-weight: 700;
-  position: relative;
-  display: inline-block;
-  padding-bottom: 4px;
-
-  justify-self: end;     /* ✅ value  */
-  text-align: right;     /* ✅  align  */
-  min-width: 90px;      /* ✅  column value  */
-}
-
-.v::after{
-  content: "";
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  width: 100%;
-  height: 2px;
-  background: linear-gradient(90deg, var(--c1), var(--c2));
-  border-radius: 99px;
-  opacity: .85;
-}
-
-
-  .sep{
-    height: 2px;
-    background: linear-gradient(90deg, var(--c1), var(--c2));
+  .scroll-terms::-webkit-scrollbar{ width: 5px; }
+  .scroll-terms::-webkit-scrollbar-thumb{
+    background: rgba(150,90,95,.30);
     border-radius: 99px;
-    margin: 16px 0;
-    opacity: .85;
   }
 
-  .subject{
-    margin-top: 4px;
+  /* ── Signature ── */
+  .sig-card{
+    background: linear-gradient(180deg, rgba(255,255,255,.80) 0%, rgba(246,228,227,.60) 100%);
+    border: 1px solid rgba(255,255,255,.7);
+    border-radius: 22px;
+    padding: 16px 18px 18px;
+    margin-bottom: 18px;
+    box-shadow: inset 0 2px 4px rgba(150,90,95,.08);
+  }
+
+  .sig-head{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  .sig-head .sec-label{ margin: 0; }
+
+  .sig-note{
+    color: #9B7B80;
     font-size: 13px;
-    font-weight: 950;
-    letter-spacing: .06em;
-    text-transform: uppercase;
-    color: #b8530a;
+    font-weight: 600;
   }
 
-  .para{
-    font-size: 13px;
-    line-height: 1.7;
-    color: #111827;
-    margin-top: 10px;
+  .sig-box{
+    background: #FDF8F2;
+    border: 1px dashed #D9A9AE;
+    border-radius: 16px;
+    min-height: 118px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
   }
 
-  .muted{ color: var(--mut); }
-  .head .contact .muted{
-  color: rgba(255,255,255,.88) !important;
-}
+  .sig-box img{
+    max-width: 100%;
+    max-height: 120px;
+    display: block;
+  }
 
-  .sig{
-    margin-top: 20px;
-    display:grid;
+  .sig-empty{
+    color: #A98A8E;
+    font-size: 14px;
+    text-align: center;
+    line-height: 1.5;
+  }
+
+  /* ── Accept ── */
+  .accept-btn{
+    display: flex;
+    align-items: center;
+    justify-content: center;
     gap: 10px;
-    max-width: 520px;
-  }
-  .sig .line{
-    border-bottom: 2px solid #FF6B00;
-    height: 24px;
     width: 100%;
+    height: 60px;
+    border: 0;
+    border-radius: 999px;
+    text-decoration: none;
+    font-size: 17px;
+    font-weight: 800;
+    letter-spacing: .3px;
+    color: #fff;
+    background: linear-gradient(180deg, #B13445 0%, #9C2838 55%, #8C2030 100%);
+    box-shadow:
+      0 8px 0 #6E1623,
+      0 18px 26px rgba(150,36,52,.34),
+      inset 0 2px 4px rgba(255,255,255,.22),
+      inset 0 -8px 14px rgba(70,10,18,.28);
+    transition: transform .15s cubic-bezier(.22,.61,.36,1), box-shadow .2s ease;
   }
 
-  /* footer band */
-  .foot{
-    padding: 12px 18px;
-    border-top: 1px solid #FFE9D6;
-    background: #FFFAF5;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap: 10px;
-    flex-wrap: wrap;
-    font-size: 12px;
-    color: #FF6B00;
+  .accept-btn:hover{ transform: translateY(-2px); }
+  .accept-btn:active{
+    transform: translateY(6px);
+    box-shadow: 0 2px 0 #6E1623, 0 6px 10px rgba(150,36,52,.28);
   }
-  .foot .badge{
-    border: 1px solid #FFD4A3;
-    background: #FFE9D6;
-    color: #b8530a;
-    padding: 6px 14px;
-    border-radius: 999px;
-    font-weight: 900;
+
+  .office{
+    margin-top: 16px;
+    text-align: center;
+    color: #8E7B7D;
+    font-size: 13px;
+  }
+
+  /* ═════ floating 3D props ═════ */
+  .decor-layer{ position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+  .decor-layer img{ position: absolute; display: block; opacity: .9; will-change: transform; }
+
+  @keyframes floatA{ 0%,100%{ transform: translate3d(0,0,0) rotate(0deg);} 50%{ transform: translate3d(4px,-16px,0) rotate(7deg);} }
+  @keyframes floatB{ 0%,100%{ transform: translate3d(0,0,0) rotate(0deg);} 50%{ transform: translate3d(-6px,-12px,0) rotate(-9deg);} }
+  @keyframes floatC{ 0%,100%{ transform: translate3d(0,0,0) rotate(-3deg);} 50%{ transform: translate3d(5px,-20px,0) rotate(5deg);} }
+
+  .d1 { left: 2%;  top: 2%;   width: 44px; animation: floatA 7.6s ease-in-out infinite; }
+  .d2 { right: 2%; top: 1%;   width: 50px; animation: floatB 8.6s ease-in-out infinite .5s; }
+  .d3 { left: 1%;  top: 32%;  width: 30px; animation: floatC 9.4s ease-in-out infinite 1s; }
+  .d4 { right: 1%; top: 26%;  width: 34px; animation: floatA 8.2s ease-in-out infinite 1.4s; }
+  .d5 { left: 2%;  top: 62%;  width: 40px; animation: floatB 9s   ease-in-out infinite .3s; }
+  .d6 { right: 2%; top: 70%;  width: 46px; animation: floatC 7.9s ease-in-out infinite 1.7s; }
+
+  @media (max-width: 420px){ .d3 { display: none; } }
+
+  @media (min-width: 900px){
+    .d1 { left: 11%; width: 58px; }
+    .d2 { right: 12%; width: 62px; }
+    .d3 { left: 8%;  width: 44px; }
+    .d4 { right: 9%; width: 48px; }
+    .d5 { left: 13%; width: 54px; }
+    .d6 { right: 11%; width: 60px; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .decor-layer img{ animation: none !important; }
+    .fold .chev{ transition: none; }
   }
 </style>
 
-<div class="ct-wrap">
-  <div class="paper">
-    <!-- TOP ACTIONS -->
-<div class="top-actions">
-  <a class="back-btn" href="{% url 'quick_loan' %}">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 6l-6 6 6 6"/></svg>
-    Back
-  </a>
+<div class="decor-layer" aria-hidden="true">
+  <img class="d1" src="{% static 'img/decor/coin.svg' %}" alt="">
+  <img class="d2" src="{% static 'img/decor/coin-edge.svg' %}" alt="">
+  <img class="d3" src="{% static 'img/decor/sphere.svg' %}" alt="">
+  <img class="d4" src="{% static 'img/decor/sphere.svg' %}" alt="">
+  <img class="d5" src="{% static 'img/decor/coin.svg' %}" alt="">
+  <img class="d6" src="{% static 'img/decor/coin-edge.svg' %}" alt="">
 </div>
-<div class="top-actions-line"></div>
 
-    <!-- HEADER -->
-    <div class="head">
-      <div class="head-inner">
+<div class="ct-wrap">
 
-        <div class="brand">
-          <div class="brand-logo">
-            {# ✅ later you will replace this file name with your logo #}
-            <img src="{% static 'img/logo.webp' %}" alt="Logo">
-          </div>
-          <div>
-            <div class="brand-title">LOAN CONTRACT</div>
-          </div>
-        </div>
+  <div class="ct-head">
+    <a class="back-btn" href="{% url 'quick_loan' %}">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 6l-6 6 6 6"/></svg>
+      Back
+    </a>
+    <h1 class="ct-title">Loan Contract Agreement</h1>
+  </div>
 
-        <div class="contact">
-          <div class="row"><b>Support:</b> <span class="muted">Company Department</span></div>
-        </div>
+  <div class="paper">
 
+    <h2 class="sec-label">Loan summary</h2>
+
+    <div class="summary">
+      <div class="row">
+        <div class="k">Amount of loan</div>
+        <div class="v">&#8369; {{ amount|floatformat:2|default:"0.00" }}</div>
+      </div>
+      <div class="row">
+        <div class="k">Interest rate</div>
+        <div class="v accent">{{ interest_rate|default:"0.5" }}%</div>
+      </div>
+      <div class="row">
+        <div class="k">Loan period</div>
+        <div class="v">{{ term_months|default:"—" }} months</div>
+      </div>
+      <div class="row">
+        <div class="k">Monthly repayment</div>
+        <div class="v">&#8369; {{ monthly_repayment|floatformat:2|default:"0.00" }}</div>
       </div>
     </div>
 
-    <!-- BODY -->
-    <div class="body">
+    <details class="fold" open>
+      <summary>Borrower Details <span class="chev" aria-hidden="true"></span></summary>
+      <div class="fold-body">
+        <div class="kv-line">Full name: <b>{{ full_name|default:"—" }}</b></div>
+        <div class="kv-line">Phone number: <b>{{ phone|default:"—" }}</b></div>
+        <div class="kv-line">Currently living: <b>{{ current_living|default:"—" }}</b></div>
+      </div>
+    </details>
 
-      <div class="top-grid">
-        <div class="box">
-          <h4>To</h4>
+    <details class="fold">
+      <summary>Lender Terms &amp; Disclosures <span class="chev" aria-hidden="true"></span></summary>
+      <div class="fold-body">
+        <p>The loan application is under review by the Financial department. You can track your
+          application status in Quick Loan.</p>
+        <p>This contract confirms the loan request and the repayment responsibilities under the
+          company policy. By continuing to use this service, you agree to the terms below.</p>
+        <p>Support is available from the Company Department, Monday&ndash;Sunday, 9:00 AM &ndash; 10:00 PM.</p>
+      </div>
+    </details>
 
-          <div class="kv">
-            <div class="k">Full name</div>
-            <div class="v">{{ full_name|default:"—" }}</div>
-
-            <div class="k">Phone number</div>
-            <div class="v">{{ phone|default:"—" }}</div>
-
-            <div class="k">Currently living</div>
-            <div class="v">{{ current_living|default:"—" }}</div>
-
-            <div class="k">Loan amount</div>
-            <div class="v">PHP {{ amount|floatformat:2|default:"0.00" }}</div>
-
-            <div class="k">Terms</div>
-            <div class="v">{{ term_months|default:"—" }} months</div>
-
-            <div class="k">Interest rate</div>
-            <div class="v">0.5%</div>
-
-            <div class="k">Monthly repayment</div>
-            <div class="v">PHP {{ monthly_repayment|floatformat:2|default:"0.00" }}</div>
-          </div>
+    <details class="fold">
+      <summary>Legal Agreement Terms <span class="chev" aria-hidden="true"></span></summary>
+      <div class="fold-body">
+        <div class="scroll-terms">
+          <p><b>1) Loan Details:</b> The borrower requests the loan amount and term shown above.
+            The monthly repayment shown is a calculated estimate based on the current interest rate.</p>
+          <p><b>2) Repayment:</b> The borrower must repay on time according to the repayment schedule
+            provided in the system. Late payments may result in account restrictions or additional
+            verification.</p>
+          <p><b>3) Verification:</b> The company may request additional documents at any time for
+            security, risk checks, or compliance purposes.</p>
+          <p><b>4) Communication:</b> Important notices can be sent to your notifications section.
+            Please check regularly.</p>
         </div>
       </div>
+    </details>
 
-      <div class="sep"></div>
-
-      <div class="subject">SUBJECT: LOAN CONTRACT AGREEMENT.</div>
-
-      <div class="para">
-        Dear <b>{{ full_name|default:"Client" }}</b>,
+    <div class="sig-card">
+      <div class="sig-head">
+        <h2 class="sec-label">Borrower signature</h2>
+        <span class="sig-note">From your application</span>
       </div>
 
-      <div class="para muted">
-        The loan application now is under review by the Financial department. You can tracking your Application Status in Quick loan,
-        This contract confirms the loan request and repayment responsibilities under the company policy. By continuing to use this service, you agree to the terms below.
+      <div class="sig-box">
+        {% if signature_url %}
+          <img src="{{ signature_url }}" alt="Borrower signature">
+        {% else %}
+          <div class="sig-empty">No signature yet.<br>Draw it on the last step of your loan application.</div>
+        {% endif %}
       </div>
-
-      <div class="para">
-        <b>1) Loan Details:</b> The borrower requests the loan amount and term shown above. The monthly repayment shown is a calculated estimate based on the current interest rate.
-      </div>
-
-      <div class="para">
-        <b>2) Repayment:</b> The borrower must repay on time according to the repayment schedule provided in the system. Late payments may result in account restrictions or additional verification.
-      </div>
-
-      <div class="para">
-        <b>3) Verification:</b> The company may request additional documents at any time for security, risk checks, or compliance purposes.
-      </div>
-
-      <div class="para">
-        <b>4) Communication:</b> Important notices can be sent to your notifications section. Please check regularly.
-      </div>
-
-      <div class="para">
-        Thank you for using our service.
-      </div>
-
-      <div class="sig">
-        <div class="para" style="margin:0;"><b>Sincerely,</b></div>
-        <div class="line"></div>
-        <div class="muted" style="font-size:12px;">Authorized Company Signature</div>
-      </div>
-
     </div>
 
-    <!-- FOOTER -->
-    <div class="foot">
-      <div class="badge">Office Hours</div>
-      <div class="muted">Monday–Sunday: 9:00 AM – 10:00 PM</div>
-    </div>
+    <a class="accept-btn" href="{% url 'dashboard' %}">
+      <span>Sign &amp; Accept Contract</span>
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-7-7l7 7-7 7"/></svg>
+    </a>
+
+    <div class="office">Office hours &nbsp;&middot;&nbsp; Monday&ndash;Sunday, 9:00 AM &ndash; 10:00 PM</div>
 
   </div>
 </div>

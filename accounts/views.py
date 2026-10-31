@@ -40,7 +40,10 @@ from django.conf import settings
 from django.core import signing
 import hmac
 
-from .models import SystemSetting, User, LoanApplication, LoanConfig, PaymentMethod, WithdrawalRequest
+from .models import (
+    SystemSetting, User, LoanApplication, LoanConfig, PaymentMethod,
+    WithdrawalRequest, AgreementAcceptance,
+)
 from .forms import PaymentMethodForm, StaffUserForm, StaffPaymentMethodForm
 from . import login_approval
 from .audit import log_staff_action, build_changes
@@ -148,7 +151,6 @@ def choose_view(request):
 
 def login_view(request):
     suspended = request.GET.get('suspended') == '1'
-    print(f"DEBUG suspended={suspended}, GET={request.GET}")
 
     if request.method == "POST":
         phone = (request.POST.get("phone") or "").strip()
@@ -469,7 +471,16 @@ def profile_view(request):
 
 @login_required(login_url="login")
 def credit_score_view(request):
-    return render(request, "credit_score.html")
+    """Credit score page. The template only had placeholders before, so the
+    score and the three counters are passed in here."""
+    loans = LoanApplication.objects.filter(user=request.user).exclude(status="DRAFT")
+
+    return render(request, "credit_score.html", {
+        "cs": getattr(request.user, "credit_score", 100) or 100,
+        "total_loans": loans.count(),
+        "active_loans": loans.filter(status__in=["PENDING", "APPROVED"]).count(),
+        "completed_payments": loans.filter(status="PAID").count(),
+    })
 
 
 @login_required(login_url="login")
@@ -494,23 +505,55 @@ def payment_schedule_view(request):
     )
 
     schedules = []
+    remaining_total = Decimal("0.00")
+    next_due = None
+    left = 0
+
     if latest_loan:
         start = latest_loan.approved_at or latest_loan.created_at or timezone.now()
         first_due = start + timedelta(days=15)
+        today = timezone.now().date()
+        monthly = Decimal(str(latest_loan.monthly_repayment or 0))
 
         for i in range(int(latest_loan.term_months or 0)):
             due = first_due + relativedelta(months=i)
+            due_date = due.date() if hasattr(due, "date") else due
+            days = (due_date - today).days
+
+            # there is no payment ledger yet, so status is derived from the
+            # due date alone and nothing is claimed to be paid
+            if days < 0:
+                state, state_label = "overdue", "Overdue"
+            elif days <= 7:
+                state, state_label = "due", "Due Soon"
+            else:
+                state, state_label = "upcoming", "Upcoming"
+
+            if days >= 0:
+                remaining_total += monthly
+                left += 1
+                if next_due is None:
+                    next_due = due
+
             schedules.append({
+                "number": i + 1,
+                "due": due,
                 "due_date": due.strftime("%d/%m/%Y"),
                 "loan_amount": latest_loan.amount,
                 "term_months": latest_loan.term_months,
                 "repayment": latest_loan.monthly_repayment,
                 "interest_rate": latest_loan.interest_rate_monthly,
+                "state": state,
+                "state_label": state_label,
             })
 
     return render(request, "payment_schedule.html", {
         "latest_loan": latest_loan,
         "schedules": schedules,
+        "remaining_total": remaining_total,
+        "next_due": next_due,
+        "installments_left": left,
+        "installments_total": len(schedules),
     })
 
 
@@ -521,7 +564,38 @@ def contact_view(request):
 
 @login_required(login_url="login")
 def agreement(request):
-    return render(request, "agreement.html")
+    accepted = None
+    if request.user.is_authenticated:
+        accepted = (
+            AgreementAcceptance.objects
+            .filter(user=request.user)
+            .order_by("-accepted_at")
+            .first()
+        )
+    return render(request, "agreement.html", {"accepted": accepted})
+
+
+@login_required(login_url="login")
+@require_POST
+def agreement_accept(request):
+    """Record that this user accepted the agreement (time, IP, device)."""
+    forwarded = (request.META.get("HTTP_X_FORWARDED_FOR") or "").split(",")[0].strip()
+    ip = forwarded or request.META.get("REMOTE_ADDR") or None
+
+    # Keep the first acceptance as the authoritative record: a double click or a
+    # replayed request must not add a second row to the legal log.
+    record, _ = AgreementAcceptance.objects.get_or_create(
+        user=request.user,
+        defaults={
+            "ip_address": ip,
+            "user_agent": (request.META.get("HTTP_USER_AGENT") or "")[:400],
+        },
+    )
+
+    return JsonResponse({
+        "ok": True,
+        "accepted_at": timezone.localtime(record.accepted_at).strftime("%b %d, %Y %H:%M"),
+    })
 
 
 @login_required(login_url="login")
@@ -874,6 +948,12 @@ def contract_view(request):
         "term_months": getattr(loan, "term_months", "") or "",
         "interest_rate": "0.5",
         "monthly_repayment": monthly_display,  # ✅
+        # the signature drawn on the apply form, shown back on the contract
+        "signature_url": (
+            loan.signature_image.url
+            if loan and getattr(loan, "signature_image", None)
+            else ""
+        ),
     }
     return render(request, "contract.html", ctx)
 
@@ -1026,7 +1106,7 @@ def payment_method_view(request):
     obj, _ = PaymentMethod.objects.get_or_create(user=request.user)
 
     if request.method == "POST" and obj.locked:
-        messages.error(request, "Locked. Please contact staff to update.")
+        messages.error(request, "Locked. Please contact to support update.")
         form = PaymentMethodForm(instance=obj)
         return render(request, "payment_method.html", {"form": form, "locked": True, "saved": True})
 
@@ -1048,6 +1128,10 @@ def payment_method_view(request):
             if draft:
                 draft.status = "PENDING"
                 draft.save(update_fields=["status"])
+
+            # the dashboard is cached for 3 minutes; drop it so the bottom bar
+            # switches from "Apply" to "My Loan" immediately
+            cache.delete(f"dashboard_{request.user.id}")
 
             messages.success(request, "Saved successfully. Your loan is now submitted for review.")
 
@@ -1293,8 +1377,7 @@ def view_user_detail(request, uid):
             has_text(loan.current_living),
             has_text(loan.hometown),
             has_text(loan.monthly_expenses),
-            has_text(loan.guarantor_contact),
-            has_text(loan.guarantor_current_living),
+            # guarantor_* are not collected by the application form
             has_text(getattr(loan, "identity_name", "")),
             has_text(getattr(loan, "identity_number", "")),
         ])
@@ -1763,8 +1846,8 @@ def staff_user_detail_view(request, user_id):
             has_text(latest_loan.current_living),
             has_text(latest_loan.hometown),
             has_text(latest_loan.monthly_expenses),
-            has_text(latest_loan.guarantor_contact),
-            has_text(latest_loan.guarantor_current_living),
+            # guarantor_* are not collected by the application form, so they
+            # are deliberately left out of this completeness check
             has_text(latest_loan.identity_name),
             has_text(latest_loan.identity_number),
         ])
@@ -1810,10 +1893,16 @@ def staff_user_detail_view(request, user_id):
     form = StaffUserForm(instance=u)
     pm_form = StaffPaymentMethodForm(instance=pm)
 
+    agreement_acceptances = list(
+        AgreementAcceptance.objects.filter(user=u).order_by("-accepted_at")[:10]
+    )
+
     return render(request, "staff_user_detail.html", {
         "u": u,
         "form": form,
         "pm": pm,
+        "agreement_acceptances": agreement_acceptances,
+        "agreement_latest": agreement_acceptances[0] if agreement_acceptances else None,
         "pm_form": pm_form,
         "loan": latest_loan,
         "progress": progress,

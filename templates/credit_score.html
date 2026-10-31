@@ -1,374 +1,355 @@
 {% extends "base.html" %}
+{% load static %}
 {% block title %}Credit Score{% endblock %}
 
 {% block content %}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
 <style>
-.cs-page, .cs-page * {
-  font-family: "Outfit", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-}
+  /* ═════════════════════════════════════════════════════════
+     Credit score — dark cherry hero + light sheet
+     The score owns the top of the screen; everything else
+     sits on a pale sheet that rides up over it.
+     ═════════════════════════════════════════════════════════ */
+  body{
+    background: #FBF4F2 !important;
+    padding-bottom: 0 !important;
+  }
 
-/* Page layout */
-.wrap {
-  align-items: flex-start;
-  justify-content: center;
-  padding-top: 28px;
-  padding-bottom: 40px;
-}
+  #pageRoot.wrap{
+    max-width: 100% !important;
+    width: 100% !important;
+    padding: 0 !important;
+    display: block !important;
+  }
 
-@media(max-width:480px) {
-  .wrap { padding-top: 18px; }
-}
+  .cs-page{
+    position: relative;
+    min-height: 100vh;
+    font-family: "Outfit", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    background: #FBF4F2;
+    overflow-x: hidden;
+  }
 
-/* Page wrapper */
-.cs-page {
-  width: min(480px, 94vw);
-  max-width: 480px;
-  margin: 0 auto;
-  box-sizing: border-box;
-}
+  .cs-page *{ box-sizing: border-box; }
 
-/* Main card */
-.cs-card {
-  width: 100%;
-  box-sizing: border-box;
-  position: relative;
-  overflow: hidden;
-  background: #ffffff;
-  border-radius: 22px;
-  border: 1.5px solid #FFD4A3;
-  border-top: 4px solid #FF6B00;
-  box-shadow: 0 8px 28px rgba(255,107,0,.14), 0 2px 8px rgba(0,0,0,.04);
-  padding: 24px 20px;
-  color: #1a1a1a;
-  animation: cardSwipe 0.5s ease both;
-  margin-bottom: 16px;
-}
+  /* ── Hero ── */
+  .cs-hero{
+    position: relative;
+    padding: 34px 20px 64px;
+    background:
+      radial-gradient(120% 90% at 18% 6%, rgba(255,255,255,.16) 0%, transparent 55%),
+      radial-gradient(90% 70% at 100% 0%, rgba(255,170,120,.16) 0%, transparent 60%),
+      linear-gradient(170deg, #6E1222 0%, #8E1E31 46%, #A6263C 100%);
+    border-radius: 0 0 40px 40px;
+    box-shadow: 0 22px 44px rgba(90,14,28,.34);
+    overflow: hidden;
+  }
 
-@keyframes cardSwipe {
-  from { opacity: 0; transform: translateY(20px) scale(0.98); }
-  to   { opacity: 1; transform: translateY(0) scale(1); }
-}
+  .cs-hero-inner{
+    position: relative;
+    z-index: 2;
+    width: min(480px, 100%);
+    margin: 0 auto;
+    text-align: center;
+  }
 
-/* Header */
-.cs-header { text-align: center; margin-bottom: 4px; }
+  .cs-title{
+    padding-top: 10px;
+    color: #FFFFFF;
+    font-size: 30px;
+    font-weight: 800;
+    letter-spacing: -.7px;
+  }
 
-.cs-title {
-  font-size: 18px;
-  font-weight: 800;
-  color: #1a1a1a;
-  margin-bottom: 4px;
-}
+  .cs-subtitle{
+    margin-top: 4px;
+    color: rgba(255,228,232,.80);
+    font-size: 16px;
+  }
 
-.cs-subtitle {
-  font-size: 13px;
-  color: #9a9a9a;
-}
+  /* ── Gauge ── */
+  .cs-gauge-wrap{
+    position: relative;
+    width: 232px;
+    height: 232px;
+    margin: 18px auto 0;
+  }
 
-/* Donut gauge */
-.cs-gauge-wrap {
-  position: relative;
-  width: 220px;
-  height: 220px;
-  margin: 14px auto 6px;
-}
+  .cs-gauge-svg{ width: 100%; height: 100%; display: block; }
 
-.cs-gauge-svg {
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-}
+  .cs-gauge-bg{
+    fill: none;
+    stroke: rgba(255,255,255,.14);
+    stroke-width: 16;
+  }
 
-.cs-gauge-bg {
-  fill: none;
-  stroke: #FFE9D6;
-  stroke-width: 16;
-}
+  .cs-gauge-inner{ fill: rgba(255,255,255,.06); }
 
-.cs-gauge-fill {
-  fill: none;
-  stroke-width: 16;
-  stroke-linecap: round;
-  transition: stroke-dashoffset 1s ease-out, stroke 0.5s ease;
-}
+  .cs-gauge-fill{
+    fill: none;
+    stroke-width: 16;
+    stroke-linecap: round;
+    filter: drop-shadow(0 0 12px rgba(255,138,158,.55));
+    transition: stroke-dashoffset 1.2s cubic-bezier(.22,.61,.36,1);
+  }
 
-.cs-gauge-fill.red {
-  filter: drop-shadow(0 4px 12px rgba(198,40,40,.35));
-}
+  .cs-gauge-fill.green{ filter: drop-shadow(0 0 12px rgba(74,222,128,.5)); }
 
-.cs-gauge-fill.green {
-  filter: drop-shadow(0 4px 12px rgba(34,197,94,.35));
-}
+  .cs-score-wrap{
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+  }
 
-/* Center score (now centered inside the full ring) */
-.cs-score-wrap {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
+  .cs-score-number{
+    color: #FFFFFF;
+    font-size: 58px;
+    font-weight: 800;
+    letter-spacing: -2.5px;
+    line-height: 1;
+  }
 
-.cs-score-number {
-  font-size: 36px;
-  font-weight: 900;
-  line-height: 1;
-  transition: color 0.5s ease;
-}
+  .cs-score-max{
+    margin-top: 4px;
+    color: rgba(255,222,228,.75);
+    font-size: 19px;
+    font-weight: 700;
+  }
 
-.cs-score-number.red { color: #e53935; }
-.cs-score-number.green { color: #16a34a; }
+  .cs-status{
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    margin-top: 16px;
+    padding: 10px 22px;
+    border-radius: 999px;
+    color: #FFFFFF;
+    font-size: 15px;
+    font-weight: 800;
+    background: rgba(255,255,255,.14);
+    border: 1px solid rgba(255,255,255,.24);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
 
-.cs-score-max {
-  font-size: 13px;
-  color: #9a9a9a;
-  font-weight: 600;
-  margin-top: 2px;
-}
+  .cs-status-icon{ font-size: 13px; color: #FF93A6; }
+  .cs-status.green .cs-status-icon{ color: #6EE7A8; }
 
-/* Status Badge */
-.cs-status {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 7px 16px;
-  border-radius: 999px;
-  font-size: 13px;
-  font-weight: 800;
-  margin: 4px auto 18px;
-  transition: all 0.5s ease;
-}
+  /* ── Sheet ── */
+  .cs-sheet{
+    position: relative;
+    z-index: 3;
+    width: min(480px, 94vw);
+    margin: -34px auto 0;
+    padding: 26px 20px calc(40px + env(safe-area-inset-bottom));
+    background: #FBF4F2;
+    border-radius: 34px 34px 0 0;
+  }
 
-.cs-status.red {
-  background: #ffebee;
-  border: 1px solid rgba(198,40,40,.3);
-  color: #c62828;
-}
+  /* scale */
+  .cs-scale-bar{
+    height: 9px;
+    border-radius: 999px;
+    overflow: hidden;
+    background: linear-gradient(90deg,
+      #B4213A 0%, #B4213A 20%,
+      #EFD9B6 20%, #EFD9B6 50%,
+      #A8D8B9 50%, #A8D8B9 100%);
+    box-shadow: inset 0 1px 3px rgba(150,90,95,.20);
+  }
 
-.cs-status.green {
-  background: #dcfce7;
-  border: 1px solid rgba(22,163,74,.3);
-  color: #16a34a;
-}
+  .cs-scale{
+    display: flex;
+    justify-content: space-between;
+    margin: 9px 2px 20px;
+  }
 
-.cs-status-icon { font-size: 14px; }
+  .cs-scale-label{ color: #6E5054; font-size: 13.5px; font-weight: 700; }
 
-/* Scale bar (replaces tick marks) */
-.cs-scale-bar {
-  height: 6px;
-  border-radius: 999px;
-  background: linear-gradient(90deg, #e53935 0%, #e53935 20%, #FFD4A3 20%, #FFD4A3 50%, #22c55e 50%, #22c55e 100%);
-  margin: 0 4px 8px;
-}
-.cs-scale {
-  display: flex;
-  justify-content: space-between;
-  padding: 0 2px;
-  margin-bottom: 18px;
-}
+  /* message */
+  .cs-message{
+    border-radius: 22px;
+    border-left: 5px solid #A62F38;
+    padding: 18px 20px;
+    margin-bottom: 16px;
+    background: #FFFFFF;
+    box-shadow: 0 10px 22px rgba(120,70,70,.10);
+  }
 
-.cs-scale-label {
-  font-size: 11px;
-  font-weight: 700;
-  color: #9a9a9a;
-}
-.cs-scale-label.danger { color: #e53935; }
-.cs-scale-label.safe { color: #16a34a; }
+  .cs-message.green{ border-left-color: #16A34A; }
 
-/* Info Message */
-.cs-message {
-  padding: 14px;
-  border-radius: 14px;
-  margin: 0 0 16px;
-  text-align: left;
-  transition: all 0.5s ease;
-}
+  .cs-message-title{
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    color: #5C1522;
+    font-size: 19px;
+    font-weight: 800;
+    margin-bottom: 6px;
+  }
 
-.cs-message.red {
-  background: #ffebee;
-  border-left: 4px solid #e53935;
-  color: #c62828;
-}
+  .cs-message.green .cs-message-title{ color: #15803D; }
+  .cs-message-text{ color: #4A3438; font-size: 15px; line-height: 1.55; }
 
-.cs-message.green {
-  background: #dcfce7;
-  border-left: 4px solid #16a34a;
-  color: #16a34a;
-}
+  /* stats */
+  .cs-stats{
+    display: flex;
+    align-items: center;
+    border-radius: 22px;
+    padding: 18px 10px;
+    margin-bottom: 20px;
+    background: #FFFFFF;
+    box-shadow: 0 10px 22px rgba(120,70,70,.10);
+  }
 
-.cs-message-title {
-  font-size: 14px;
-  font-weight: 800;
-  margin-bottom: 4px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
+  .cs-stat{ flex: 1; text-align: center; }
+  .cs-stat + .cs-stat{ border-left: 1px solid rgba(150,90,95,.16); }
+  .cs-stat-value{ color: #5C1522; font-size: 32px; font-weight: 800; line-height: 1; }
+  .cs-stat-label{ margin-top: 7px; color: #6E5054; font-size: 14px; font-weight: 600; }
 
-.cs-message-text {
-  font-size: 12px;
-  line-height: 1.5;
-  color: inherit;
-  opacity: .85;
-}
+  /* actions */
+  .cs-actions{ display: flex; gap: 12px; }
 
-/* Stats strip (single grouped panel with dividers, not 3 separate boxes) */
-.cs-stats {
-  display: flex;
-  align-items: center;
-  background: #FFFAF5;
-  border: 1px solid #FFE9D6;
-  border-radius: 14px;
-  margin-bottom: 18px;
-  overflow: hidden;
-}
+  .cs-btn{
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    height: 58px;
+    border: 0;
+    border-radius: 999px;
+    text-decoration: none;
+    font-size: 17px;
+    font-weight: 800;
+    transition: transform .15s cubic-bezier(.22,.61,.36,1), box-shadow .2s ease;
+  }
 
-.cs-stat {
-  flex: 1;
-  text-align: center;
-  padding: 14px 6px;
-  position: relative;
-}
-.cs-stat + .cs-stat::before {
-  content: "";
-  position: absolute;
-  left: 0; top: 14px; bottom: 14px;
-  width: 1px;
-  background: #FFE9D6;
-}
+  .cs-btn svg{ width: 18px; height: 18px; }
 
-.cs-stat-value {
-  font-size: 17px;
-  font-weight: 800;
-  color: #FF6B00;
-  margin-bottom: 3px;
-}
+  .cs-btn-ghost{
+    background: linear-gradient(180deg, #FFFFFF 0%, #FBF0F0 100%);
+    color: #8A2129;
+    box-shadow: 0 6px 0 #E6D2D2, 0 14px 20px rgba(140,80,85,.18), inset 0 2px 2px #fff;
+  }
 
-.cs-stat-label {
-  font-size: 10.5px;
-  color: #9a9a9a;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  font-weight: 700;
-}
+  .cs-btn-ghost:hover{ transform: translateY(-2px); }
+  .cs-btn-ghost:active{ transform: translateY(4px); box-shadow: 0 2px 0 #E6D2D2, 0 6px 10px rgba(140,80,85,.16); }
 
-/* Actions */
-.cs-actions {
-  display: flex;
-  gap: 12px;
-}
+  .cs-btn-primary{
+    background: linear-gradient(180deg, #B13445 0%, #9C2838 55%, #8C2030 100%);
+    color: #fff;
+    box-shadow:
+      0 8px 0 #6E1623,
+      0 18px 26px rgba(150,36,52,.34),
+      inset 0 2px 4px rgba(255,255,255,.22),
+      inset 0 -8px 14px rgba(70,10,18,.28);
+  }
 
-.cs-btn {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  padding: 14px 16px;
-  border-radius: 999px;
-  font-size: 14px;
-  font-weight: 700;
-  text-decoration: none;
-  transition: all 0.2s ease;
-  cursor: pointer;
-  border: none;
-}
-.cs-btn svg{ width: 15px; height: 15px; }
+  .cs-btn-primary:hover{ transform: translateY(-2px); }
+  .cs-btn-primary:active{ transform: translateY(6px); box-shadow: 0 2px 0 #6E1623, 0 6px 10px rgba(150,36,52,.28); }
 
-.cs-btn-primary {
-  background: linear-gradient(135deg, #FF6B00, #FF8A33);
-  color: #ffffff;
-  box-shadow: 0 8px 22px rgba(255,107,0,.32);
-}
+  /* ── coins, floating over the dark hero ── */
+  .cs-coins{ position: absolute; inset: 0; z-index: 1; pointer-events: none; overflow: hidden; }
+  .cs-coins img{ position: absolute; display: block; opacity: .95; will-change: transform; }
 
-.cs-btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 26px rgba(255,107,0,.40);
-}
+  @keyframes floatA{ 0%,100%{ transform: translate3d(0,0,0) rotate(0deg);} 50%{ transform: translate3d(4px,-16px,0) rotate(8deg);} }
+  @keyframes floatB{ 0%,100%{ transform: translate3d(0,0,0) rotate(0deg);} 50%{ transform: translate3d(-6px,-12px,0) rotate(-10deg);} }
+  @keyframes floatC{ 0%,100%{ transform: translate3d(0,0,0) rotate(-3deg);} 50%{ transform: translate3d(5px,-20px,0) rotate(6deg);} }
 
-.cs-btn-ghost {
-  background: #ffffff;
-  color: #FF6B00;
-  border: 1.5px solid #FFD4A3;
-}
+  .k1{ left: 4%;  top: 14%; width: 46px; animation: floatA 7.6s ease-in-out infinite; }
+  .k2{ right: 5%; top: 9%;  width: 34px; animation: floatB 8.6s ease-in-out infinite .5s; }
+  .k3{ left: 9%;  bottom: 12%; width: 30px; animation: floatC 9.4s ease-in-out infinite 1s; }
+  .k4{ right: 7%; bottom: 16%; width: 42px; animation: floatA 8.2s ease-in-out infinite 1.4s; }
 
-.cs-btn-ghost:hover {
-  transform: translateY(-2px);
-  background: #FFF3E9;
-}
+  @media (max-width: 400px){ .k3{ display: none; } }
 
-.cs-btn:active {
-  transform: scale(0.98);
-}
+  @media (min-width: 900px){
+    .k1{ left: 20%; width: 58px; }
+    .k2{ right: 20%; width: 44px; }
+    .k3{ left: 25%; width: 40px; }
+    .k4{ right: 24%; width: 52px; }
+  }
 
-/* Responsive */
-@media(max-width:480px) {
-  .cs-card { padding: 20px 16px; }
-  .cs-gauge-wrap { width: 190px; height: 190px; }
-  .cs-score-number { font-size: 30px; }
-}
+  @media (prefers-reduced-motion: reduce){
+    .cs-coins img{ animation: none !important; }
+    .cs-gauge-fill{ transition: none; }
+  }
 </style>
-
-{% with cs=request.user.credit_score|default:100 %}
-{% with score_int=cs|add:0 %}
 
 <div class="cs-page">
 
-  <div class="cs-card">
+  <div class="cs-hero">
+    <div class="cs-coins" aria-hidden="true">
+      <img class="k1" src="{% static 'img/decor/coin.svg' %}" alt="">
+      <img class="k2" src="{% static 'img/decor/coin-edge.svg' %}" alt="">
+      <img class="k3" src="{% static 'img/decor/coin-edge.svg' %}" alt="">
+      <img class="k4" src="{% static 'img/decor/coin.svg' %}" alt="">
+    </div>
 
-    <!-- Header -->
-    <div class="cs-header">
+    <div class="cs-hero-inner">
       <div class="cs-title">Credit Score</div>
       <div class="cs-subtitle">Your financial health status</div>
-    </div>
 
-    <!-- Donut Gauge -->
-    <div class="cs-gauge-wrap">
-      <svg class="cs-gauge-svg" viewBox="0 0 200 200">
-        <circle class="cs-gauge-bg" cx="100" cy="100" r="84" />
-        <circle id="gaugeFill" class="cs-gauge-fill" cx="100" cy="100" r="84" transform="rotate(-90 100 100)" />
-      </svg>
+      <div class="cs-gauge-wrap">
+        <svg class="cs-gauge-svg" viewBox="0 0 200 200">
+          <defs>
+            <linearGradient id="gaugeGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#FFB0BE"/>
+              <stop offset="50%" stop-color="#FF7A8F"/>
+              <stop offset="100%" stop-color="#E23D57"/>
+            </linearGradient>
+            <linearGradient id="gaugeGradOk" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#9FF3C4"/>
+              <stop offset="100%" stop-color="#22C55E"/>
+            </linearGradient>
+          </defs>
+          <circle class="cs-gauge-inner" cx="100" cy="100" r="70" />
+          <circle class="cs-gauge-bg" cx="100" cy="100" r="84" />
+          <circle id="gaugeFill" class="cs-gauge-fill" cx="100" cy="100" r="84" transform="rotate(-90 100 100)" />
+        </svg>
 
-      <!-- Center Score -->
-      <div class="cs-score-wrap">
-        <span id="scoreNumber" class="cs-score-number">{{ cs }}</span>
-        <span class="cs-score-max">/ 500</span>
+        <div class="cs-score-wrap">
+          <span id="scoreNumber" class="cs-score-number">{{ cs }}</span>
+          <span class="cs-score-max">/ 500</span>
+        </div>
       </div>
-    </div>
 
-    <!-- Status Badge -->
-    <div style="text-align:center;">
       <div id="statusBadge" class="cs-status">
-        <span class="cs-status-icon">●</span>
-        <span id="statusText">Checking...</span>
+        <span class="cs-status-icon">&#9679;</span>
+        <span id="statusText">Low Score</span>
       </div>
     </div>
+  </div>
 
-    <!-- Scale bar -->
+  <div class="cs-sheet">
+
     <div class="cs-scale-bar"></div>
     <div class="cs-scale">
-      <span class="cs-scale-label danger">0</span>
-      <span class="cs-scale-label danger">100</span>
+      <span class="cs-scale-label">0</span>
+      <span class="cs-scale-label">100</span>
       <span class="cs-scale-label">250</span>
-      <span class="cs-scale-label safe">500</span>
+      <span class="cs-scale-label">500</span>
     </div>
 
-    <!-- Info Message -->
     <div id="infoMessage" class="cs-message">
       <div class="cs-message-title">
-        <span id="messageIcon">ℹ</span>
-        <span id="messageTitle">Analyzing...</span>
+        <span id="messageIcon">&#9888;</span>
+        <span id="messageTitle">Needs Improvement</span>
       </div>
       <div id="messageText" class="cs-message-text">Please wait while we calculate your score.</div>
     </div>
 
-    <!-- Stats -->
     <div class="cs-stats">
       <div class="cs-stat">
-        <div class="cs-stat-value">{{ request.user.loan_set.count|default:0 }}</div>
+        <div class="cs-stat-value">{{ total_loans|default:0 }}</div>
         <div class="cs-stat-label">Loans</div>
       </div>
       <div class="cs-stat">
@@ -381,7 +362,6 @@
       </div>
     </div>
 
-    <!-- Actions -->
     <div class="cs-actions">
       <a class="cs-btn cs-btn-ghost" href="/profile/">Back</a>
       <a class="cs-btn cs-btn-primary" href="/dashboard/">
@@ -398,39 +378,29 @@
   const creditScore = parseInt("{{ cs }}") || 100;
   const maxScore = 500;
 
-  // Elements
-  const gaugeFill = document.getElementById('gaugeFill');
+  const gaugeFill   = document.getElementById('gaugeFill');
   const scoreNumber = document.getElementById('scoreNumber');
   const statusBadge = document.getElementById('statusBadge');
-  const statusText = document.getElementById('statusText');
+  const statusText  = document.getElementById('statusText');
   const infoMessage = document.getElementById('infoMessage');
   const messageIcon = document.getElementById('messageIcon');
-  const messageTitle = document.getElementById('messageTitle');
+  const messageTitle= document.getElementById('messageTitle');
   const messageText = document.getElementById('messageText');
 
-  // Calculate ring circumference from its actual radius (full circle gauge)
-  const r = parseFloat(gaugeFill.getAttribute('r')) || 84;
-  const arcLength = 2 * Math.PI * r;
+  const radius = 84;
+  const arcLength = 2 * Math.PI * radius;
+  const pct = Math.max(0, Math.min(1, creditScore / maxScore));
+  const offset = arcLength - (arcLength * pct);
+
   gaugeFill.style.strokeDasharray = String(arcLength);
   gaugeFill.style.strokeDashoffset = String(arcLength);
 
-  const percentage = Math.min(creditScore / maxScore, 1);
-  const offset = arcLength - (arcLength * percentage);
+  const isGood = creditScore > 250;
+  const colorClass = isGood ? 'green' : 'red';
 
-  // Determine color based on score
-  // 0-100 = RED, 101-500 = GREEN
-  const isRed = creditScore <= 100;
-  const colorClass = isRed ? 'red' : 'green';
-
-  // Set messages based on score
   let statusMsg, msgIcon, msgTitle, msgDesc;
 
-  if (creditScore <= 50) {
-    statusMsg = 'Critical';
-    msgIcon = '⚠';
-    msgTitle = 'Critical Score';
-    msgDesc = 'Your credit score is critically low. Immediate action is required to improve your financial standing.';
-  } else if (creditScore <= 100) {
+  if (creditScore <= 100) {
     statusMsg = 'Low Score';
     msgIcon = '⚠';
     msgTitle = 'Needs Improvement';
@@ -452,32 +422,22 @@
     msgDesc = 'Outstanding! Your credit score is excellent. You qualify for the best rates and highest limits.';
   }
 
-  // Apply styling
+  scoreNumber.textContent = String(creditScore);
   scoreNumber.className = 'cs-score-number ' + colorClass;
   statusBadge.className = 'cs-status ' + colorClass;
   infoMessage.className = 'cs-message ' + colorClass;
   gaugeFill.classList.add('cs-gauge-fill', colorClass);
 
-  // Set gauge color
-  if (isRed) {
-    gaugeFill.style.stroke = '#e53935';
-  } else {
-    gaugeFill.style.stroke = '#16a34a';
-  }
+  gaugeFill.style.stroke = isGood ? 'url(#gaugeGradOk)' : 'url(#gaugeGrad)';
 
-  // Animate gauge fill
-  setTimeout(() => {
+  setTimeout(function () {
     gaugeFill.style.strokeDashoffset = String(offset);
   }, 300);
 
-  // Set text content
   statusText.textContent = statusMsg;
   messageIcon.textContent = msgIcon;
   messageTitle.textContent = msgTitle;
   messageText.textContent = msgDesc;
 })();
 </script>
-
-{% endwith %}
-{% endwith %}
 {% endblock %}
