@@ -875,6 +875,7 @@
     ];
     let i = 0;
     let placeToken = 0;
+    let currentEl = null;
 
     steps.forEach((_, idx) => {
       const d = document.createElement('i');
@@ -918,6 +919,7 @@
     function place(){
       const el = document.querySelector(steps[i].sel);
       if(!el){ next(); return; }
+      currentEl = el;
       el.scrollIntoView({ block: 'center', behavior: 'smooth' });
 
       // Draw only once the target stops moving: the card animates in, the
@@ -951,7 +953,11 @@
     btnNext.addEventListener('click', next);
     btnBack.addEventListener('click', back);
     btnSkip.addEventListener('click', end);
-    window.addEventListener('resize', () => { if (overlay.classList.contains('show')) place(); });
+    // The smooth scroll can still be running when the step is first drawn, so
+    // keep the spotlight on its field whenever the page moves under it.
+    function follow(){ if (overlay.classList.contains('show') && currentEl) draw(currentEl); }
+    window.addEventListener('scroll', follow, { passive: true });
+    window.addEventListener('resize', follow);
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && overlay.classList.contains('show')) end(); });
 
     let seen = false;
