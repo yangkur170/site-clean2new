@@ -371,8 +371,8 @@
       go.addEventListener("click", function(){ lsSet(ACTIVE_KEY, "1"); }); // carry into next page
 
       run([
-        { sel: "#qAmount", text: "Enter how much you want to borrow (₱80,000 – ₱5,000,000).",
-          done: function(){ var v = Number(val("#qAmount")); return v >= 80000 && v <= 5000000; } },
+        { sel: "#qAmount", text: "Enter how much you want to borrow (₱50,000 – ₱5,000,000).",
+          done: function(){ var v = Number(val("#qAmount")); return v >= 50000 && v <= 5000000; } },
         { sel: ".term-grid", text: "Choose how many months to repay.",
           done: function(){ return val("#qTerm") !== ""; } },
         { sel: "#goApply", text: "Tap Continue to start your application.", done: null }

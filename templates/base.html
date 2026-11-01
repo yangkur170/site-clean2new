@@ -4,8 +4,33 @@
 <head>
 <meta charset="UTF-8">
 <meta name="google" content="notranslate">
-<link rel="icon" type="image/png" href="{% static 'img/logo.webp' %}?v=3">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+<title>{% block title %}perabridgeph{% endblock %}</title>
+<meta name="description" content="{% block meta_description %}Fast, secure personal loans in the Philippines from PHP 50,000 to PHP 5,000,000, with approval in as little as 24 hours.{% endblock %}">
+<link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}">
+
+<link rel="icon" type="image/png" href="{% static 'img/favicon-pb.png' %}">
+<link rel="apple-touch-icon" href="{% static 'img/apple-touch-icon.png' %}">
+
+{# Link previews in Messenger, Viber, Facebook and the rest. Without these the
+   scraper picks whatever image it finds first, which was a stray 3D prop. #}
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="perabridgeph">
+<meta property="og:locale" content="en_PH">
+<meta property="og:title" content="{% block og_title %}perabridgeph - Fast, secure personal loans{% endblock %}">
+<meta property="og:description" content="{% block og_description %}Apply online in minutes. Loans from PHP 50,000 to PHP 5,000,000, approved in as little as 24 hours.{% endblock %}">
+<meta property="og:url" content="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}">
+<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'img/share-card.jpg' %}">
+<meta property="og:image:secure_url" content="https://{{ request.get_host }}{% static 'img/share-card.jpg' %}">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="perabridgeph - personal loans from PHP 50,000 to PHP 5,000,000">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{% block twitter_title %}perabridgeph - Fast, secure personal loans{% endblock %}">
+<meta name="twitter:description" content="{% block twitter_description %}Apply online in minutes. Loans from PHP 50,000 to PHP 5,000,000, approved in as little as 24 hours.{% endblock %}">
+<meta name="twitter:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'img/share-card.jpg' %}">
 {% block extra_css %}
 <style>
 :root{

@@ -151,7 +151,7 @@ class LoanConfig(models.Model):
         max_digits=10, decimal_places=6, default=Decimal("0.000500")
     )
     min_amount = models.DecimalField(
-        max_digits=14, decimal_places=2, default=Decimal("80000.00")
+        max_digits=14, decimal_places=2, default=Decimal("50000.00")
     )
     max_amount = models.DecimalField(
         max_digits=14, decimal_places=2, default=Decimal("5000000.00")
