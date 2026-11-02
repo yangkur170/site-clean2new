@@ -312,7 +312,9 @@
   }
 
   /* ===== Onboarding coachmark tour ===== */
-  .tour-overlay { position: fixed; inset: 0; z-index: 2147483000; display: none; }
+  /* The overlay covers the whole screen, so it must let taps through to the
+     form underneath - only the tip itself is interactive. */
+  .tour-overlay { position: fixed; inset: 0; z-index: 2147483000; display: none; pointer-events: none; }
   .tour-overlay.show { display: block; }
   .tour-spot {
     position: fixed; top: 0; left: 0; width: 0; height: 0;
@@ -322,6 +324,7 @@
     pointer-events: none;
   }
   .tour-tip {
+    pointer-events: auto;
     position: fixed; top: 50%; left: 50%;
     width: min(300px, 86vw);
     background: #ffffff;
