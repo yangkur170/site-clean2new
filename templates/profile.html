@@ -757,6 +757,75 @@
     .logout-modal, .logout-box{ transition: none; }
   }
 
+
+  /* ════════════════════════════════════════
+     Fit the whole page on one screen
+     The menu was a single column of full-width
+     rows, which ran past the bottom of a phone
+     and cut the logout button off. Two columns
+     of compact tiles bring everything into view.
+     ════════════════════════════════════════ */
+  /* The shared shell pads the page; this screen manages its own height. */
+  .wrap{ padding-top: 0; padding-bottom: 0; }
+
+  .p-wrap{
+    height: 100vh;            /* fallback for older browsers */
+    height: 100dvh;           /* the real visible height on a phone */
+    padding: 8px 16px;
+  }
+
+  .back-btn{ padding: 8px 14px; font-size: 14px; }
+
+  .p-scroll{
+    flex: 0 1 auto;           /* hug the content instead of stretching */
+    margin-top: 7px;
+    padding: 11px 11px 11px;
+    overflow-y: auto;         /* a safety valve only: the content fits */
+  }
+
+  .ph-row{ padding: 10px 13px; }
+  .ph-avatar{ width: 46px; height: 46px; border-radius: 15px; }
+  .ph-avatar svg{ width: 23px; height: 23px; }
+  .ph-balance{ padding: 10px 13px; margin-top: 7px; }
+
+  .menu-label{ margin-top: 8px; margin-bottom: 6px; }
+
+  .tile-grid{
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    margin-bottom: 9px;
+  }
+
+  @media (max-width: 420px){
+    .tile-grid{ grid-template-columns: repeat(2, 1fr); }
+  }
+
+  .tile{
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+    justify-items: center;
+    text-align: center;
+    column-gap: 0;
+    row-gap: 3px;
+    padding: 10px 6px;
+    border-radius: 18px;
+  }
+
+  .tile::after{ display: none; }      /* no chevron on a centred tile */
+
+  .tile-icon{
+    grid-column: 1;
+    grid-row: 1;
+    width: 34px;
+    height: 34px;
+    border-radius: 12px;
+  }
+  .tile-icon svg{ width: 17px; height: 17px; }
+
+  .tile-title{ grid-column: 1; grid-row: 2; font-size: 13px; line-height: 1.2; }
+  .tile-sub{ grid-column: 1; grid-row: 3; font-size: 10.5px; line-height: 1.2; }
+
+  .logout-btn{ padding: 12px; font-size: 15.5px; }
 </style>
 
 <div class="decor-layer" aria-hidden="true">
