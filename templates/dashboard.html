@@ -659,7 +659,7 @@ body{
   -webkit-overflow-scrolling: touch; scrollbar-width: none;
 }
 .trust-carousel::-webkit-scrollbar{ display: none; }
-.trust-slide{ flex: 0 0 100%; width: 100%; scroll-snap-align: start; }
+.trust-slide{ flex: 0 0 100%; width: 100%; scroll-snap-align: start; scroll-snap-stop: always; }
 .trust-dots{ display: flex; justify-content: center; gap: 6px; margin-top: 13px; }
 .trust-dots i{
   width: 6px; height: 6px; border-radius: 50%; background: #E9CBCB;
@@ -1960,14 +1960,40 @@ body{
   var AUTO_MS = 4000;
   var timer = null;
 
-  function current(){ return Math.round(car.scrollLeft / car.clientWidth); }
+  var slides = car.querySelectorAll(".trust-slide");
+
+  // Measure the slides themselves. clientWidth is rounded, so stepping by it
+  // drifts a little further off every slide.
+  function current(){
+    var best = 0, bestGap = Infinity;
+    for(var k = 0; k < slides.length; k++){
+      var gap = Math.abs(slides[k].offsetLeft - car.scrollLeft);
+      if(gap < bestGap){ bestGap = gap; best = k; }
+    }
+    return best;
+  }
   function update(){
     var i = current();
     for(var k = 0; k < dots.length; k++){ dots[k].classList.toggle("on", k === i); }
   }
-  function goTo(i){ car.scrollTo({ left: i * car.clientWidth, behavior: "smooth" }); }
+  function goTo(i){
+    if(!slides[i]) return;
+    car.scrollTo({ left: slides[i].offsetLeft, behavior: "smooth" });
+  }
 
-  car.addEventListener("scroll", function(){ window.requestAnimationFrame(update); }, { passive: true });
+  // Never leave it resting between slides. A dropped drag, or an auto-slide
+  // the user interrupted by touching the screen, used to strand it half way
+  // and the card clipped the tiles on both sides.
+  var settle = null;
+  function snapBack(){
+    var i = current();
+    if(slides[i] && Math.abs(car.scrollLeft - slides[i].offsetLeft) > 1) goTo(i);
+  }
+  car.addEventListener("scroll", function(){
+    window.requestAnimationFrame(update);
+    if(settle) clearTimeout(settle);
+    settle = setTimeout(snapBack, 160);
+  }, { passive: true });
   dots.forEach(function(d, k){
     d.addEventListener("click", function(){ goTo(k); restart(); });
   });
