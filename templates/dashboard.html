@@ -41,14 +41,17 @@ body{
   width: min(520px, 94vw);
   margin: 0 auto;
   height: 100vh;    /* fallback for older browsers */
-  height: 100dvh;   /* iOS counts the area behind its toolbars in 100vh,
+  height: 100dvh;   /* iOS counts the area behind its own toolbars in 100vh,
                        which pushed the bottom nav out of sight */
   padding-top: calc(
     (var(--topbar-pad) * 2) + var(--topbar-card-h) + var(--topbar-gap)
   ) !important;
   padding-left: 14px;
   padding-right: 14px;
-  padding-bottom: calc(124px + env(safe-area-inset-bottom));
+  /* No clearance here. Holding the scrolling area short of the nav left a
+     strip of the page that content could never reach - a permanent blank
+     band above the nav. The clearance belongs inside the scroller. */
+  padding-bottom: 0;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -61,6 +64,9 @@ body{
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
   padding-right: 2px;
+  /* The scrolling area now reaches the bottom of the screen and content
+     passes behind the nav; this padding lets the last card clear it. */
+  padding-bottom: calc(118px + env(safe-area-inset-bottom));
 }
 .dash-scroll::-webkit-scrollbar{ width: 6px; }
 .dash-scroll::-webkit-scrollbar-thumb{ background: rgba(166,47,56,.20); border-radius: 99px; }

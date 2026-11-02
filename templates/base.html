@@ -138,7 +138,11 @@ body{
 
 /* ===== PAGE ENTER/LEAVE ANIMATION ===== */
 .page-enter{
-  animation: pageIn .45s ease both;
+  /* "backwards", not "both": holding the last keyframe leaves a transform on
+     the element, and a transformed element becomes the anchor for its
+     position:fixed descendants - which is how the bottom nav ended up pinned
+     to the page box instead of the screen on iOS. */
+  animation: pageIn .45s ease backwards;
 }
 @keyframes pageIn{
   from{ opacity:0; transform: translateX(16px); }
