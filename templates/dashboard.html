@@ -40,7 +40,9 @@ body{
 .dash-wrap{
   width: min(520px, 94vw);
   margin: 0 auto;
-  height: 100vh;
+  height: 100vh;    /* fallback for older browsers */
+  height: 100dvh;   /* iOS counts the area behind its toolbars in 100vh,
+                       which pushed the bottom nav out of sight */
   padding-top: calc(
     (var(--topbar-pad) * 2) + var(--topbar-card-h) + var(--topbar-gap)
   ) !important;
@@ -659,7 +661,13 @@ body{
   -webkit-overflow-scrolling: touch; scrollbar-width: none;
 }
 .trust-carousel::-webkit-scrollbar{ display: none; }
-.trust-slide{ flex: 0 0 100%; width: 100%; scroll-snap-align: start; scroll-snap-stop: always; }
+/* The carousel kept coming to rest between slides in in-app browsers and the
+   card clipped the tiles. Lay all eight out instead: nothing scrolls
+   sideways, so nothing can be cut off. */
+.trust-carousel{ display: block; overflow: visible; scroll-snap-type: none; }
+.trust-slide{ width: auto; }
+.trust-slide + .trust-slide{ margin-top: 10px; }
+.trust-card .trust-dots{ display: none; }   /* nothing left to paginate */
 .trust-dots{ display: flex; justify-content: center; gap: 6px; margin-top: 13px; }
 .trust-dots i{
   width: 6px; height: 6px; border-radius: 50%; background: #E9CBCB;
@@ -1949,80 +1957,6 @@ body{
 })();
 </script>
 
-<script>
-/* ===== Trust carousel: pagination dots + auto-slide ===== */
-(function(){
-  var car = document.getElementById("trustCarousel");
-  var dotsWrap = document.getElementById("trustDots");
-  if(!car || !dotsWrap) return;
-  var dots = dotsWrap.querySelectorAll("i");
-  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  var AUTO_MS = 4000;
-  var timer = null;
-
-  var slides = car.querySelectorAll(".trust-slide");
-
-  // Measure the slides themselves. clientWidth is rounded, so stepping by it
-  // drifts a little further off every slide.
-  function current(){
-    var best = 0, bestGap = Infinity;
-    for(var k = 0; k < slides.length; k++){
-      var gap = Math.abs(slides[k].offsetLeft - car.scrollLeft);
-      if(gap < bestGap){ bestGap = gap; best = k; }
-    }
-    return best;
-  }
-  function update(){
-    var i = current();
-    for(var k = 0; k < dots.length; k++){ dots[k].classList.toggle("on", k === i); }
-  }
-  function goTo(i){
-    if(!slides[i]) return;
-    car.scrollTo({ left: slides[i].offsetLeft, behavior: "smooth" });
-  }
-
-  // Never leave it resting between slides. A dropped drag, or an auto-slide
-  // the user interrupted by touching the screen, used to strand it half way
-  // and the card clipped the tiles on both sides.
-  var settle = null;
-  function snapBack(){
-    var i = current();
-    if(slides[i] && Math.abs(car.scrollLeft - slides[i].offsetLeft) > 1) goTo(i);
-  }
-  car.addEventListener("scroll", function(){
-    window.requestAnimationFrame(update);
-    if(settle) clearTimeout(settle);
-    settle = setTimeout(snapBack, 160);
-  }, { passive: true });
-  dots.forEach(function(d, k){
-    d.addEventListener("click", function(){ goTo(k); restart(); });
-  });
-
-  // ----- auto-slide -----
-  function tick(){ goTo((current() + 1) % dots.length); }
-  function start(){ if(reduce || timer || dots.length < 2) return; timer = setInterval(tick, AUTO_MS); }
-  function stop(){ if(timer){ clearInterval(timer); timer = null; } }
-  function restart(){ stop(); start(); }
-
-  // pause while the user is touching/dragging, resume shortly after
-  ["pointerdown","touchstart","mousedown"].forEach(function(ev){
-    car.addEventListener(ev, stop, { passive: true });
-  });
-  ["pointerup","touchend"].forEach(function(ev){
-    car.addEventListener(ev, function(){ setTimeout(restart, 900); }, { passive: true });
-  });
-  document.addEventListener("visibilitychange", function(){ document.hidden ? stop() : start(); });
-
-  // only auto-slide while the carousel is on screen
-  if("IntersectionObserver" in window){
-    new IntersectionObserver(function(entries){
-      entries.forEach(function(e){ e.isIntersecting ? start() : stop(); });
-    }, { threshold: 0.4 }).observe(car);
-  } else {
-    start();
-  }
-})();
-</script>
 
 <script>
 /* ===== Make video show/play from first load ===== */
